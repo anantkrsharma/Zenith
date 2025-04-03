@@ -33,7 +33,7 @@ export default function RootLayout({
             {/* header */}
             <Header />
             
-            <main className="min-h-screen pt-20">  
+            <main className="min-h-screen">  
               {children}
             </main>
             
