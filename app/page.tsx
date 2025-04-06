@@ -1,3 +1,4 @@
+import { AccordionNew } from "@/components/accordionNew";
 import HeroSection from "@/components/hero";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -145,21 +146,14 @@ export default function Home() {
                 Frequently Asked Questions
               </h2>
               <p className="text-center text-muted-foreground">
-                Got questions? We have answers! Here are some common queries about our AI Career Coach.
+                Got questions? We have answers! Here are some common queries about Zenith.
               </p>
             </div>
 
-            <div className="gap-6 max-w-6xl mx-auto">
-              {faqs.map((item, index) => (
-                <Accordion type="single" collapsible key={index}>
-                  <AccordionItem value="item-1">
-                    <AccordionTrigger>Is it accessible?</AccordionTrigger>
-                    <AccordionContent>
-                      Yes. It adheres to the WAI-ARIA design pattern.
-                    </AccordionContent>
-                  </AccordionItem>
-                </Accordion>
-              ))}
+            <div className="max-w-4xl mx-auto">
+                {faqs.map((item, index) => (
+                  <AccordionNew title={item.question} content={item.answer} key={index} />
+                ))}
             </div>
         </div>
       </section>
