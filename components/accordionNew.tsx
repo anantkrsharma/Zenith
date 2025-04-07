@@ -13,13 +13,13 @@ export function AccordionNew({ title, content }: SimpleAccordionProps) {
     const [isOpen, setIsOpen] = useState(false)
 
     return (
-        <div className="border-b border-gray-800 bg-auto bg-opacity-90 backdrop-blur-sm">
+        <div className="border-b border-neutral-800 bg-transparent text-sm w-full">
             <button
-                className="flex w-full items-center justify-between py-5 px-4 text-left text-white focus:outline-none hover:cursor-pointer hover:underline"
+                className={`flex w-full items-center justify-between py-5 px-4 text-left text-white focus:outline-none hover:cursor-pointer ${!isOpen && `hover:underline`}`}
                 onClick={() => setIsOpen(!isOpen)}
                 aria-expanded={isOpen}
             >
-                <span className="text-lg font-medium">{title}</span>
+                <span className="font-medium">{title}</span>
                 <ChevronDown
                 className={cn("h-5 w-5 transform transition-transform duration-300", isOpen ? "rotate-180" : "")}
                 />
@@ -30,7 +30,7 @@ export function AccordionNew({ title, content }: SimpleAccordionProps) {
                 isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0",
                 )}
             >
-                <div className="px-4 pb-5 text-gray-300">{content}</div>
+                <div className="px-4 pb-5 text-gray-300 text-justify">{content}</div>
             </div>
         </div>
     )

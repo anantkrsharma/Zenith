@@ -1,12 +1,14 @@
 import { AccordionNew } from "@/components/accordionNew";
 import HeroSection from "@/components/hero";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { faqs } from "@/data/faqs";
 import { features } from "@/data/features";
 import { howItWorks } from "@/data/howItWorks";
 import { testimonial } from "@/data/testimonial";
+import { ArrowRight } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
   return <>
@@ -40,7 +42,7 @@ export default function Home() {
       {/* Stats */}
       <section className="w-full py-12 md:py-24 bg-muted/50">
         <div className="container mx-auto px-4 md:px-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-4xl text-center mx-auto">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl text-center mx-auto">
                 <div className="flex flex-col items-center justify-center space-y-2">
                   <h3 className="text-4xl font-bold">50+</h3>
                   <p className="text-muted-foreground">Industries Covered</p>
@@ -139,7 +141,7 @@ export default function Home() {
       </section>
 
       {/* FAQs */}
-      <section className="w-full py-12 md:py-24 bg-background">
+      <section className="w-full py-12 md:py-24">
         <div className="container mx-auto px-4 md:px-6">
             <div className="max-w-3xl mx-auto text-center mb-12">
               <h2 className="text-3xl font-bold mb-4">
@@ -150,11 +152,35 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="max-w-4xl mx-auto">
+            <div className="max-w-3xl mx-auto">
                 {faqs.map((item, index) => (
                   <AccordionNew title={item.question} content={item.answer} key={index} />
                 ))}
             </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="w-full">
+        <div className="mx-auto py-24 gradient">
+          <div className="flex flex-col items-center justify-center space-y-4 text-center max-w-3xl mx-auto">
+            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl gradient-title-2">
+              Ready to Accelerate Your Career?
+            </h2>
+            <p className="mx-auto max-w-[600px] text-gray-300 md:text-xl">
+              Join thousands of professionals who are advancing their careers
+              with AI-powered guidance.
+            </p>
+            <Link href="/dashboard" passHref>
+              <Button
+                size="lg"
+                variant="outline"
+                className="h-11 mt-5 animate-bounce hover:cursor-pointer"
+              >
+                Start Your Journey Today <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
+          </div>
         </div>
       </section>
     </>
