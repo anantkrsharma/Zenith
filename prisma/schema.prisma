@@ -4,12 +4,90 @@
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
+
 generator client {
   provider = "prisma-client-js"
 }
+
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
+
+model User {
+  id                    String                  @id         @default(uuid())
+  clerkUserId           String                  @unique 
+  email                 String                  @unique
+  name                  String?
+  imageUrl              String?
+  bio                   String?
+  experience            Int?
+  skills                String[]
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime                @updatedAt
+  industry              String?
+  industryInsight       IndustryInsight?        @relation(fields: [industry], references: [industry], onDelete: Cascade, onUpdate: Cascade)
+  assessments           Assessment[]            @relation()
+  resume                Resume?                 @relation()
+  coverLetters          CoverLetter[]           @relation()
+}
+
+
+model IndustryInsight {
+  id                    String                  @id         @default(uuid())
+  industry              String                  @unique
+  salaryRanges          Json[]                  //Array of - { role: string, minSal: float, maxSal: float, medianSal: float, location: string? }
+  grownRate             Float
+  demandLevel           String
+  topSkills             String[]
+  marketOutlook         String
+  keyTrends             String[]
+  recommendedSkills     String[]
+  lastUpdated           DateTime                
+  nextUpdate            DateTime
+  user                  User[]                    @relation()
+}
+
+
+model Assessment {
+  id                    String                  @id         @default(uuid())
+  quizScore             Float
+  questions             Json[]                  //Array of - { question: string, answer: string, userAnswer: string, isCorrect: boolean }
+  category              String
+  improvementTip        String?
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime                @updatedAt
+  userId                String                  //multiple assessments per user
+  user                  User                    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@index([userId])
+}
+
+
+model Resume {
+  id                    String                  @id         @default(uuid())
+  content               String                  @db.Text    //Markdown content (very long text, that's why its @db.Text)
+  atsScore              Float?
+  feedback              String?
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime                @updatedAt
+  userId                String                  @unique     //one resume per user
+  user                  User                    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model CoverLetter {
+  id                    String                  @id         @default(uuid())
+  content               String                  @db.Text
+  jobDescription        String?
+  companyName           String
+  jobTitle              String
+  status                String
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime                @updatedAt
+  userId                String                  //multiple cover letters per user
+  user                  User                    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@index([userId])
+}
