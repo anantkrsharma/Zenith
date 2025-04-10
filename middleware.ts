@@ -14,12 +14,13 @@ export default clerkMiddleware(async (auth, req) => {
 
     if(!userId && isProtectedRoute(req)){
         const { redirectToSignIn } = await auth();
-        return redirectToSignIn({ returnBackUrl: req.url });
+        return redirectToSignIn();
     }
 
-    if(userId && req.url === '/sign-in(.*)' || req.url === '/sign-up(.*)'){
-        return NextResponse.redirect('/');
-    }
+    //if already logged in, redirect to landing-page
+    // if(userId && req.url === '/sign-in(.*)' || req.url === '/sign-up(.*)'){
+    //     return NextResponse.redirect('/');
+    // }
     
     return NextResponse.next();
 });

@@ -7,6 +7,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  output = "../lib/generated/client"
 }
 
 
@@ -39,15 +40,15 @@ model IndustryInsight {
   id                    String                  @id         @default(uuid())
   industry              String                  @unique
   salaryRanges          Json[]                  //Array of - { role: string, minSal: float, maxSal: float, medianSal: float, location: string? }
-  grownRate             Float
-  demandLevel           String
+  growthRate            Float
+  demandLevel           DemandLevel             //"High", "Medium", "Low"  
   topSkills             String[]
-  marketOutlook         String
+  marketOutlook         MarketOutlook           //"Positive", "Neutral", "Negative"
   keyTrends             String[]
   recommendedSkills     String[]
-  lastUpdated           DateTime                
-  nextUpdate            DateTime
-  user                  User[]                    @relation()
+  lastUpdated           DateTime                @default(now())    
+  nextUpdate            DateTime                
+  user                  User[]                  @relation()
 }
 
 
@@ -90,4 +91,16 @@ model CoverLetter {
   user                  User                    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@index([userId])
+}
+
+enum DemandLevel{
+  High
+  Medium
+  Low
+}
+
+enum MarketOutlook{
+  Positive
+  Neutral
+  Negative
 }
