@@ -1,10 +1,11 @@
 import React from 'react'
 
 const MainRoutesLayout = ({ children }: { children: React.ReactNode}) => {
-    //redirect the user after onboarding
+    //redirect to onboarding if not onboarded
     
     return (
-        <div className='container mx-auto mt-24 mb-20'>
+        <div className='border container mx-auto mt-24 mb-20'>
+            main route layout
             {children}
         </div>
     )
