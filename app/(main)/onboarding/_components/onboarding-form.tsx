@@ -11,7 +11,7 @@ interface OnboardingFormProps {
 const OnboardingForm = ({ industries } : OnboardingFormProps) => {
     return (
         <div>
-            FORM
+            ONBOARDING FORM
         </div>
     )
 }
