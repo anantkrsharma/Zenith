@@ -1,10 +1,9 @@
 'use client';
 
 import { redirect, usePathname } from 'next/navigation';
-import React from 'react'
 
 const RedirectToOnboarding = ({ isOnboarded } : { isOnboarded: boolean }) => {
-    //redirect to onboarding if not onboarded
+    //redirect to onboarding if not onboarded (protects all routes of (main) folder, as its present in parent layout.tsx)
     const path = usePathname();
 
     if (!isOnboarded && path !== '/onboarding') {

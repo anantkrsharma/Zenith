@@ -7,7 +7,7 @@ const MainRoutesLayout = async ({ children }: { children: React.ReactNode}) => {
     
     return (
         <div className='border container mx-auto mt-24 mb-20'>
-            <RedirectToOnboarding isOnboarded = { isOnboarded }/>
+            <RedirectToOnboarding isOnboarded = {isOnboarded}/>
 
             main route layout
             {children}

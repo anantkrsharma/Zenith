@@ -2,6 +2,8 @@
 
 import { db } from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
+import { revalidatePath } from "next/cache";
+//onboarding page server actions
 
 interface updateUserProps {
     bio: string;
@@ -67,6 +69,9 @@ export async function updateUser(data: updateUserProps) {
         {
             timeout: 10000
         })
+        
+        revalidatePath("/");
+        return result.updatedUser;
     } catch (error) {
         if(error instanceof Error) {
             console.log("Error while updating the user and industry:", error.message);
