@@ -1,6 +1,6 @@
 import React from 'react'
 
-const InterviewPage = () => {
+const MockInterviewPage = () => {
     return (
         <div>
             Interview Page
@@ -8,4 +8,4 @@ const InterviewPage = () => {
     )
 }
 
-export default InterviewPage
+export default MockInterviewPage
