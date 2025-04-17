@@ -8,6 +8,10 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { z } from "zod";
 
 interface OnboardingFormProps {
     industries: {
@@ -16,6 +20,8 @@ interface OnboardingFormProps {
         subIndustries: string[];
     }[]
 }
+
+type OnboardingSchemaType = z.infer<typeof onboardingSchema>;
 
 interface Industry {
     id: string;
@@ -41,8 +47,8 @@ const OnboardingForm = ({ industries } : OnboardingFormProps) => {
 
     const watchIndustry = watch("industry");
 
-    const onSubmit = async () => {
-        
+    const onSubmit = async (values: OnboardingSchemaType) => {
+        console.log(values);
     }
 
     return (
@@ -51,7 +57,8 @@ const OnboardingForm = ({ industries } : OnboardingFormProps) => {
                 <CardHeader>
                     <CardTitle className="gradient-title text-4xl">Complete Your Profile</CardTitle>
                     <CardDescription>Select your industry to get personalised career insights and recommendations.</CardDescription>
-                </CardHeader>
+                </CardHeader> 
+
                 <CardContent>
                     <form action="" className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
                         <div className="space-y-2">
@@ -108,6 +115,61 @@ const OnboardingForm = ({ industries } : OnboardingFormProps) => {
                             }
                         </div> 
                         }
+
+                        <div className="space-y-2">
+                            <Label htmlFor="experience">Years of Experience</Label>
+                            <Input  id="experience" 
+                                    type="number"
+                                    min={0}
+                                    max={50}
+                                    placeholder="Years of Experience"
+                                    {...register("experience", {
+                                        required: "Please enter your years of experience",
+                                    })}
+                            />
+                            {
+                                errors.experience && (
+                                    <p className="text-red-500 text-sm">{errors.experience.message}</p>
+                                )
+                            }
+                        </div>
+                        
+                        <div className="space-y-2">
+                            <Label htmlFor="skills">Skills</Label>
+                            <Input  id="skills" 
+                                    type="text"
+                                    placeholder="e.g. React, Node.js, Python"
+                                    {...register("skills", {
+                                        required: "Please enter your skills",
+                                    })}
+                            />
+                            <p className="text-sm text-muted-foreground">Please separate skills with commas.</p>
+                            {
+                                errors.skills && (
+                                    <p className="text-red-500 text-sm">{errors.skills.message}</p>
+                                )
+                            }
+                        </div>
+                        
+                        <div className="space-y-2">
+                            <Label htmlFor="bio">Bio</Label>
+                            <Textarea   id="bio"
+                                        placeholder="Tell us about your professional background and interests."
+                                        className="resize-none"
+                                        {...register("bio")}
+                            />
+                            {
+                                errors.bio && (
+                                    <p className="text-red-500 text-sm">{errors.bio.message}</p>
+                                )
+                            }
+                        </div>
+                            
+                        <div className="w-full flex justify-center ">
+                            <Button className="text-center w-full hover:cursor-pointer" type="submit" variant="default" size="lg">
+                                Complete Profile
+                            </Button>
+                        </div>
                     </form>
                 </CardContent>
             </Card>
