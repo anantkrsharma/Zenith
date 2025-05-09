@@ -6,6 +6,7 @@ import Header from "@/components/header";
 import { ClerkProvider } from "@clerk/nextjs"; 
 import {dark, neobrutalism} from '@clerk/themes';
 import Link from 'next/link';
+import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,12 +23,15 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     }}>  
       <html lang="en" suppressHydrationWarning>
         <body className= {`${inter.className}`} >
+
           <ThemeProvider
             attribute="class"
             defaultTheme="dark"
             enableSystem
             disableTransitionOnChange
             >
+            <Toaster richColors/>
+
             {/* header */}
             <Header />
             
@@ -83,7 +87,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
                 &copy; {new Date().getFullYear()} Zenith. All rights reserved.
               </div>
             </footer>
-
           </ThemeProvider>
         </body>
       </html>

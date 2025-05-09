@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { onboardingSchema } from "@/app/lib/schema";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
@@ -12,6 +12,10 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { z } from "zod";
+import { updateUser } from "@/actions/user";
+import { useFetch } from "@/hooks/use-fetch";
+import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
 
 interface OnboardingFormProps {
     industries: {
@@ -33,14 +37,20 @@ const OnboardingForm = ({ industries } : OnboardingFormProps) => {
     const [selectedIndustry, setSelectedIndustry] = useState<Industry | null>(null);
     const router = useRouter();
 
-    const {
+    const { 
+        data: updateResult,
+        fn: updateUserFn,
+        loading: updateLoading,
+    } = useFetch(updateUser);
+
+    const { 
         register,
         handleSubmit,
+        setValue,
+        watch,
         formState: {
             errors
-        },
-        setValue,
-        watch
+        }
     } = useForm({
         resolver: zodResolver(onboardingSchema),
     });
@@ -48,8 +58,29 @@ const OnboardingForm = ({ industries } : OnboardingFormProps) => {
     const watchIndustry = watch("industry");
 
     const onSubmit = async (values: OnboardingSchemaType) => {
-        console.log(values);
+        try {
+            console.log("Values - " + values);
+            const formattedIndustry = `${values.industry}-${values.subIndustry.toLowerCase().replace(/ /g, "-")}`;
+            
+            await updateUserFn({
+                ...values,
+                industry: formattedIndustry,
+            });
+        } catch (error) {
+            if(error instanceof Error) {
+                toast.error(error.message);
+            } else {
+                toast.error("An unknown error occured. Please try again later.");
+            }
+        }
     }
+
+    useEffect(() => {
+        if(updateResult?.success && !updateLoading) {
+            toast.success("Profile updated successfully.");
+            router.push("/dashboard");
+        }
+    }, [updateResult, updateLoading]);
 
     return (
         <div className="flex items-center justify-center bg-background">
@@ -62,7 +93,7 @@ const OnboardingForm = ({ industries } : OnboardingFormProps) => {
                 <CardContent>
                     <form action="" className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
                         <div className="space-y-2">
-                            <Label htmlFor="industry">Industry</Label>
+                            <Label htmlFor="industry">Industry *</Label>
                             <Select onValueChange={(val) => {
                                 setValue('industry', val);
                                 setSelectedIndustry(
@@ -92,7 +123,7 @@ const OnboardingForm = ({ industries } : OnboardingFormProps) => {
                         {
                         selectedIndustry && watchIndustry && 
                         <div className="space-y-2">
-                            <Label htmlFor="sub-industry">Specialization</Label>
+                            <Label htmlFor="sub-industry">Specialization *</Label>
                             <Select onValueChange={(val) => {
                                 setValue('subIndustry', val);
                             }}
@@ -129,7 +160,7 @@ const OnboardingForm = ({ industries } : OnboardingFormProps) => {
                             />
                             {
                                 errors.experience && (
-                                    <p className="text-red-500 text-sm">{errors.experience.message}</p>
+                                    <p className="text-red-500 text-sm">Enter valid years of experience</p>
                                 )
                             }
                         </div>
@@ -164,12 +195,17 @@ const OnboardingForm = ({ industries } : OnboardingFormProps) => {
                                 )
                             }
                         </div>
-                            
-                        <div className="w-full flex justify-center ">
-                            <Button className="text-center w-full hover:cursor-pointer" type="submit" variant="default" size="lg">
-                                Complete Profile
-                            </Button>
-                        </div>
+                        
+                        <Button type="submit" className="w-full hover:cursor-pointer" disabled={updateLoading}>
+                            {updateLoading ? (
+                                <>
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                Saving...
+                                </>
+                            ) : (
+                                "Complete Profile"
+                            )}
+                        </Button>
                     </form>
                 </CardContent>
             </Card>
