@@ -13,7 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { z } from "zod";
 import { updateUser } from "@/actions/user";
-import { useFetch } from "@/hooks/use-fetch";
+import useFetch from "@/hooks/use-fetch";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 
@@ -38,9 +38,9 @@ const OnboardingForm = ({ industries } : OnboardingFormProps) => {
     const router = useRouter();
 
     const { 
-        data: updateResult,
-        fn: updateUserFn,
-        loading: updateLoading,
+        data: onboardResult,
+        fn: onboardUserFn,
+        loading: onboardLoading,
     } = useFetch(updateUser);
 
     const { 
@@ -59,10 +59,10 @@ const OnboardingForm = ({ industries } : OnboardingFormProps) => {
 
     const onSubmit = async (values: OnboardingSchemaType) => {
         try {
-            console.log("Values - " + values);
+            console.log(values);
             const formattedIndustry = `${values.industry}-${values.subIndustry.toLowerCase().replace(/ /g, "-")}`;
-            
-            await updateUserFn({
+
+            await onboardUserFn({
                 ...values,
                 industry: formattedIndustry,
             });
@@ -76,11 +76,11 @@ const OnboardingForm = ({ industries } : OnboardingFormProps) => {
     }
 
     useEffect(() => {
-        if(updateResult?.success && !updateLoading) {
+        if(onboardResult?.success && !onboardLoading) {
             toast.success("Profile updated successfully.");
             router.push("/dashboard");
         }
-    }, [updateResult, updateLoading]);
+    }, [onboardResult, onboardLoading]);
 
     return (
         <div className="flex items-center justify-center bg-background">
@@ -196,8 +196,8 @@ const OnboardingForm = ({ industries } : OnboardingFormProps) => {
                             }
                         </div>
                         
-                        <Button type="submit" className="w-full hover:cursor-pointer" disabled={updateLoading}>
-                            {updateLoading ? (
+                        <Button type="submit" className="w-full hover:cursor-pointer" disabled={onboardLoading}>
+                            {onboardLoading ? (
                                 <>
                                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                                 Saving...

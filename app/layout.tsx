@@ -30,10 +30,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             enableSystem
             disableTransitionOnChange
             >
-            <Toaster richColors/>
-
             {/* header */}
             <Header />
+            
+            <Toaster richColors/>
             
             <main className="min-h-screen">  
               {children}

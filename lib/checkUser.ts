@@ -1,5 +1,6 @@
 import { currentUser } from "@clerk/nextjs/server"
 import { db } from "./prisma";
+import { toast } from "sonner";
 
 export const checkUser = async () => {
     const user = await currentUser();
@@ -33,8 +34,10 @@ export const checkUser = async () => {
     } catch (error) {
         if (error instanceof Error) {
             console.log(error.message);
+            toast.error(error.message);
         } else {
             console.log("An unknown error occurred while checking the user.");
+            toast.error("An unknown error occurred while checking the user.");
         }
     }
 }

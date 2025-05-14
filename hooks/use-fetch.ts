@@ -5,7 +5,7 @@ type ResponseDataType = {
     success: string
 }
 
-export const useFetch =  (cb: (...args: any[]) => any) => {
+const useFetch =  (cb: (...args: any[]) => any) => {
     const [data, setData] = useState<ResponseDataType | undefined>(undefined);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<Error | null>(null);
@@ -14,7 +14,7 @@ export const useFetch =  (cb: (...args: any[]) => any) => {
         setLoading(true);
         setError(null);
         try {
-            const res = await cb(...args);  //cb is the server action that we're using for fetching/updating data
+            const res = await cb(...args);  //cb is the server action that we're using for fetching/updating data (BE-calls).
             setData(res);
         } catch (error) {
             if(error instanceof Error) {
@@ -29,3 +29,5 @@ export const useFetch =  (cb: (...args: any[]) => any) => {
 
     return { data, loading, error, fn, setData };
 }
+
+export default useFetch;

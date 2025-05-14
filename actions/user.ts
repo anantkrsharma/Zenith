@@ -11,12 +11,12 @@ interface updateUserProps {
     skills: string[];
     industry: string;
 }
-
+    
 export async function updateUser(data: updateUserProps) {
     try {
         const { userId } = await auth();
         if(!userId) {
-            throw new Error("Unauthorized");
+            throw new Error("Unauthenticated");
         }
         
         const user = await db.user.findUnique({
@@ -73,8 +73,8 @@ export async function updateUser(data: updateUserProps) {
         revalidatePath("/");
         
         return {
-            updatedUser: result.updatedUser,
             success: "User updated successfully",
+            ...result
         };
     } catch (error) {
         if(error instanceof Error) {
