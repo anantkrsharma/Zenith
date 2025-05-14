@@ -93,7 +93,7 @@ const OnboardingForm = ({ industries } : OnboardingFormProps) => {
                 <CardContent>
                     <form action="" className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
                         <div className="space-y-2">
-                            <Label htmlFor="industry">Industry *</Label>
+                            <Label htmlFor="industry">* Industry</Label>
                             <Select onValueChange={(val) => {
                                 setValue('industry', val);
                                 setSelectedIndustry(
@@ -119,11 +119,11 @@ const OnboardingForm = ({ industries } : OnboardingFormProps) => {
                                 )
                             }
                         </div>
-
+                        
                         {
                         selectedIndustry && watchIndustry && 
                         <div className="space-y-2">
-                            <Label htmlFor="sub-industry">Specialization *</Label>
+                            <Label htmlFor="sub-industry">* Specialization</Label>
                             <Select onValueChange={(val) => {
                                 setValue('subIndustry', val);
                             }}
@@ -160,7 +160,7 @@ const OnboardingForm = ({ industries } : OnboardingFormProps) => {
                             />
                             {
                                 errors.experience && (
-                                    <p className="text-red-500 text-sm">Enter valid years of experience</p>
+                                    <p className="text-red-500 text-sm">Enter valid years of experience (0 - 50)</p>
                                 )
                             }
                         </div>
@@ -174,7 +174,7 @@ const OnboardingForm = ({ industries } : OnboardingFormProps) => {
                                         required: "Please enter your skills",
                                     })}
                             />
-                            <p className="text-sm text-muted-foreground">Please separate skills with commas.</p>
+                            <p className="text-sm text-muted-foreground">Separate multiple skills with commas (,).</p>
                             {
                                 errors.skills && (
                                     <p className="text-red-500 text-sm">{errors.skills.message}</p>
