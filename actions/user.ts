@@ -51,7 +51,8 @@ export async function updateUser(data: updateUserProps) {
                     }
                 })
             }
-            //update user with the industry
+            
+            //update user with the industry 
             const updatedUser = await tx.user.update({
                 where: {
                     id: user.id
