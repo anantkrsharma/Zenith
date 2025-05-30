@@ -31,44 +31,47 @@ Zenith is an all-in-one platform designed to assist job seekers through AI-drive
 
 1. **Clone the repository**:
 
-   ```bash
-   git clone https://github.com/AnantKrSharma/zenith.git
-   cd zenith
-   ```
+     ```bash
+     git clone https://github.com/AnantKrSharma/zenith.git
+     cd zenith
+     ```
 2. **Install dependencies**:
 
-  ```bash
-  pnpm install
-  or
-  npm install
-  ```
+     ```bash
+     pnpm install
+     or
+     npm install
+     ```
 3. **Set up environment variables**:
-  ```
-  NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY = 
-  CLERK_SECRET_KEY = 
-  
-  GEMINI_API_KEY = 
-  
-  NEXT_PUBLIC_CLERK_SIGN_IN_URL = /sign-in
-  NEXT_PUBLIC_CLERK_SIGN_UP_URL = /sign-up
-  
-  NEXT_PUBLIC_CLERK_SIGN_IN_FORCE_REDIRECT_URL = /onboarding
-  NEXT_PUBLIC_CLERK_SIGN_UP_FORCE_REDIRECT_URL = /onboarding
-  
-  DATABASE_URL = 
-  NODE_ENV = "development"
-```
-4. **Set up the database**:
-```bash
-pnpx prisma generate
-pnpx prisma migrate dev
-or
-npx prisma generate
-npx prisma migrate dev
-```
+
+     ```
+     NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY = 
+     CLERK_SECRET_KEY = 
+     
+     GEMINI_API_KEY = 
+     
+     NEXT_PUBLIC_CLERK_SIGN_IN_URL = /sign-in
+     NEXT_PUBLIC_CLERK_SIGN_UP_URL = /sign-up
+     
+     NEXT_PUBLIC_CLERK_SIGN_IN_FORCE_REDIRECT_URL = /onboarding
+     NEXT_PUBLIC_CLERK_SIGN_UP_FORCE_REDIRECT_URL = /onboarding
+     
+     DATABASE_URL = 
+     NODE_ENV = "development"
+     ```
+5. **Set up the database**:
+
+      ```bash
+      pnpx prisma generate
+      pnpx prisma migrate dev
+      or
+      npx prisma generate
+      npx prisma migrate dev
+      ```
 5. **Start Inngest Dev Server**:
-```bash
-pnpx inngest-cli dev
-or
-npx inngest-cli dev
-```
+
+      ```bash
+      pnpx inngest-cli dev
+      or
+      npx inngest-cli dev
+      ```
