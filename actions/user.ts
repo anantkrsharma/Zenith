@@ -3,6 +3,7 @@
 import { db } from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
+import { generateAiInsight } from "./dashboard";
 //onboarding page server actions
 
 interface updateUserProps {
@@ -29,24 +30,21 @@ export async function updateUser(data: updateUserProps) {
         }
         
         const result = await db.$transaction(async (tx) => {
-            //check if the industry alreay exists
+            //check if the industry already exists
             let industryInsight = await tx.industryInsight.findUnique({
                 where: {
                     industry: data.industry
                 }
             })
+
             if(!industryInsight){
-                //create new industry with default values (as of now, add AI-curated values later)
+                //AI-curated industry insights
+                const insights = await generateAiInsight(data.industry);
+
                 industryInsight = await tx.industryInsight.create({
                     data: {
                         industry: data.industry,
-                        salaryRanges: [],
-                        growthRate: 0,
-                        demandLevel: "Medium",
-                        topSkills: [],
-                        marketOutlook: "Neutral",
-                        keyTrends: [],
-                        recommendedSkills: [],
+                        ...insights,
                         nextUpdate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), //7 days from now
                     }
                 })

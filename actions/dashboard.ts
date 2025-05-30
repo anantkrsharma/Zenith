@@ -9,7 +9,7 @@ const ai = new GoogleGenAI({
     apiKey: process.env.GENAI_API_KEY
 });
 
-const generateAiInsight = async (industry: string | null) => {
+export const generateAiInsight = async (industry: string | null) => {
     const prompt = `
         Analyze the current state of the ${industry} industry and provide insights in ONLY the following JSON format without any additional notes or explanations:
         {
