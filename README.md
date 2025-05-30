@@ -32,7 +32,7 @@ Zenith is an all-in-one platform designed to assist job seekers through AI-drive
 1. **Clone the repository**:
 
      ```bash
-     git clone https://github.com/AnantKrSharma/zenith.git
+     git clone https://github.com/AnantKrSharma/Zenith.git
      cd zenith
      ```
 2. **Install dependencies**:
