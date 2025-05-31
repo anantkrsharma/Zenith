@@ -50,7 +50,7 @@ Zenith is an all-in-one platform designed to assist job seekers through AI-drive
      NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY = 
      CLERK_SECRET_KEY = 
      
-     GEMINI_API_KEY = 
+     GENAI_API_KEY = 
      
      NEXT_PUBLIC_CLERK_SIGN_IN_URL = /sign-in
      NEXT_PUBLIC_CLERK_SIGN_UP_URL = /sign-up
