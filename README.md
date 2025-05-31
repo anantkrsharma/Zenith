@@ -39,7 +39,9 @@ Zenith is an all-in-one platform designed to assist job seekers through AI-drive
 
      ```bash
      pnpm install
+     ```
      or
+     ```bash
      npm install
      ```
 3. **Set up environment variables**:
@@ -64,7 +66,9 @@ Zenith is an all-in-one platform designed to assist job seekers through AI-drive
       ```bash
       pnpx prisma generate
       pnpx prisma migrate dev
+      ```
       or
+      ```bash
       npx prisma generate
       npx prisma migrate dev
       ```
@@ -72,6 +76,8 @@ Zenith is an all-in-one platform designed to assist job seekers through AI-drive
 
       ```bash
       pnpx inngest-cli dev
+      ```
       or
+      ```bash
       npx inngest-cli dev
       ```
