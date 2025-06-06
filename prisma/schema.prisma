@@ -100,7 +100,7 @@ enum DemandLevel{
 }
 
 enum MarketOutlook{
-  Positive
-  Neutral
-  Negative
+  POSITIVE
+  NEUTRAL
+  NEGATIVE
 }

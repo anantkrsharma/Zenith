@@ -19,7 +19,7 @@ export const generateAiInsight = async (industry: string | null) => {
             "growthRate": number,
             "demandLevel": "High" | "Medium" | "Low",
             "topSkills": ["skill1", "skill2"],
-            "marketOutlook": "Positive" | "Neutral" | "Negative",
+            "marketOutlook": "POSITIVE" | "NEUTRAL" | "NEGATIVE",
             "keyTrends": ["trend1", "trend2"],
             "recommendedSkills": ["skill1", "skill2"]
         }
@@ -27,7 +27,7 @@ export const generateAiInsight = async (industry: string | null) => {
         IMPORTANT: Return ONLY the JSON. No additional text, notes, or markdown formatting.
         Include at least 5 common roles for salary ranges.
         Growth rate should be a percentage.
-        Include at least 5 skills and trends.
+        Include at least 10 skills and trends.
     `;
     
     const result = await ai.models.generateContent({

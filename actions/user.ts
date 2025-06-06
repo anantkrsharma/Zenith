@@ -50,7 +50,7 @@ export async function updateUser(data: updateUserProps) {
                 })
             }
             
-            //update user with the industry 
+            //update user with onboarding data
             const updatedUser = await tx.user.update({
                 where: {
                     id: user.id
