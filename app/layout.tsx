@@ -40,7 +40,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             </main>
             
             {/* footer */}
-            <footer className="bg-zinc-950 text-white py-10 px-6 border-t border-zinc-900">
+            <footer className="bg-zinc-900 text-white py-10 px-6 border-t border-zinc-900">
               <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10">
                 <div>
                   <h2 className="text-2xl font-bold mb-4">Zenith</h2>

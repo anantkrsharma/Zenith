@@ -3,10 +3,10 @@
 import { format, formatDistanceToNow } from 'date-fns';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Rectangle } from 'recharts';
 import { IndustryInsight } from '@/lib/generated/client'
-import { Brain, BriefcaseIcon, LineChart, TrendingDown, TrendingUp } from 'lucide-react';
+import { Brain, BriefcaseIcon, Dot, LineChart, TrendingDown, TrendingUp } from 'lucide-react';
 import React, { useEffect, useState } from 'react'
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 
 type SalaryRange = {
@@ -82,7 +82,7 @@ const DashboardView = ({ insights }: { insights: IndustryInsight }) => {
     return (
         <div className='space-y-6'>
             <div className='flex items-center justify-between'>
-                <Badge variant={'outline'}>
+                <Badge variant={'secondary'}>
                     Last updated: {lastUpdate}
                 </Badge>
             </div>
@@ -145,7 +145,7 @@ const DashboardView = ({ insights }: { insights: IndustryInsight }) => {
                     <CardContent>
                         <div className='flex flex-wrap gap-1'>
                             {insights.topSkills.map((skill, index) => (
-                                <Badge key={index} variant={'secondary'}>
+                                <Badge key={index} variant={'outline'} className='bg-neutral-900'>
                                     {skill}
                                 </Badge>
                             ))}
@@ -155,14 +155,12 @@ const DashboardView = ({ insights }: { insights: IndustryInsight }) => {
                 
                 <Card className='col-span-1 md:col-span-2 lg:col-span-4'>
                     <CardHeader>
-                        <CardTitle className='text-sm font-medium'>
-                            <p className='text-lg font-semibold mb-1'>
-                                Salary Ranges by Role 
-                            </p>
-                            <span className='text-sm text-muted-foreground'>
-                                Displaying minimum, median, and maximum salaries (in thousands).
-                            </span>
+                        <CardTitle className='font-semibold'>
+                            Salary Ranges by Role
                         </CardTitle>
+                        <CardDescription className='text-sm text-muted-foreground'>
+                            Displaying minimum, median, and maximum salaries (in thousands).
+                        </CardDescription>
                     </CardHeader>
                     <CardContent>
                         <div className='h-[500px] w-full'>
@@ -206,11 +204,60 @@ const DashboardView = ({ insights }: { insights: IndustryInsight }) => {
                                     />
                                     <Bar 
                                         dataKey="max" 
-                                        fill="#D3D3D3" 
-                                        activeBar={<Rectangle fill="#D3D3D3" stroke="black" />} 
+                                        fill="#C0C0C0" 
+                                        activeBar={<Rectangle fill="#C0C0C0" stroke="black" />} 
                                     />
                                 </BarChart>
                             </ResponsiveContainer>
+                        </div>
+                    </CardContent>
+                </Card>
+            </div>
+            
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-4 '>
+                <Card>
+                    <CardHeader>
+                        <CardTitle className='font-medium'>
+                            Industry trends
+                        </CardTitle>
+                        <CardDescription className='text-sm text-muted-foreground'>
+                            Ongoing trends shaping the industry.
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <div className='flex flex-col justify-center gap-[6px]'>
+                            {insights.keyTrends.map((trend, index) => {
+                                    return <div className='flex items-center gap-[1px]' key={index}>
+                                        <span>
+                                            <Dot size={26}/>
+                                        </span>
+                                        <p className='text-sm'>
+                                            {trend}.
+                                        </p>
+                                    </div>
+                            })}
+                        </div>
+                    </CardContent>
+                </Card>
+                
+                <Card>
+                    <CardHeader>
+                        <CardTitle className='font-medium'>
+                            Recommended Skills
+                        </CardTitle>
+                        <CardDescription className='text-sm text-muted-foreground'>
+                            Skills to develop for future opportunities.
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <div className='flex items-center gap-[6px]'>
+                            {insights.recommendedSkills.map((skill, index) => {
+                                    return <div className='flex items-center gap-[1px]' key={index}>
+                                        <Badge variant={'outline'} className='text-sm bg-neutral-800'>
+                                            {skill}
+                                        </Badge>
+                                    </div>
+                            })}
                         </div>
                     </CardContent>
                 </Card>
