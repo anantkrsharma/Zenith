@@ -166,22 +166,22 @@ const DashboardView = ({ insights }: { insights: IndustryInsight }) => {
                             </p>
                             <br />
                             {isSmallScreen && 
-                            <span className='text-sm text-cyan-300'>
+                            <span className='text-sm text-cyan-400'>
                                 * Tap / Hover on the graph bars for salary details *
                             </span>
                             }
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <div className={`h-[${isMediumScreen ? (isSmallScreen ? 500 : 400) : 500}px] w-full`}>
+                        <div className={`h-[${isMediumScreen ? (isSmallScreen ? `200` : `400`) : `500`}px] w-full`}>
                             <ResponsiveContainer width="100%" height="100%">
                                 <BarChart   data={salaryData}
                                             margin={{
                                                 left: isSmallScreen ? -25 : -5, 
-                                                right: isMediumScreen ? (isSmallScreen ? 0 : 30) : 10, 
-                                                bottom: isMediumScreen ? (isSmallScreen ? 0 : 70) : 30 
+                                                right: isMediumScreen ? (isSmallScreen ? 10 : 30) : 20, 
+                                                bottom: isMediumScreen ? (isSmallScreen ? -15 : 70) : 30 
                                             }}
-                                            barCategoryGap={isSmallScreen ? '12%' : '15%'}
+                                            barCategoryGap={isSmallScreen ? '15%' : '11%'}
                                 >
                                     <CartesianGrid strokeDasharray="5 5" />
                                     <XAxis
