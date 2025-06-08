@@ -62,11 +62,13 @@ const DashboardView = ({ insights }: { insights: IndustryInsight }) => {
         { addSuffix: true }
     );
 
+    const [isMediumScreen, setIsMediumScreen] = useState(false);
     const [isSmallScreen, setIsSmallScreen] = useState(false);
 
     useEffect(() => {
         const checkScreenSize = () => {
-        setIsSmallScreen(window.innerWidth < 1280);
+            setIsMediumScreen(window.innerWidth < 1024);
+            setIsSmallScreen(window.innerWidth < 769);
         };
 
         checkScreenSize(); // initial check
@@ -158,23 +160,36 @@ const DashboardView = ({ insights }: { insights: IndustryInsight }) => {
                         <CardTitle className='font-semibold'>
                             Salary Ranges by Role
                         </CardTitle>
-                        <CardDescription className='text-sm text-muted-foreground'>
-                            Displaying minimum, median, and maximum salaries (in thousands).
+                        <CardDescription>
+                            <p className='text-sm text-muted-foreground'>
+                                Displaying minimum, median, and maximum salaries (in thousands)
+                            </p>
+                            <br />
+                            {isSmallScreen && 
+                            <span className='text-sm text-cyan-300'>
+                                * Tap / Hover on the graph bars for salary details *
+                            </span>
+                            }
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <div className='h-[500px] w-full'>
+                        <div className={`h-[${isMediumScreen ? (isSmallScreen ? 500 : 400) : 500}px] w-full`}>
                             <ResponsiveContainer width="100%" height="100%">
                                 <BarChart   data={salaryData}
-                                            margin={{ right: isSmallScreen ? 30 : 10, bottom: isSmallScreen ? 105 : 10 }}
+                                            margin={{
+                                                left: isSmallScreen ? -25 : -5, 
+                                                right: isMediumScreen ? (isSmallScreen ? 0 : 30) : 10, 
+                                                bottom: isMediumScreen ? (isSmallScreen ? 0 : 70) : 30 
+                                            }}
+                                            barCategoryGap={isSmallScreen ? '12%' : '15%'}
                                 >
                                     <CartesianGrid strokeDasharray="5 5" />
-                                    <XAxis  
-                                            dataKey="name"
-                                            angle={isSmallScreen ? -45 : 0}
-                                            textAnchor={'middle'}
+                                    <XAxis
+                                            dataKey={"name"}
                                             interval={0}
-                                            dy={isSmallScreen ? 55 : 5}
+                                            angle={isMediumScreen ? (isSmallScreen ? 0 : -35) : -13}
+                                            dy={isMediumScreen ? (isSmallScreen ? 0 : 35) : 15}
+                                            tick={!isSmallScreen}
                                     />
                                     <YAxis />
                                     <Tooltip content={({ active, payload, label }) => {
@@ -250,7 +265,7 @@ const DashboardView = ({ insights }: { insights: IndustryInsight }) => {
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <div className='flex items-center gap-[6px]'>
+                        <div className='flex items-center flex-wrap gap-[6px]'>
                             {insights.recommendedSkills.map((skill, index) => {
                                     return <div className='flex items-center gap-[1px]' key={index}>
                                         <Badge variant={'outline'} className='text-sm bg-neutral-800'>
