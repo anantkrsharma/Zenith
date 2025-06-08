@@ -62,11 +62,13 @@ const DashboardView = ({ insights }: { insights: IndustryInsight }) => {
         { addSuffix: true }
     );
 
+    const [isLargeScreen, setIsLargeScreen] = useState(false);
     const [isMediumScreen, setIsMediumScreen] = useState(false);
     const [isSmallScreen, setIsSmallScreen] = useState(false);
 
     useEffect(() => {
         const checkScreenSize = () => {
+            setIsLargeScreen(window.innerWidth >= 1280);
             setIsMediumScreen(window.innerWidth < 1024);
             setIsSmallScreen(window.innerWidth < 769);
         };
@@ -187,7 +189,7 @@ const DashboardView = ({ insights }: { insights: IndustryInsight }) => {
                                     <XAxis
                                             dataKey={"name"}
                                             interval={0}
-                                            angle={isMediumScreen ? (isSmallScreen ? 0 : -35) : -13}
+                                            angle={isMediumScreen ? (isSmallScreen ? 0 : -35) : isLargeScreen ? 0 : -10}
                                             dy={isMediumScreen ? (isSmallScreen ? 0 : 35) : 15}
                                             tick={!isSmallScreen}
                                     />
