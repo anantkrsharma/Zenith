@@ -60,21 +60,25 @@ export const updateIndustryInsights = inngest.createFunction(
                 }
             )
             const cleanedText = (text ?? "").replace(/```(?:json)?\n?/g, "").trim();
-            const insights = JSON.parse(cleanedText);
+            
+            let insights = {};
+            try {
+                insights = JSON.parse(cleanedText);
+            } catch (error) {
+                if (error instanceof Error) {
+                    console.error("Error parsing insights:", error.message);
+                } else {
+                    console.error("Error parsing insights:", error);
+                }
+            }
 
             //updating the industry insight in the database
             await step.run(
                 `update-${industry}-in-industryInsights-db`,
                 async () => {
-                    return await db.industryInsight.upsert({
+                    return await db.industryInsight.update({
                         where: { industry },
-                        create: {
-                            industry,
-                            ...insights,
-                            lastUpdated: new Date(),
-                            nextUpdate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 1 week later
-                        },
-                        update: {
+                        data: {
                             ...insights,
                             lastUpdated: new Date(),
                             nextUpdate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 1 week later
