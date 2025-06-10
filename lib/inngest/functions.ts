@@ -59,10 +59,12 @@ export const updateIndustryInsights = inngest.createFunction(
                     contents: prompt
                 }
             )
-            const cleanedText = (text ?? "").replace(/```(?:json)?\n?/g, "").trim();
-            
             let insights = {};
             try {
+                const cleanedText = (text ?? "").replace(/```(?:json)?\n?/g, "").trim();
+                if (!cleanedText) {
+                    throw new Error(`Empty JSON from model: "${text}"`);
+                }
                 insights = JSON.parse(cleanedText);
             } catch (error) {
                 if (error instanceof Error) {
