@@ -4,4 +4,9 @@ import { Inngest } from "inngest";
 export const inngest = new Inngest({ 
     id: "zenith",
     name: "Zenith",
+    credentials: {
+        gemini: {
+            apiKey: process.env.GENAI_API_KEY || "",
+        }
+    }
 });
