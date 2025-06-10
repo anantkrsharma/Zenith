@@ -55,17 +55,18 @@ const DashboardView = ({ insights }: { insights: IndustryInsight }) => {
     const MarketOutlookIcon = getMarketOutlookInfo(insights.marketOutlook).icon;
     const marketOutlookColor = getMarketOutlookInfo(insights.marketOutlook).color;
 
-
-    const lastUpdate = format(new Date(insights.lastUpdated), 'dd/MM/yyyy');
-    const nextUpdateDifference = formatDistanceToNow(
-        new Date(insights.nextUpdate), 
-        { addSuffix: true }
-    );
+    const [lastUpdate, setLastUpdate] = useState('');
+    const [nextUpdateDifference, setNextUpdateDifference] = useState('');
+    useEffect(() => {
+        setLastUpdate(format(new Date(insights.lastUpdated), 'dd/MM/yyyy'));
+        setNextUpdateDifference(
+            formatDistanceToNow(new Date(insights.nextUpdate), { addSuffix: true })
+        );
+    }, [insights.lastUpdated, insights.nextUpdate]);
 
     const [isLargeScreen, setIsLargeScreen] = useState(false);
     const [isMediumScreen, setIsMediumScreen] = useState(false);
     const [isSmallScreen, setIsSmallScreen] = useState(false);
-
     useEffect(() => {
         const checkScreenSize = () => {
             setIsLargeScreen(window.innerWidth >= 1280);
@@ -81,7 +82,9 @@ const DashboardView = ({ insights }: { insights: IndustryInsight }) => {
             window.removeEventListener('resize', checkScreenSize);
             }
         };
-        }, []);
+    }, []);
+
+    const heightClass = isMediumScreen ? (isSmallScreen ? 'h-[200px]' : 'h-[400px]') : 'h-[500px]';
 
     return (
         <div className='space-y-6'>
@@ -175,27 +178,28 @@ const DashboardView = ({ insights }: { insights: IndustryInsight }) => {
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <div className={`h-[${isMediumScreen ? (isSmallScreen ? `200` : `400`) : `500`}px] w-full`}>
+                        <div className={`${heightClass} w-full`}>
                             <ResponsiveContainer width="100%" height="100%">
-                                <BarChart   data={salaryData}
-                                            margin={{
-                                                left: isSmallScreen ? -25 : -5, 
-                                                right: isMediumScreen ? (isSmallScreen ? 10 : 30) : 20, 
-                                                bottom: isMediumScreen ? (isSmallScreen ? -15 : 70) : 30 
-                                            }}
-                                            barCategoryGap={isSmallScreen ? '15%' : '11%'}
+                                <BarChart
+                                    data={salaryData}
+                                    margin={{
+                                        left: isSmallScreen ? -25 : -5,
+                                        right: isMediumScreen ? (isSmallScreen ? 10 : 30) : 20,
+                                        bottom: isMediumScreen ? (isSmallScreen ? -15 : 70) : 30
+                                    }}
+                                    barCategoryGap={isSmallScreen ? '15%' : '11%'}
                                 >
                                     <CartesianGrid strokeDasharray="5 5" />
                                     <XAxis
-                                            dataKey={"name"}
-                                            interval={0}
-                                            angle={isMediumScreen ? (isSmallScreen ? 0 : -35) : isLargeScreen ? 0 : -10}
-                                            dy={isMediumScreen ? (isSmallScreen ? 0 : 35) : 15}
-                                            tick={!isSmallScreen}
+                                        dataKey={"name"}
+                                        interval={0}
+                                        angle={isMediumScreen ? (isSmallScreen ? 0 : -35) : isLargeScreen ? 0 : -10}
+                                        dy={isMediumScreen ? (isSmallScreen ? 0 : 35) : 15}
+                                        tick={!isSmallScreen}
                                     />
                                     <YAxis />
                                     <Tooltip content={({ active, payload, label }) => {
-                                        if(active && payload && payload.length) {
+                                        if (active && payload && payload.length) {
                                             return (
                                                 <div className='bg-background border rounded-lg p-2 shadow-lg'>
                                                     <p className='font-medium'>{label}</p>
@@ -208,21 +212,21 @@ const DashboardView = ({ insights }: { insights: IndustryInsight }) => {
                                             )
                                         }
                                         return null;
-                                    }}/>
-                                    <Bar 
-                                        dataKey="min" 
-                                        fill="#505050" 
-                                        activeBar={<Rectangle fill="#505050" stroke="black" />} 
+                                    }} />
+                                    <Bar
+                                        dataKey="min"
+                                        fill="#505050"
+                                        activeBar={<Rectangle fill="#505050" stroke="black" />}
                                     />
-                                    <Bar 
-                                        dataKey="median" 
-                                        fill="#808080" 
-                                        activeBar={<Rectangle fill="#808080" stroke="black" />} 
+                                    <Bar
+                                        dataKey="median"
+                                        fill="#808080"
+                                        activeBar={<Rectangle fill="#808080" stroke="black" />}
                                     />
-                                    <Bar 
-                                        dataKey="max" 
-                                        fill="#C0C0C0" 
-                                        activeBar={<Rectangle fill="#C0C0C0" stroke="black" />} 
+                                    <Bar
+                                        dataKey="max"
+                                        fill="#C0C0C0"
+                                        activeBar={<Rectangle fill="#C0C0C0" stroke="black" />}
                                     />
                                 </BarChart>
                             </ResponsiveContainer>

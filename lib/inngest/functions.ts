@@ -48,12 +48,12 @@ export const updateIndustryInsights = inngest.createFunction(
             `;
             
             //binding to prevent the original parent object context of generateContent function, into a new function, and then using the new function in step.ai.wrap
-            const generateInsight = ai.models.generateContent.bind(ai.models);
+            const generateInsightFn = ai.models.generateContent.bind(ai.models);
             
             //generating updated insights using Gemini
             const { text } = await step.ai.wrap(
                 `ai-generated-insight-for-${industry}`,
-                generateInsight,
+                generateInsightFn,
                 {
                     model: "gemini-2.0-flash",
                     contents: prompt
