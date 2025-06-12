@@ -8,7 +8,7 @@ const ai = new GoogleGenAI({
     apiKey: process.env.GENAI_API_KEY
 });
 
-//fn to generate interview quiz questions based on user's industry and skills
+//Fn to generate interview quiz questions based on user's industry and skills
 export async function generateInterviewQuestions(industry: string) {
     try {
         const { userId } = await auth();
@@ -64,14 +64,14 @@ export async function generateInterviewQuestions(industry: string) {
     }
 }
 
-interface QuestionDataProps {
+interface QuestionDataProp {
     question: string;
     correctAnswer: string;
     explanation: string;
 }
 
-//fn to save interview quiz assessment based on user's answers
-export async function saveInterviewAssessment(questions: QuestionDataProps[], answers: string[], score: number) {
+//Fn to save interview quiz assessment based on user's answers
+export async function saveInterviewAssessment(questions: QuestionDataProp[], answers: string[], score: number) {
     try {
         const { userId } = await auth();
         if (!userId) {
@@ -138,6 +138,42 @@ export async function saveInterviewAssessment(questions: QuestionDataProps[], an
         } else {
             console.error("An unknown error occurred while saving interview quiz.");
             throw new Error("An unknown error occurred while saving interview quiz.");
+        }
+    }
+}
+
+export async function getInterviewAssesments(){
+    try {
+        const { userId } = await auth();
+        if (!userId) {
+            throw new Error("Unauthenticated");
+        }
+
+        const user = await db.user.findUnique({
+            where: { clerkUserId: userId },
+        });
+        if (!user) {
+            throw new Error("User not found");
+        }
+
+        const assessments = await db.assessment.findMany({
+            where: {
+                userId: user.id,
+                category: "Technical",
+            },
+            orderBy: {
+                createdAt: "asc",
+            },
+        });
+
+        return assessments;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error("Error fetching interview assessments:", error.message);
+            throw new Error("Failed to fetch interview assessments");
+        } else {
+            console.error("An unknown error occurred while fetching interview assessments.");
+            throw new Error("An unknown error occurred while fetching interview assessments.");
         }
     }
 }
