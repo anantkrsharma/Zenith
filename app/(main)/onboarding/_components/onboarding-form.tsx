@@ -41,7 +41,7 @@ const OnboardingForm = ({ industries } : OnboardingFormProps) => {
         data: onboardResult,
         fn: onboardUserFn,
         loading: onboardLoading,
-    } = useFetch(updateUser);
+    } = useFetch();
 
     const { 
         register,
@@ -62,10 +62,13 @@ const OnboardingForm = ({ industries } : OnboardingFormProps) => {
             console.log(values);
             const formattedIndustry = `${values.industry}-${values.subIndustry.toLowerCase().replace(/ /g, "-")}`;
 
-            await onboardUserFn({
+            await onboardUserFn(
+                updateUser,
+                {
                 ...values,
                 industry: formattedIndustry,
-            });
+                }
+            );
         } catch (error) {
             if(error instanceof Error) {
                 toast.error(error.message);

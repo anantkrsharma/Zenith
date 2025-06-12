@@ -5,12 +5,15 @@ type ResponseDataType = {
     success: string
 }
 
-const useFetch =  (cb: (...args: any[]) => any) => {
+type ServerActionType = (...args: any[]) => any
+
+
+const useFetch =  () => {
     const [data, setData] = useState<ResponseDataType | undefined>(undefined);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<Error | null>(null);
 
-    async function fn(...args: any[]) {
+    async function fn(cb: ServerActionType, ...args: any[]) { //...args will expect any number of arguments (rest operator), and combine them into an array, so that's why we'll have to destructure the same using spread operator, while passing them as arguments in the server action function calling.
         setLoading(true);
         setError(null);
         try {
