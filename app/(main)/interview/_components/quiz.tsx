@@ -93,13 +93,13 @@ export const Quiz = () => {
             {questionsData.length > 0 
             && 
             questionsData.map((q: any) => {
-                    return <>
-                    <div key={q.question}>
+                    return <div key={q.question}>
+                    <div>
                         {JSON.stringify(q)}
                     </div>
                     <br />
                     <br />
-                    </> 
+                    </div> 
                 })
             }
         </div>
