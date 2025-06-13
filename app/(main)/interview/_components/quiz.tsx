@@ -1,10 +1,12 @@
 'use client';
 
+import { generateInterviewQuestions } from '@/actions/interview';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import useFetch from '@/hooks/use-fetch';
-import { ArrowRight } from 'lucide-react';
-import React, { useState } from 'react'
+import { Loader2, SquareCheckBig } from 'lucide-react';
+import React, { useEffect, useState } from 'react'
+import { toast } from 'sonner';
 
 export const Quiz = () => {
     const [currentQues, setCurrentQues] = useState();
@@ -18,9 +20,37 @@ export const Quiz = () => {
         error: questionsError,
     } = useFetch();
 
-    const handleClick = () => {
-        
+    const handleClick = async () => {
+        try {
+            await getQuestions(generateInterviewQuestions);
+            if(questionsError)
+                throw new Error("An unknown error occured while generating mock interview quiz questions");
+        } catch (error) {
+            if(error instanceof Error){
+                console.log(error.message);
+                toast.error(error.message);
+            }
+            else{
+                toast.error("An unknown error occured while generating mock interview quiz questions");
+            }
+        }
     }
+
+    const [toastId, setToastId] = useState<string | number | null>(null);
+    useEffect(() => {
+        if (questionsLoading && toastId == null) {
+            const id = toast.loading("Generating mock interview quiz...");
+            setToastId(id);
+        }
+        if (!questionsLoading && toastId != null) {
+            toast.dismiss(toastId);
+            setToastId(null);
+
+            if (questionsData.length > 0) {
+            toast.success("Generated mock interview quiz successfully.");
+            }
+        }
+    }, [questionsData, questionsLoading]);
 
     if(!questionsData){
         return <div className='flex justify-center'>
@@ -37,11 +67,21 @@ export const Quiz = () => {
                     </CardDescription>
                 </CardHeader>
                 <CardFooter>
-                    <Button variant={'secondary'} className='w-4/5 md:w-3/5 flex items-center border hover:cursor-pointer hover:bg-neutral-950 transition-all duration-75 ease-in-out'
+                    <Button variant={'secondary'} className='w-4/5 md:w-3/5 flex items-center gap-2 border hover:cursor-pointer hover:bg-neutral-950 transition-all duration-75 ease-in-out'
                             onClick={handleClick}
+                            disabled={questionsLoading}
                     >
-                        Start the quiz
-                        <ArrowRight />
+                        {questionsLoading ? (
+                            <>
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                Generating the quiz...
+                            </>
+                        ) : (
+                            <>            
+                                <SquareCheckBig />
+                                Start the quiz
+                            </>
+                        )}
                     </Button>
                 </CardFooter>
             </Card>
@@ -50,7 +90,18 @@ export const Quiz = () => {
 
     return (
         <div>
-            WTF
+            {questionsData.length > 0 
+            && 
+            questionsData.map((q: any) => {
+                    return <>
+                    <div key={q.question}>
+                        {JSON.stringify(q)}
+                    </div>
+                    <br />
+                    <br />
+                    </> 
+                })
+            }
         </div>
     )
 }

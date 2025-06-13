@@ -1,15 +1,10 @@
 import { useState } from "react";
 import { toast } from "sonner";
 
-type ResponseDataType = {
-    success: string
-}
-
 type ServerActionType = (...args: any[]) => any
 
-
 const useFetch =  () => {
-    const [data, setData] = useState<ResponseDataType | undefined>(undefined);
+    const [data, setData] = useState<any>(undefined);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<Error | null | unknown>(null);
 
@@ -23,12 +18,10 @@ const useFetch =  () => {
             if(error instanceof Error) {
                 setError(error);
                 console.log(`error in the use-fetch custom hook - ${error.message}`);
-                toast.error(error.message);
             }
             else{
                 setError(error);
                 console.log(`error in the use-fetch custom hook - ${error}`);
-                toast.error("An unknown error occured, please try again later.")
             }
         }
         finally {

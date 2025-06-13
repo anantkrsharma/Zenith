@@ -59,7 +59,6 @@ export const OnboardingForm = ({ industries } : OnboardingFormProps) => {
 
     const onSubmit = async (values: OnboardingSchemaType) => {
         try {
-            console.log(values);
             const formattedIndustry = `${values.industry}-${values.subIndustry.toLowerCase().replace(/ /g, "-")}`;
 
             await onboardUserFn(
@@ -78,10 +77,20 @@ export const OnboardingForm = ({ industries } : OnboardingFormProps) => {
         }
     }
 
+    const [toastId, setToastId] = useState<string | number | null>(null);
     useEffect(() => {
-        if(onboardResult?.success && !onboardLoading) {
+        if (onboardLoading && toastId == null) {
+            const id = toast.loading("Updating profile...");
+            setToastId(id);
+        }
+        if (!onboardLoading && toastId != null) {
+            toast.dismiss(toastId);
+            setToastId(null);
+
+            if (onboardResult?.success) {
             toast.success("Profile updated successfully.");
             router.push("/dashboard");
+            }
         }
     }, [onboardResult, onboardLoading]);
 
@@ -177,7 +186,7 @@ export const OnboardingForm = ({ industries } : OnboardingFormProps) => {
                                         required: "Please enter your skills",
                                     })}
                             />
-                            <p className="text-sm text-muted-foreground">Separate multiple skills with commas (,).</p>
+                            <p className="text-sm text-muted-foreground">Separate multiple skills with commas (,)</p>
                             {
                                 errors.skills && (
                                     <p className="text-red-500 text-sm">{errors.skills.message}</p>

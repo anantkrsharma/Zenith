@@ -9,7 +9,7 @@ const ai = new GoogleGenAI({
 });
 
 //Fn to generate interview quiz questions based on user's industry and skills
-export async function generateInterviewQuestions(industry: string) {
+export async function generateInterviewQuestions() {
     try {
         const { userId } = await auth();
         if (!userId) {
