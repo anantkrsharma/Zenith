@@ -40,23 +40,23 @@ const Header = async () => {
                                     <ChevronDown className='h-6 w-6 hidden md:block'/>
                                 </Button>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent>
+                            <DropdownMenuContent className="overflow-y-auto [&>*]:text-lg md:[&>*]:text-base">
                                 <DropdownMenuItem>
                                     <Link href={'/resume'} className='flex items-center gap-2'>
-                                        <FileText className='h-6 w-6'/>
-                                        <span className='hidden md:block'> Resume Builder </span>
+                                        <FileText className='h-8 w-8 md:h-6 md:w-6'/>
+                                        <span> Resume Builder </span>
                                     </Link>
                                 </DropdownMenuItem>          
                                 <DropdownMenuItem>
                                     <Link href={'/ai-cover-letter'} className='flex items-center gap-2'>
-                                        <PenBox className='h-6 w-6'/>
-                                        <span className='hidden md:block'> Cover-Letter Builder </span>
+                                        <PenBox className='h-8 w-8 md:h-6 md:w-6'/>
+                                        <span> Cover-Letter Builder </span>
                                     </Link>
                                 </DropdownMenuItem>
                                 <DropdownMenuItem>
                                     <Link href={'/interview'} className='flex items-center gap-2'>
-                                        <GraduationCap className='h-6 w-6'/>
-                                        <span className='hidden md:block'> Interveiw Prep </span>
+                                        <GraduationCap className='h-8 w-8 md:h-6 md:w-6'/>
+                                        <span> Interveiw Prep </span>
                                     </Link>
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
