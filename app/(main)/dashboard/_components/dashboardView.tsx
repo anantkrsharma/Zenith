@@ -17,7 +17,7 @@ type SalaryRange = {
     location?: string; // Optional, as not all salary ranges may have a location
 };
 
-const DashboardView = ({ insights }: { insights: IndustryInsight }) => {
+export const DashboardView = ({ insights }: { insights: IndustryInsight }) => {
     const salaryData = (insights.salaryRanges as SalaryRange[]).map((salRange) => ({
         name: salRange.role, // Split role name for better readability in the chart
         min: salRange.min / 1000,
@@ -286,5 +286,3 @@ const DashboardView = ({ insights }: { insights: IndustryInsight }) => {
         </div>
     );
 }
-
-export default DashboardView;

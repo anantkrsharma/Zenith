@@ -1,6 +1,6 @@
 import React from 'react'
-import OnboardingForm from './_components/onboarding-form'
-import { industries } from '@/data/industries'
+import { OnboardingForm } from './_components/onboarding-form'
+import { industries }  from '@/data/industries'
 import { getUserOnboardingStatus } from '@/actions/user'
 import { redirect } from 'next/navigation'
 

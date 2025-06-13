@@ -33,7 +33,7 @@ interface Industry {
     subIndustries: string[];
 }
 
-const OnboardingForm = ({ industries } : OnboardingFormProps) => {
+export const OnboardingForm = ({ industries } : OnboardingFormProps) => {
     const [selectedIndustry, setSelectedIndustry] = useState<Industry | null>(null);
     const router = useRouter();
 
@@ -215,5 +215,3 @@ const OnboardingForm = ({ industries } : OnboardingFormProps) => {
         </div>
     )
 }
-
-export default OnboardingForm;
