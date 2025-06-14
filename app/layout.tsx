@@ -33,7 +33,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             {/* header */}
             <Header />
             
-            <Toaster richColors/>
+            <Toaster richColors />
             
             <main className="min-h-screen">  
               {children}

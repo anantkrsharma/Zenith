@@ -88,8 +88,8 @@ export const OnboardingForm = ({ industries } : OnboardingFormProps) => {
             setToastId(null);
 
             if (onboardResult?.success) {
-            toast.success("Profile updated successfully.");
-            router.push("/dashboard");
+                toast.success("Profile updated successfully");
+                router.push("/dashboard");
             }
         }
     }, [onboardResult, onboardLoading]);
