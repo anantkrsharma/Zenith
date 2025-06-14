@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import useFetch from '@/hooks/use-fetch';
-import { ChevronLeft, ChevronRight, Loader2, SquareCheckBig } from 'lucide-react';
+import { ChevronLeft, ChevronRight, CircleCheckBig, Loader2, SquareCheckBig } from 'lucide-react';
 import React, { useEffect, useState } from 'react'
 import { BarLoader } from 'react-spinners';
 import { toast } from 'sonner';
@@ -42,7 +42,7 @@ export const Quiz = () => {
     const [toastId, setToastId] = useState<string | number | null>(null); //to stop rendering the 'loading' spinner after successful data fetching
     useEffect(() => {
         if (questionsLoading && toastId == null) {
-            const id = toast.loading("Generating mock interview quiz");
+            const id = toast.loading("Generating mock interview quiz...");
             setToastId(id);
         }
         if (!questionsLoading && toastId != null) {
@@ -75,7 +75,7 @@ export const Quiz = () => {
                     </CardDescription>
                 </CardHeader>
                 <CardFooter>
-                    <Button variant={'secondary'} className='w-fit sm:px-auto sm:w-[50%] md:w-[40%] lg:w-[35%] flex items-center gap-2 border hover:cursor-pointer hover:bg-neutral-950 transition-all duration-75 ease-in-out'
+                    <Button variant={'outline'} className='w-fit sm:px-auto sm:w-[50%] md:w-[40%] lg:w-[35%] flex items-center gap-2 bg-neutral-900 border-neutral-700 hover:cursor-pointer hover:bg-zinc-900 hover:border-zinc-500 transition-all duration-75 ease-in-out'
                             onClick={handleClick}
                             disabled={questionsLoading}
                             >
@@ -86,8 +86,8 @@ export const Quiz = () => {
                             </>
                         ) : (
                             <>            
+                                Start the Quiz
                                 <SquareCheckBig />
-                                Start the quiz
                             </>
                         )}
                     </Button>
@@ -129,8 +129,14 @@ export const Quiz = () => {
                 >
                     { question.options.map((option: string, index: number) => (
                         <div key={index} className="flex items-center space-x-2">
-                            <RadioGroupItem value={option} id={`option-${index}`} className='hover:cursor-pointer border-neutral-400 hover:border-neutral-700 transition-colors duration-75 ease-in-out'/>
-                            <Label htmlFor={`option-${index}`}>{option}</Label>
+                            <RadioGroupItem className='hover:cursor-pointer border-neutral-400 hover:border-neutral-700 transition-colors duration-75 ease-in-out'
+                                            value={option} 
+                                            id={`option-${index}`}
+                            />
+                            <Label  className='hover:cursor-pointer'
+                                    htmlFor={`option-${index}`}>
+                                {option}
+                            </Label>
                         </div>
                     ))
                     }
@@ -139,30 +145,32 @@ export const Quiz = () => {
             <CardFooter className='flex items-center justify-center md:justify-start gap-2 md:gap-4'>
                 {currentQues > 0 &&
                 <Button variant={'outline'} 
-                        className='flex items-center justify-center gap-1 bg-neutral-900 hover:cursor-pointer hover:bg-zinc-950 transition-all duration-75 ease-in-out'
+                        className='flex items-center justify-center gap-1 bg-neutral-900 border-neutral-700 hover:cursor-pointer hover:bg-zinc-900 hover:border-zinc-500 transition-all duration-75 ease-in-out'
                         onClick={() => setCurrentQues(prev => prev - 1)}
                 >
                     <ChevronLeft />
                     Back
                 </Button>
                 }
+                
                 {currentQues < questionsData.length - 1 &&
                 <Button variant={'outline'} 
-                        className='flex items-center justify-center gap-1 bg-neutral-900 hover:cursor-pointer hover:bg-zinc-950 transition-all duration-75 ease-in-out'
+                        className='flex items-center justify-center gap-1 bg-neutral-900 border-neutral-700 hover:cursor-pointer hover:bg-zinc-900 hover:border-zinc-500 transition-all duration-75 ease-in-out'
                         onClick={() => setCurrentQues(prev => prev + 1)}
                 >
                     Next
                     <ChevronRight />
                 </Button>
                 }
-                {
-                    currentQues == questionsData.length - 1 &&
-                    <Button variant={'default'}
-                            className='flex items-center justify-center gap-1 hover:cursor-pointer hover:bg-zinc-400 transition-all duration-75 ease-in-out'
-                            onClick={handleSubmit}
-                    >
-                        Submit Quiz
-                    </Button>
+                
+                {currentQues == questionsData.length - 1 &&
+                <Button variant={'default'}
+                        className='flex items-center justify-center gap-1 hover:cursor-pointer hover:bg-zinc-400 transition-all duration-75 ease-in-out'
+                        onClick={handleSubmit}
+                >
+                    Submit Quiz
+                    <CircleCheckBig />
+                </Button>
                 }
             </CardFooter>
             {JSON.stringify(userAnswers)}
