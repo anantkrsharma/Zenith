@@ -11,7 +11,7 @@ const HeroSectionImage = () => {
         
         const handleScroll = () => {
             const scrollPosition = window.scrollY;
-            const scrollThreshold = 100;
+            const scrollThreshold = 400;
             if(scrollPosition > scrollThreshold) {
                 imageElement && imageElement.classList.add('scrolled');
             }
@@ -31,10 +31,10 @@ const HeroSectionImage = () => {
         <div className='mt-5 md:mt-0 hero-image-wrapper'>
             <div ref={imageRef} className='hero-image'>
                 <Image 
-                    src={'/Banner_1.jpeg'}
+                    src={'/Banner_1.png'}
                     alt='Banner Image'
-                    width={1280}
-                    height={720}
+                    width={1024}
+                    height={576}
                     className='rounded-lg shadow-2xl border mx-auto'
                     priority={true}
                 />    

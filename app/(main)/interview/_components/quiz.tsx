@@ -110,7 +110,7 @@ export const Quiz = () => {
             toast.error("Attempt each question in the quiz");
             return;
         }
-        toast.success("Quiz submitted")
+        
     }
 
     return (
