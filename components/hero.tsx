@@ -19,12 +19,17 @@ const HeroSection = () => {
 
                     <div className='flex justify-center items-center space-x-4'>
                         <Link href={'/dashboard'}>
-                            <Button size={'default'} className='px-8 hover:cursor-pointer'>
+                            <Button size={'default'} 
+                                    variant={'outline'}
+                                    className='px-8 bg-zinc-900 border-neutral-700 hover:cursor-pointer hover:bg-neutral-800 hover:border-zinc-500 transition-all duration-75 ease-in-out'>
                                 Get Started
                             </Button>
                         </Link>
                         <Link href={''}>
-                            <Button size={'default'} className='px-8 hover:cursor-pointer border border-blue-500' variant={'outline'}>
+                            <Button size={'default'} 
+                                    variant={'outline'}
+                                    className='px-8 bg-fuchsia-950 border-purple-800 hover:cursor-pointer hover:bg-fuchsia-900 hover:border-purple-700 transition-all duration-75 ease-in-out' 
+                            >
                                 Watch Demo
                             </Button>
                         </Link>
