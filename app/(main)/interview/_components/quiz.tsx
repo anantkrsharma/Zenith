@@ -10,6 +10,7 @@ import { ChevronLeft, ChevronRight, CircleCheckBig, Lightbulb, LightbulbOff, Loa
 import React, { useEffect, useState } from 'react'
 import { BarLoader } from 'react-spinners';
 import { toast } from 'sonner';
+import QuizResult from './quizResult';
 
 export const Quiz = () => {
     const [currentQues, setCurrentQues] = useState<number>(0);
@@ -22,9 +23,10 @@ export const Quiz = () => {
     //question generation hook
     const {
         data: questionsData,
+        setData: setQuestionsData,
         loading: questionsLoading,
         error: questionsError,
-        fn: getQuestions,
+        fn: questionsFn,
     } = useFetch();
     
     //quiz submission hook
@@ -39,7 +41,7 @@ export const Quiz = () => {
     //generate question (hook fn)
     const handleGenerateQuiz = async () => {
         try {
-            await getQuestions(generateInterviewQuestions);
+            await questionsFn(generateInterviewQuestions);
 
             if(questionsError)
                 throw new Error("An unknown error occured while generating mock interview quiz questions");
@@ -64,7 +66,7 @@ export const Quiz = () => {
             toast.dismiss(quesLoadingToastId);
             setQuesLoadingToastId(null);
 
-            if (questionsData.length > 0) {
+            if(questionsData.length > 0) {
                 setUserAnswers(new Array(questionsData.length).fill(null));
                 toast.success("Generated mock interview quiz successfully");
             }
@@ -116,11 +118,27 @@ export const Quiz = () => {
             toast.dismiss(submitLoadingToastId);
             setSubmitLoadingToastId(null);
             
-            if (submitData)
+            if(submitData)
                 toast.success("Submitted the quiz successfully");
         }
     }, [submitData, submitLoading]);
     
+    const startNewQuiz = () => { //function to clear all state variables, or to set them to null. Called when the user clicks to start a new quiz
+        setCurrentQues(0);
+        setUserAnswers([]);
+        setQuestionsData(null);
+        setShowExplanation(false);
+        setSubmitData(null);
+        
+        //new quiz questions
+        questionsFn(generateInterviewQuestions);
+    }
+    
+    //render if the quiz has been subitted
+    if(submitData){
+        return <QuizResult submitResult={submitData} startNewQuizFn={startNewQuiz}/> 
+    }
+
     //loader while generating the quiz questions
     if(questionsLoading)
         return <BarLoader className='mt-3' width={'100%'} color='gray' />
