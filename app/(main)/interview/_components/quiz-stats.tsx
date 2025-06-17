@@ -34,7 +34,7 @@ const QuizStats = ({ assessments }: { assessments: Assessment[] }) => {
     }
 
     return (
-        <div className='grid grid-cols-1 md:grid-cols-3'>
+        <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
             <Card>
                 <CardHeader className='flex flex-row items-center justify-between space-y-0'>
                     <CardTitle className='font-medium'>
@@ -78,7 +78,7 @@ const QuizStats = ({ assessments }: { assessments: Assessment[] }) => {
                 </CardHeader>
                 <CardContent>
                     <div className='text-2xl font-semibold'>
-                        {getLatestAssessment()?.quizScore.toFixed(1)}%
+                        {getLatestAssessment()?.quizScore.toFixed(1) || 0}%
                     </div>
                     <div className='text-sm text-muted-foreground'>
                         Most recent quiz 

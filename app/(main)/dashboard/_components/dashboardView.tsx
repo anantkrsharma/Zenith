@@ -171,8 +171,8 @@ export const DashboardView = ({ insights }: { insights: IndustryInsight }) => {
                             </p>
                             <br />
                             {isSmallScreen && 
-                            <span className='text-sm text-cyan-400'>
-                                * Tap / Hover on the graph bars for salary details *
+                            <span className='text-sm text-cyan-500'>
+                                * Tap / hover on the graph bars for salary details *
                             </span>
                             }
                         </CardDescription>
