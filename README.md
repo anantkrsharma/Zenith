@@ -81,3 +81,12 @@ Zenith is an all-in-one platform designed to assist job seekers through AI-drive
       ```bash
       npx inngest-cli dev
       ```
+5. **Run in dev environment**:
+
+      ```bash
+      pnpm dev
+      ```
+      or
+      ```bash
+      npm dev
+      ```
