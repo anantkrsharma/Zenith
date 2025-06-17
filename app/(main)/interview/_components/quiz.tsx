@@ -16,6 +16,7 @@ export const Quiz = () => {
     const [currentQues, setCurrentQues] = useState<number>(0);
     const [userAnswers, setUserAnswers] = useState<any[]>([]);
     const [showExplanation, setShowExplanation] = useState<boolean>(false);
+    const [disableQuizOptn, setDisableQuizOptn] = useState<boolean>(false);
     
     const [quesLoadingToastId, setQuesLoadingToastId] = useState<string | number | null>(null); //to stop rendering the 'loading' spinner after successful quiz generation
     const [submitLoadingToastId, setSubmitLoadingToastId] = useState<string | number | null>(null); //to stop rendering the 'loading' spinner after successful quiz submission
@@ -128,8 +129,8 @@ export const Quiz = () => {
         setUserAnswers([]);
         setQuestionsData(null);
         setShowExplanation(false);
+        setDisableQuizOptn(false);
         setSubmitData(null);
-        
         //new quiz questions
         questionsFn(generateInterviewQuestions);
     }
@@ -204,6 +205,7 @@ export const Quiz = () => {
                             <RadioGroupItem className='hover:cursor-pointer border-neutral-400 hover:border-neutral-700 transition-colors duration-75 ease-in-out'
                                             value={option} 
                                             id={`option-${index}`}
+                                            disabled={disableQuizOptn}
                             />
                             <Label  className='hover:cursor-pointer'
                                     htmlFor={`option-${index}`}>
@@ -224,7 +226,10 @@ export const Quiz = () => {
                         : 
                         <Button variant={'outline'} 
                                 className='flex items-center justify-center gap-1 bg-zinc-900 border-blue-900 hover:cursor-pointer hover:bg-neutral-800 hover:border-blue-700 transition-all duration-75 ease-in-out'
-                                onClick={() => setShowExplanation(true)}
+                                onClick={() => {
+                                    setShowExplanation(true)
+                                    setDisableQuizOptn(true)
+                                }}
                                 disabled={userAnswers[currentQues] == null}
                         >
                             <Lightbulb />
@@ -247,6 +252,7 @@ export const Quiz = () => {
                         onClick={() => {
                             setCurrentQues(prev => prev - 1);
                             setShowExplanation(false);
+                            setDisableQuizOptn(true);
                         }}
                 >
                     <ChevronLeft />
@@ -260,6 +266,7 @@ export const Quiz = () => {
                         onClick={() => {
                             setCurrentQues(prev => prev + 1);
                             setShowExplanation(false);
+                            setDisableQuizOptn(false);
                         }}
                         disabled={userAnswers[currentQues] == null}
                 >
@@ -279,8 +286,6 @@ export const Quiz = () => {
                 </Button>
                 }
             </CardFooter>
-            {JSON.stringify(userAnswers)}
-            {JSON.stringify(submitData && submitData?.join("\n\n"))}
         </Card>
     )
 }

@@ -48,9 +48,13 @@ export async function generateInterviewQuestions() {
         });
 
         let text = result.text ?? "";
-        text = text.replace(/```(?:json)?\n?/g, "").trim();
-
-        const interviewQuestions = JSON.parse(text);
+        const jsonMatch = text.match(/\{[\s\S]*\}/);
+        if (!jsonMatch) {
+            throw new Error("AI response did not contain valid JSON");
+        }
+        let jsonString = jsonMatch[0];
+        jsonString = jsonString.replace(/,\s*([\]}])/g, '$1');
+        const interviewQuestions = JSON.parse(jsonString);
         
         return interviewQuestions.questions;
     } catch (error) {
