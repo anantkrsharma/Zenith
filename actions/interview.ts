@@ -147,7 +147,7 @@ export async function saveInterviewAssessment(questions: QuestionDataProp[], ans
     }
 }
 
-export async function getInterviewAssesments(){
+export async function getInterviewAssessments(){
     try {
         const { userId } = await auth();
         if (!userId) {
@@ -168,7 +168,7 @@ export async function getInterviewAssesments(){
             },
             orderBy: {
                 createdAt: "asc",
-            },
+            }
         });
 
         return assessments;

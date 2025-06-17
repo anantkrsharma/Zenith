@@ -1,13 +1,21 @@
-import Link from 'next/link'
+import { getInterviewAssessments } from '@/actions/interview'
 import React from 'react'
+import QuizStats from './_components/quiz-stats';
+import PerformanceChart from './_components/performance-chart';
+import QuizList from './_components/quiz-list';
 
-const InterviewPrepPage = () => {
+const InterviewPrepPage = async () => {
+    const assessments = await getInterviewAssessments();
+
     return (
         <div>
-            Interview Page
-            <Link href={'/interview/mock'} className='border rounded-lg p-2 ml-6'>
-                Mock
-            </Link>
+            <div className="text-3xl md:text-5xl gradient-title">
+                Interview Preparation
+            </div>
+
+            <QuizStats assessments={assessments}/>
+            <PerformanceChart assessments={assessments}/>
+            <QuizList assessments={assessments}/>
         </div>
     )
 }

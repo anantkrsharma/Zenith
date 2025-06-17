@@ -14,7 +14,7 @@ const MockInterviewPage = () => {
                     </Button>
                 </Link>
                 <div>
-                    <h1 className="text-5xl gradient-title">Mock Interview</h1>
+                    <h1>Mock Interview</h1>
                     <p className='text-muted-foreground'>
                         Test your skills with industry-specific questions!
                     </p>
