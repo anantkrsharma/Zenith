@@ -31,13 +31,13 @@ interface QuizResultProps {
 
 const QuizResult = ({ submitResult, startNewQuizFn, showNewQuizBtn = true }: QuizResultProps) => {
     return (
-    <div className="mx-auto space-y-5">
+    <div className="mx-auto space-y-7">
         <h1 className="flex items-center justify-center md:justify-start gap-2 text-2xl md:text-4xl gradient-title">
             <Trophy className="h-6 w-6 text-yellow-500" />
             Quiz Results
         </h1>
 
-        <CardContent className="space-y-6">
+        <CardContent className="space-y-6 border-t pt-5">
             {/* Score Overview */}
             <div className="text-center space-y-2">
                 <h3 className="text-2xl font-bold">{submitResult.quizScore.toFixed(1)}%</h3>
@@ -57,11 +57,11 @@ const QuizResult = ({ submitResult, startNewQuizFn, showNewQuizBtn = true }: Qui
             )}
 
             {/* Questions Review */}
-            <div className="space-y-4">
+            <div className="space-y-6">
                 <h3 className="text-base text-center md:text-start md:text-lg font-medium">Question Review</h3>
                 
                 {submitResult.questions.map((q, index) => (
-                <div key={index} className="border border-zinc-500 rounded-lg p-4 space-y-3">
+                <div key={index} className="border border-neutral-700 rounded-lg p-4 space-y-3">
                     <div className="flex items-center justify-between gap-2">
                         <p className="font-medium">{q.question}</p>
                         {q.isCorrect ? (
