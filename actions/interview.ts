@@ -167,7 +167,7 @@ export async function getInterviewAssessments(){
                 category: "Technical",
             },
             orderBy: {
-                createdAt: "asc",
+                createdAt: "desc",
             }
         });
 
