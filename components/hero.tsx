@@ -28,7 +28,7 @@ const HeroSection = () => {
                         <Link href={''}>
                             <Button size={'default'} 
                                     variant={'outline'}
-                                    className='px-8 bg-fuchsia-950 border-purple-800 hover:cursor-pointer hover:bg-fuchsia-900 hover:border-purple-700 transition-all duration-75 ease-in-out' 
+                                    className='px-8 text-white bg-cyan-950 border-cyan-800 hover:cursor-pointer hover:bg-cyan-900 hover:border-cyan-600 transition-all duration-75 ease-in-out' 
                             >
                                 Watch Demo
                             </Button>
