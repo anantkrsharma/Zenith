@@ -4,7 +4,7 @@ import { Progress } from '@/components/ui/progress'
 import { CheckCircle2, Trophy, XCircle } from 'lucide-react'
 import React from 'react'
 
-interface QuestionType {
+export interface QuestionType {
     question: string,
     correctAnswer: string,
     userAnswer: string,
@@ -12,7 +12,7 @@ interface QuestionType {
     explanation: string
 }
 
-interface SubmitResultType {
+export interface SubmitResultType {
     id: string;
     quizScore: number;
     questions: QuestionType[];
@@ -25,7 +25,7 @@ interface SubmitResultType {
 
 interface QuizResultProps {
     submitResult: SubmitResultType
-    startNewQuizFn: () => void
+    startNewQuizFn?: () => void
     showNewQuizBtn?: boolean
 }
 
@@ -50,7 +50,7 @@ const QuizResult = ({ submitResult, startNewQuizFn, showNewQuizBtn = true }: Qui
 
             {/* Improvement Tip */}
             {submitResult.improvementTip && (
-            <div className="bg-neutral-800 p-3 rounded-lg space-y-2">
+            <div className="bg-neutral-800/65 p-3 rounded-lg space-y-2">
                 <p className="font-medium">Improvement Tip:</p>
                 <p className="text-muted-foreground">{submitResult.improvementTip}</p>
             </div>
@@ -60,26 +60,34 @@ const QuizResult = ({ submitResult, startNewQuizFn, showNewQuizBtn = true }: Qui
             <div className="space-y-6">
                 <h3 className="text-base text-center md:text-start md:text-lg font-medium">Question Review</h3>
                 
-                {submitResult.questions.map((q, index) => (
-                <div key={index} className="border border-neutral-700 rounded-lg p-4 space-y-3">
-                    <div className="flex items-center justify-between gap-2">
-                        <p className="font-medium">{q.question}</p>
-                        {q.isCorrect ? (
-                        <CheckCircle2 className="h-5 w-5 text-green-500 flex-shrink-0" />
-                        ) : (
-                        <XCircle className="h-5 w-5 text-red-500 flex-shrink-0" />
-                        )}
+                <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                    {submitResult.questions.map((q, index) => (
+                    <div key={index} className="flex flex-col justify-between border border-neutral-700 rounded-lg p-4 space-y-3">
+                        <div className='space-y-2'>
+                            <div className="flex items-center justify-between gap-2">
+                                <p className="font-medium">{`Q${index + 1}: ${q.question}`}</p>
+                                {q.isCorrect ? (
+                                <CheckCircle2 className="h-5 w-5 text-green-500 flex-shrink-0" />
+                                ) : (
+                                <XCircle className="h-5 w-5 text-red-500 flex-shrink-0" />
+                                )}
+                            </div>
+                            <div className="text-sm">
+                                <p>Your answer: 
+                                    <span className='text-muted-foreground'> {q.userAnswer}</span>
+                                </p>
+                                {!q.isCorrect && <p>Correct answer: 
+                                    <span className='text-muted-foreground'> {q.correctAnswer}</span>
+                                </p>}
+                            </div>
+                        </div>
+                        <div className="text-sm bg-neutral-800/70 p-[10px] rounded-md">
+                            <p className="font-medium">Explanation:</p>
+                            <p className='text-muted-foreground'>{q.explanation}</p>
+                        </div>
                     </div>
-                    <div className="text-sm text-muted-foreground">
-                        <p>Your answer: {q.userAnswer}</p>
-                        {!q.isCorrect && <p>Correct answer: {q.correctAnswer}</p>}
-                    </div>
-                    <div className="text-sm bg-muted p-[10px] rounded">
-                        <p className="font-medium">Explanation:</p>
-                        <p>{q.explanation}</p>
-                    </div>
+                    ))}
                 </div>
-            ))}
             </div>
         </CardContent>
 
