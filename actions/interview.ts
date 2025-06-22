@@ -59,11 +59,11 @@ export async function generateInterviewQuestions() {
         return interviewQuestions.questions;
     } catch (error) {
         if (error instanceof Error) {
-            console.error("Error generating interview questions:", error.message);
-            throw new Error("Failed to generate interview questions");
+            console.error("Error while generating the interview questions:", error.message);
+            throw new Error("Failed to generate the interview questions");
         } else {
-            console.error("An unknown error occurred while generating interview questions.");
-            throw new Error("An unknown error occurred while generating interview questions.");
+            console.error("An unknown error occurred while generating the interview questions");
+            throw new Error("An unknown error occurred while generating the interview questions");
         }
     }
 }
