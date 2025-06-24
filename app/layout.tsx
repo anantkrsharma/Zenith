@@ -20,7 +20,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <ClerkProvider appearance={{
       baseTheme: dark,
-    }}>  
+    }}
+      signInUrl="/sign-in"
+      signUpUrl="/sign-up"
+    >  
       <html lang="en" suppressHydrationWarning>
         <body className= {`${inter.className}`} >
 
