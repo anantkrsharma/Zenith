@@ -133,10 +133,10 @@
   height: 100%;
   background: linear-gradient(
       to right,
-      rgba(255, 255, 255, 0.17) 1px,
+      rgba(255, 255, 255, 0.13) 1px,
       transparent 1px
     ),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.17) 1px, transparent 1px);
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.13) 1px, transparent 1px);
   background-size: 53px 53px;
   pointer-events: none;
   z-index: -1;

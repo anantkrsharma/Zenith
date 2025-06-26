@@ -13,7 +13,7 @@ export function AccordionNew({ title, content }: SimpleAccordionProps) {
     const [isOpen, setIsOpen] = useState(false)
 
     return (
-        <div className="border-b border-neutral-800 bg-transparent text-sm w-full">
+        <div className="border-b border-neutral-800 bg-transparent text-sm md:text-base w-full">
             <button
                 className={`flex w-full items-center justify-between py-5 px-4 text-left text-white focus:outline-none hover:cursor-pointer ${!isOpen && `hover:underline`}`}
                 onClick={() => setIsOpen(!isOpen)}
