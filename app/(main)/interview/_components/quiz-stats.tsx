@@ -24,7 +24,7 @@ const QuizStats = ({ assessments }: { assessments: Assessment[] }) => {
     
     const getLatestAssessment = () => {
         if(assessments.length == 0) return null;
-        return assessments[0];
+        return assessments[assessments.length - 1];
     }
 
     const getTotalQuestions = () => {

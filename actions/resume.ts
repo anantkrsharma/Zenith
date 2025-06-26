@@ -24,8 +24,8 @@ export async function saveResume(resumeData: Resume){
                 ...resumeData
             },
             create: {
+                ...resumeData,
                 userId: user.id,
-                ...resumeData
             },
         });
 
