@@ -198,35 +198,39 @@ export const DashboardView = ({ insights }: { insights: IndustryInsight }) => {
                                         tick={!isSmallScreen}
                                     />
                                     <YAxis />
-                                    <Tooltip content={({ active, payload, label }) => {
-                                        if (active && payload && payload.length) {
-                                            return (
-                                                <div className='bg-background border rounded-lg p-2 shadow-lg'>
-                                                    <p className='font-medium'>{label}</p>
-                                                    {payload.map((item, index) => (
-                                                        <p key={index} className='text-sm'>
-                                                            {item.name}: ${item.value}K
-                                                        </p>
-                                                    ))}
-                                                </div>
-                                            )
-                                        }
-                                        return null;
+                                    <Tooltip 
+                                        cursor = {{
+                                            fill: '#242424'
+                                        }}
+                                        content={({ active, payload, label }) => {
+                                            if (active && payload && payload.length) {
+                                                return (
+                                                    <div className='bg-black/80 border rounded-lg p-2 shadow-lg'>
+                                                        <p className='font-medium'>{label}</p>
+                                                        {payload.map((item, index) => (
+                                                            <p key={index} className='text-sm'>
+                                                                {item.name}: ${item.value}K
+                                                            </p>
+                                                        ))}
+                                                    </div>
+                                                )
+                                            }
+                                            return null;
                                     }} />
                                     <Bar
                                         dataKey="min"
-                                        fill="#505050"
-                                        activeBar={<Rectangle fill="#505050" stroke="black" />}
+                                        fill="#18848e"
+                                        activeBar={<Rectangle fill="#18848e" stroke="black" />}
                                     />
                                     <Bar
                                         dataKey="median"
-                                        fill="#808080"
-                                        activeBar={<Rectangle fill="#808080" stroke="black" />}
+                                        fill="#33c7d8"
+                                        activeBar={<Rectangle fill="#33c7d8" stroke="black" />}
                                     />
                                     <Bar
                                         dataKey="max"
-                                        fill="#C0C0C0"
-                                        activeBar={<Rectangle fill="#C0C0C0" stroke="black" />}
+                                        fill="#a9fefe"
+                                        activeBar={<Rectangle fill="#a9fefe" stroke="black" />}
                                     />
                                 </BarChart>
                             </ResponsiveContainer>
