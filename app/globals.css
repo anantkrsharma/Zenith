@@ -156,7 +156,7 @@
 
 @layer utilities {
   .gradient {
-    @apply bg-gradient-to-b from-zinc-950 via-slate-600 to-zinc-950;
+    @apply bg-gradient-to-b from-zinc-950/0 via-zinc-700 to-zinc-950/0;
   }
   .gradient-title {
     @apply bg-gradient-to-b from-gray-500 via-gray-200 to-gray-600 font-extrabold tracking-tighter text-transparent bg-clip-text pb-2 pr-2;
