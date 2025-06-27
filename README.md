@@ -19,7 +19,7 @@ Zenith is an all-in-one platform designed to assist job seekers through AI-drive
 ## Tech Stack
 
 - **Frontend**: Next.js, React.js, TypeScript
-- **Backend**: Inngest for background jobs, Gemini API for AI functionalities
+- **Backend**: Next.js Server Actions, Inngest for background jobs, Gemini API for AI functionalities
 - **Authentication**: Clerk
 - **Database**: PostgreSQL
 - **ORM**: Prisma
@@ -40,10 +40,6 @@ Zenith is an all-in-one platform designed to assist job seekers through AI-drive
      ```bash
      pnpm install
      ```
-     or
-     ```bash
-     npm install
-     ```
 3. **Set up environment variables**:
 
      ```
@@ -61,32 +57,19 @@ Zenith is an all-in-one platform designed to assist job seekers through AI-drive
      DATABASE_URL = 
      NODE_ENV = "development"
      ```
-5. **Set up the database**:
+4. **Set up the database**:
 
       ```bash
       pnpx prisma generate
       pnpx prisma migrate dev
-      ```
-      or
-      ```bash
-      npx prisma generate
-      npx prisma migrate dev
       ```
 5. **Start Inngest Dev Server**:
 
       ```bash
       pnpx inngest-cli dev
       ```
-      or
-      ```bash
-      npx inngest-cli dev
-      ```
 5. **Run in dev environment**:
 
       ```bash
       pnpm dev
-      ```
-      or
-      ```bash
-      npm dev
       ```
