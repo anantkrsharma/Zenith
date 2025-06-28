@@ -80,3 +80,63 @@ export async function saveResume(resumeContent: string){
         }
     }
 }
+
+//generate AI improved content (project, job, skills, etc)
+export async function improveWithAI(type: string, currentContent: string){
+    try {    
+        const { userId } = await auth();
+        if(!userId){
+            throw new Error("Unauthenticated");
+        }
+
+        const user = await db.user.findUnique({
+            where: {
+                clerkUserId: userId
+            },
+            include: {
+                resume: true
+            }
+        });
+        if(!user){
+            throw new Error("User not found");
+        }
+
+        const prompt = `
+            As an expert resume writer, improve the following ${type} description for a ${user.industry} professional.
+            Make it more impactful, quantifiable, and aligned with industry standards.
+            Current content: "${currentContent}"
+
+            Requirements:
+            1. Use action verbs
+            2. Include metrics and results where possible
+            3. Highlight relevant technical skills
+            4. Keep it concise but detailed
+            5. Focus on achievements over responsibilities
+            6. Use industry-specific keywords
+            
+            Format the response as a single paragraph without any additional text or explanations.
+        `;
+
+        const res = await ai.models.generateContent({
+            model: "gemini-2.0-flash",
+            contents: prompt
+        });
+        
+        return res.text?.trim() || "";
+        
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error("Error while generating AI job description", error.message);
+            throw new Error("Error while generating AI job description");
+        } else {
+            console.error("An unknown error occurred while generating AI job description");
+            throw new Error("An unknown error occurred while generating AI job description");
+        }
+    }
+}
+
+//TO-DO
+//generate AI Professional-Summary
+export async function generateAiSummary(){
+    
+}
