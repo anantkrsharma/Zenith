@@ -5,7 +5,7 @@ import PerformanceChart from './_components/performance-chart';
 import QuizList from './_components/quiz-list';
 import { BarLoader } from 'react-spinners';
 
-const InterviewPrepPage = async () => {
+const InterviewPage = async () => {
     const assessments = await getInterviewAssessments();
 
     return (
@@ -23,4 +23,4 @@ const InterviewPrepPage = async () => {
     )
 }
 
-export default InterviewPrepPage
+export default InterviewPage

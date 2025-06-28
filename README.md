@@ -60,8 +60,8 @@ Zenith is an all-in-one platform designed to assist job seekers through AI-drive
 4. **Set up the database**:
 
       ```bash
+      pnpx prisma migrate dev --name init
       pnpx prisma generate
-      pnpx prisma migrate dev
       ```
 5. **Start Inngest Dev Server**:
 

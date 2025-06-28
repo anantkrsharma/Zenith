@@ -187,7 +187,7 @@ export const DashboardView = ({ insights }: { insights: IndustryInsight }) => {
                                         right: isMediumScreen ? (isSmallScreen ? 10 : 30) : 20,
                                         bottom: isMediumScreen ? (isSmallScreen ? -15 : 70) : 30
                                     }}
-                                    barCategoryGap={isSmallScreen ? '15%' : '11%'}
+                                    barCategoryGap={isSmallScreen ? '15%' : '16%'}
                                 >
                                     <CartesianGrid strokeDasharray="5 5" />
                                     <XAxis
