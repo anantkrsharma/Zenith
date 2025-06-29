@@ -10,7 +10,7 @@ import { ChevronLeft, ChevronRight, CircleCheckBig, Lightbulb, LightbulbOff, Loa
 import React, { useEffect, useState } from 'react'
 import { BarLoader } from 'react-spinners';
 import { toast } from 'sonner';
-import QuizResult from './quizResult';
+import QuizResult from './quiz-result';
 
 export const Quiz = () => {
     const [currentQues, setCurrentQues] = useState<number>(0);
@@ -276,8 +276,8 @@ export const Quiz = () => {
                 }
                 
                 {currentQues == questionsData.length - 1 &&
-                <Button variant={'default'}
-                        className='flex items-center justify-center gap-1 text-black font-semibold hover:cursor-pointer hover:bg-zinc-300 transition-all duration-75 ease-in-out'
+                <Button variant={'outline'}
+                        className='flex items-center justify-center gap-1 text-white bg-cyan-950 border-cyan-800 hover:cursor-pointer hover:bg-cyan-900 hover:border-cyan-600 transition-all duration-75 ease-in-out'
                         onClick={handleSubmit}
                         disabled={submitLoading}
                 >

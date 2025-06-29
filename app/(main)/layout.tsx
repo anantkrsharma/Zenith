@@ -1,5 +1,5 @@
 import React from 'react'
-import RedirectToOnboarding from './_components/redirectToOnboarding';
+import RedirectToOnboarding from './_components/redirect-to-onboarding';
 import { getUserOnboardingStatus } from '@/actions/user';
 
 const MainRoutesLayout = async ({ children }: { children: React.ReactNode}) => {

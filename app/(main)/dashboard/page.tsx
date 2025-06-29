@@ -1,6 +1,6 @@
 import { getIndustryInsights } from '@/actions/dashboard'
 import React from 'react'
-import { DashboardView } from './_components/dashboardView';
+import { DashboardView } from './_components/dashboard-view';
 
 const IndustryInsightsPage = async () => {
     const industryInsights = await getIndustryInsights();

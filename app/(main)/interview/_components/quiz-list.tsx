@@ -7,7 +7,7 @@ import { Assessment } from '@/lib/generated/client'
 import { format } from 'date-fns';
 import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
-import QuizResult, { QuestionType} from './quizResult';
+import QuizResult, { QuestionType} from './quiz-result';
 
 const QuizList = ({ assessments }: { assessments: Assessment[] }) => {
     const router = useRouter();

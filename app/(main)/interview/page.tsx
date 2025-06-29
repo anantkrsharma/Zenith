@@ -9,7 +9,7 @@ const InterviewPage = async () => {
     const assessments = await getInterviewAssessments();
 
     return (
-        <div className='space-y-4 p-3'>
+        <div className='space-y-4'>
             <div className="text-3xl md:text-5xl gradient-title">
                 Interview Preparation
             </div>

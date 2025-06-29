@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link'
 import { usePathname } from 'next/navigation';
 import React from 'react'
+import { Button } from './ui/button';
 
 const Footer = () => {
     const path = usePathname();
@@ -48,15 +49,18 @@ const Footer = () => {
                     placeholder="Your email"
                     className="px-4 py-2 rounded-lg text-gray-300 w-full border border-zinc-400"
                 />
-                <button className="bg-zinc-600 hover:bg-zinc-800 transition-all duration-200 hover:cursor-pointer rounded px-4 py-2 w-full">
+                <Button 
+                    variant={'outline'}
+                    className="bg-zinc-700 border-zinc-500 hover:cursor-pointer hover:bg-zinc-600 hover:border-zinc-400 transition-all duration-75 ease-in-out rounded-lg px-4 py-2 w-full"
+                >   
                     Subscribe
-                </button>
+                </Button>
                 </form>
             </div>
             </div>
 
             <div className="mt-10 border-t border-gray-700 pt-4 text-center text-xs md:text-sm text-gray-400">
-            &copy; {new Date().getFullYear()} Zenith. All rights reserved.
+                &copy; {new Date().getFullYear()} Zenith. All rights reserved.
             </div>
         </footer>
     )

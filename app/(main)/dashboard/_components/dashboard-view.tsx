@@ -89,7 +89,7 @@ export const DashboardView = ({ insights }: { insights: IndustryInsight }) => {
     return (
         <div className='space-y-6'>
             <div className='flex items-center justify-between'>
-                <Badge variant={'secondary'}>
+                <Badge variant={'secondary'} className='text-xs md:text-sm py-1 px-3'>
                     Last updated: {lastUpdate}
                 </Badge>
             </div>
@@ -167,7 +167,7 @@ export const DashboardView = ({ insights }: { insights: IndustryInsight }) => {
                         </CardTitle>
                         <CardDescription>
                             <p className='text-sm text-muted-foreground'>
-                                Displaying minimum, median, and maximum salaries (in thousands)
+                                Displaying minimum, median, and maximum salaries ($)
                             </p>
                             <br />
                             {isSmallScreen && 

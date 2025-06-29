@@ -11,13 +11,12 @@ import {
         DropdownMenuTrigger,
     } from "@/components/ui/dropdown-menu"
 import { checkUser } from '@/lib/checkUser';
-import { revalidatePath } from 'next/cache';
 
 const Header = async () => {
     await checkUser();
     
     return (
-        <header className='fixed top-0 w-full border-b border-cyan-950/80 bg-background/80 backdrop-blur-md z-50 supports-[backdrop-filter]:bg-background/60'> 
+        <header className='fixed top-0 w-full border-b border-cyan-950/50 bg-cyan-950/50 backdrop-blur-md z-50 supports-[backdrop-filter]:bg-cyan-950/7'> 
             <nav className='container md:min-w-full mx-auto w-full px-4 h-18 flex items-center justify-between'>
                 <Link href='/'>
                     <Image src='/logo.png' alt='logo' width={90} height={60} className='p-0.5' />
@@ -32,7 +31,7 @@ const Header = async () => {
                             </Button>
                         </Link>
 
-                        <DropdownMenu>
+                        <DropdownMenu modal={false}>
                             <DropdownMenuTrigger asChild>
                                 <Button variant={'outline'} className='cursor-pointer'>
                                     <StarsIcon className='h-6 w-6 hidden md:block'/>
