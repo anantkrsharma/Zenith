@@ -18,8 +18,9 @@ const Header = async () => {
     return (
         <header className='fixed top-0 w-full border-b border-cyan-950/50 bg-cyan-950 backdrop-blur-md z-50 supports-[backdrop-filter]:bg-cyan-950/10'> 
             <nav className='container md:min-w-full mx-auto w-full px-4 h-18 flex items-center justify-between'>
-                <Link href='/'>
-                    <Image src='/logo.png' alt='logo' width={90} height={60} className='p-0.5' />
+                <Link href='/' className='flex items-center'>
+                    <Image src='/Icon.png' alt='logo' width={55} height={50} className='md:ml-2 p-1 bg-black rounded-md border' />
+                    {/* <Image src='/logo.png' alt='logo' width={90} height={60} className='p-0.5' /> */}
                 </Link>
                 
                 <div className='flex items-center space-x-2 md:space-x-4'>
