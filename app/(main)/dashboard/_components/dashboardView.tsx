@@ -219,18 +219,18 @@ export const DashboardView = ({ insights }: { insights: IndustryInsight }) => {
                                     }} />
                                     <Bar
                                         dataKey="min"
-                                        fill="#18848e"
-                                        activeBar={<Rectangle fill="#18848e" stroke="black" />}
+                                        fill="#0077b6"
+                                        activeBar={<Rectangle fill="#0077b6" stroke="black" />}
                                     />
                                     <Bar
                                         dataKey="median"
-                                        fill="#33c7d8"
-                                        activeBar={<Rectangle fill="#33c7d8" stroke="black" />}
+                                        fill="#00b4d8"
+                                        activeBar={<Rectangle fill="#00b4d8" stroke="black" />}
                                     />
                                     <Bar
                                         dataKey="max"
-                                        fill="#a9fefe"
-                                        activeBar={<Rectangle fill="#a9fefe" stroke="black" />}
+                                        fill="#90e0ef"
+                                        activeBar={<Rectangle fill="#90e0ef" stroke="black" />}
                                     />
                                 </BarChart>
                             </ResponsiveContainer>

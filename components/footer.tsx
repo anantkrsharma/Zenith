@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link'
 import { usePathname } from 'next/navigation';
 import React from 'react'
@@ -14,9 +15,9 @@ const Footer = () => {
         <footer className="bg-zinc-900 text-white py-10 px-6 border-t border-zinc-900">
             <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10">
             <div>
-                <h2 className="text-2xl font-bold mb-4">Zenith</h2>
+                <Image src='/logo.png' alt='logo' width={90} height={60} className='pb-2 md:pb-4' />
                 <p className="text-sm text-gray-400">
-                Empowering your career path with AI-driven insights and personalized coaching.
+                    Empowering your career path with AI driven insights and various career tools
                 </p>
             </div>
 
@@ -54,7 +55,7 @@ const Footer = () => {
             </div>
             </div>
 
-            <div className="mt-10 border-t border-gray-700 pt-4 text-center text-xs text-gray-400">
+            <div className="mt-10 border-t border-gray-700 pt-4 text-center text-xs md:text-sm text-gray-400">
             &copy; {new Date().getFullYear()} Zenith. All rights reserved.
             </div>
         </footer>
