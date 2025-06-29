@@ -18,7 +18,7 @@ const Footer = () => {
             <div>
                 <Image src='/logo.png' alt='logo' width={90} height={60} className='pb-2 md:pb-4' />
                 <p className="text-sm text-gray-400">
-                    Empowering your career path with AI driven insights and various career tools
+                    Empowering your career path with AI driven insights and various career growth tools
                 </p>
             </div>
 

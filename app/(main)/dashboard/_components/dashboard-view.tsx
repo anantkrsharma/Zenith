@@ -200,7 +200,7 @@ export const DashboardView = ({ insights }: { insights: IndustryInsight }) => {
                                     <YAxis />
                                     <Tooltip 
                                         cursor = {{
-                                            fill: '#242424'
+                                            fill: '#2e2b2c'
                                         }}
                                         content={({ active, payload, label }) => {
                                             if (active && payload && payload.length) {
@@ -219,18 +219,18 @@ export const DashboardView = ({ insights }: { insights: IndustryInsight }) => {
                                     }} />
                                     <Bar
                                         dataKey="min"
-                                        fill="#0077b6"
-                                        activeBar={<Rectangle fill="#0077b6" stroke="black" />}
+                                        fill="#787878"
+                                        activeBar={<Rectangle fill="#787878" stroke="black" strokeWidth={3}/>}
                                     />
                                     <Bar
                                         dataKey="median"
-                                        fill="#00b4d8"
-                                        activeBar={<Rectangle fill="#00b4d8" stroke="black" />}
+                                        fill="#D3D3D3"
+                                        activeBar={<Rectangle fill="#D3D3D3" stroke="black" strokeWidth={3} />}
                                     />
                                     <Bar
                                         dataKey="max"
-                                        fill="#90e0ef"
-                                        activeBar={<Rectangle fill="#90e0ef" stroke="black" />}
+                                        fill="#FFFFFF"
+                                        activeBar={<Rectangle fill="#FFFFFF" stroke="black" strokeWidth={3} />}
                                     />
                                 </BarChart>
                             </ResponsiveContainer>
