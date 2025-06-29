@@ -1,13 +1,23 @@
+'use client';
+
 import { Button } from '@/components/ui/button'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Download, Save } from 'lucide-react'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
+    const [activeTab, setActiveTab] = useState<string>('form');
+    
+    useEffect(() => {
+        if(initialContent.length > 0)
+            setActiveTab('markdown');
+    }, [initialContent]);
+
     
 
     return (
         <div className='space-y-4'>
-            <div className='flex flex-col md:flex-row md:items-center md:justify-between space-y-4'>
+            <div className='flex-col md:flex md:flex-row md:items-center md:justify-between border-b py-2 md:py-4'>
                 <div className="text-4xl md:text-5xl gradient-title">
                     Resume Builder
                 </div>
@@ -30,6 +40,19 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
                     </Button>
                 </div>
             </div>
+
+            <Tabs 
+                className="w-[400px] py-1 md:py-2"
+                value={activeTab} 
+                onValueChange={(val) => setActiveTab(val)} 
+            >
+                <TabsList className='[&>*]:hover:cursor-pointer'>
+                    <TabsTrigger value="form"> Form </TabsTrigger>
+                    <TabsTrigger value="markdown"> Markdown </TabsTrigger>
+                </TabsList>
+                <TabsContent value="form"> Form </TabsContent>
+                <TabsContent value="markdown"> MD </TabsContent>
+            </Tabs>
         </div>
     )
 }

@@ -21,3 +21,7 @@ export const onboardingSchema = z.object({
             .string()
             .transform((val) => val ? val.split(",").map((skill) => skill.trim()).filter(Boolean) : undefined)
 })
+
+export const resumeSchema = z.object({
+    
+})
