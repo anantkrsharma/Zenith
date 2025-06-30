@@ -2,19 +2,71 @@
 
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import useFetch from '@/hooks/use-fetch';
+import { resumeSchema } from '@/lib/form-schema';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Download, Save } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import { z } from 'zod';
 
 const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
     const [activeTab, setActiveTab] = useState<string>('form');
     
     useEffect(() => {
         if(initialContent.length > 0)
-            setActiveTab('markdown');
+            setActiveTab('markdown-preview');
     }, [initialContent]);
 
+    const { 
+        control,
+        register,
+        handleSubmit,
+        setValue,
+        watch,
+        formState: {
+            errors
+        }
+    } = useForm({
+        resolver: zodResolver(resumeSchema),
+        defaultValues: {
+            contactInfo: {},
+            summary: "",
+            skills: "",
+            education: [],
+            workExp: [],
+            projects: []
+        }
+    });
     
+    const watchForm = watch();
+    
+    type resumeFormType = z.infer<typeof resumeSchema>
 
+    const {
+        data: saveResumeData,
+        fn: saveResumeFn,
+        loading: saveResumeLoading,
+        error: saveResumeError,
+    } = useFetch();
+
+    const onSubmit = (val: resumeFormType) => {
+        try {
+            
+        } catch (error) {
+            if(error instanceof Error){
+                toast.error("Error while saving the resume");
+                console.log(error.message);
+            }
+            else{
+                toast.error("Error while saving the resume");
+                console.log(error);
+            }
+        }
+    }
+
+    
     return (
         <div className='space-y-4'>
             <div className='flex-col md:flex md:flex-row md:items-center md:justify-between border-b py-2 md:py-4'>
@@ -48,10 +100,17 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
             >
                 <TabsList className='[&>*]:hover:cursor-pointer'>
                     <TabsTrigger value="form"> Form </TabsTrigger>
-                    <TabsTrigger value="markdown"> Markdown </TabsTrigger>
+                    <TabsTrigger value="markdown-preview"> Markdown-preview </TabsTrigger>
                 </TabsList>
-                <TabsContent value="form"> Form </TabsContent>
-                <TabsContent value="markdown"> MD </TabsContent>
+                <TabsContent value="form"> 
+                    <form 
+                        action="submit"
+                        onSubmit={handleSubmit(onSubmit)}
+                    >
+
+                    </form>
+                </TabsContent>
+                <TabsContent value="markdown-preview"> MD </TabsContent>
             </Tabs>
         </div>
     )

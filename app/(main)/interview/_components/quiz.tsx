@@ -49,10 +49,10 @@ export const Quiz = () => {
         } catch (error) {
             if(error instanceof Error){
                 console.log(error.message);
-                toast.error(error.message);
+                toast.error("Error while generating quiz questions");
             }
             else{
-                toast.error("An unknown error occured while generating mock interview quiz questions");
+                toast.error("An unknown error occured while quiz questions");
             }
         }
     }
@@ -101,7 +101,7 @@ export const Quiz = () => {
         } catch (error) {
             if(error instanceof Error){
                 console.log(error.message);
-                toast.error(error.message);
+                toast.error("Error while submitting the quiz");
             }
             else{
                 toast.error("An unknown error occured while submitting the quiz");

@@ -70,7 +70,7 @@ export const OnboardingForm = ({ industries } : OnboardingFormProps) => {
             );
         } catch (error) {
             if(error instanceof Error) {
-                toast.error(error.message);
+                toast.error("Error while onboarding the user");
             } else {
                 toast.error("An unknown error occured. Please try again later.");
             }

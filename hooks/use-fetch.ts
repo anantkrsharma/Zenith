@@ -3,7 +3,7 @@ import { toast } from "sonner";
 
 type ServerActionType = (...args: any[]) => any
 
-const useFetch =  () => {
+const useFetch = () => {
     const [data, setData] = useState<any>(undefined);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<Error | null | unknown>(null);
@@ -12,7 +12,7 @@ const useFetch =  () => {
         setLoading(true);
         setError(null);
         try {
-            const res = await cb(...args);  //cb is the server action that we're using for fetching/updating data (BE-calls).
+            const res = await cb(...args);  //cb is the server action that we're using for fetching/updating data (server action calls).
             setData(res);
         } catch (error) {
             if(error instanceof Error) {
