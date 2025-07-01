@@ -142,8 +142,7 @@ export const OnboardingForm = ({ industries } : OnboardingFormProps) => {
                         </div>
                         
                         {/* Sub-Industry (Specialization) */}
-                        {
-                        selectedIndustry && watchIndustry && 
+                        { selectedIndustry && watchIndustry && 
                         <div className="space-y-2">
                             <Label htmlFor="sub-industry">* Specialization</Label>
                             <Controller

@@ -8,16 +8,16 @@ import { Textarea } from '@/components/ui/textarea';
 import useFetch from '@/hooks/use-fetch';
 import { resumeSchema } from '@/lib/form-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { error } from 'console';
 import { Download, Save } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
 const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
     const [activeTab, setActiveTab] = useState<string>('form');
-    
+    const [toastId, setToastId] = useState<string | number | null>(null);
+
     useEffect(() => {
         if(initialContent.length > 0)
             setActiveTab('markdown-preview');
@@ -55,7 +55,7 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
         error: saveResumeError,
     } = useFetch();
 
-    const onSubmit = (val: resumeFormType) => {
+    const onSubmit = async (val: resumeFormType) => {
         try {
             
         } catch (error) {
@@ -70,7 +70,22 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
         }
     }
 
-    
+    useEffect(() => {
+        if(saveResumeLoading && toastId == null){
+            const id = toast.loading("Saving the resume...");
+            setToastId(id);
+        }
+        if(!saveResumeLoading && toastId !== null){
+            toast.dismiss(toastId);
+            setToastId(null)
+
+            if(saveResumeData){
+                toast.success("Saved resume successfully");
+                setActiveTab("markdown-preview")
+            }
+        }
+    }, [toastId, saveResumeLoading])
+
     return (
         <div className='space-y-4'>
             <div className='flex-col md:flex md:flex-row md:items-center md:justify-between border-b py-2 md:py-4'>
@@ -110,7 +125,7 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
                 <TabsContent value="form" className='p-1'> 
                     <form 
                         action="submit"
-                        className='space-y-5'
+                        className='space-y-6'
                         onSubmit={handleSubmit(onSubmit)}
                     >   
                         {/* Contact Info */}
@@ -189,12 +204,77 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
                         {/* Professional Summary */}
                         <div className='space-y-2'>
                             <Label htmlFor='summary' className='text-lg font-medium'> Professional Summary </Label>
-                            <Textarea 
-                                {...register('summary')}
-                                id='summary'
-                                placeholder={`Hi I'm John Doe and I'm a Software Engineer...`}
-                                className='resize-none bg-black/69'
+                            <Controller
+                                name='summary'
+                                control={control}
+                                render={({ field }) => (
+                                    <Textarea 
+                                        {...field}
+                                        className='resize-none bg-black/69 h-30'
+                                        placeholder='Write an appropriate professional summary'
+                                    />
+                                )}
                             />
+                            {errors.summary &&
+                                <p className='text-xs md:text-sm text-red-500'>
+                                    {errors.summary.message}
+                                </p>
+                            }
+                        </div>
+
+                        {/* Skills */}
+                        <div className='space-y-2'>
+                            <Label htmlFor='skills' className='text-lg font-medium'> Skills </Label>
+                            <p className="text-sm text-muted-foreground ml-0.5">Separate multiple skills with commas (,)</p>
+                            <Controller
+                                name='skills'
+                                control={control}
+                                render={({ field }) => (
+                                    <Textarea 
+                                        {...field}
+                                        className='resize-none bg-black/69 h-30'
+                                        placeholder='Enter your key skills'
+                                    />
+                                )}
+                            />
+                            {errors.skills &&
+                                <p className='text-xs md:text-sm text-red-500'>
+                                    {errors.skills.message}
+                                </p>
+                            }
+                        </div>
+
+                        {/* Work Experience */}
+                        <div className='space-y-2'>
+                            <Label htmlFor='exp' className='text-lg font-medium'> Work Experience </Label>
+                            
+                            {errors.workExp &&
+                                <p className='text-xs md:text-sm text-red-500'>
+                                    {errors.workExp.message}
+                                </p>
+                            }
+                        </div>
+
+                        {/* Projects */}
+                        <div className='space-y-2'>
+                            <Label htmlFor='exp' className='text-lg font-medium'> Work Experience </Label>
+                            
+                            {errors.projects &&
+                                <p className='text-xs md:text-sm text-red-500'>
+                                    {errors.projects.message}
+                                </p>
+                            }
+                        </div>
+
+                        {/* Education */}
+                        <div className='space-y-2'>
+                            <Label htmlFor='exp' className='text-lg font-medium'> Work Experience </Label>
+                            
+                            {errors.education &&
+                                <p className='text-xs md:text-sm text-red-500'>
+                                    {errors.education.message}
+                                </p>
+                            }
                         </div>
                     </form> 
                 </TabsContent>
