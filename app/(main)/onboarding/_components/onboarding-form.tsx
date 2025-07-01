@@ -16,6 +16,7 @@ import { updateUser } from "@/actions/user";
 import useFetch from "@/hooks/use-fetch";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import { Controller } from "react-hook-form";
 
 interface OnboardingFormProps {
     industries: {
@@ -44,6 +45,7 @@ export const OnboardingForm = ({ industries } : OnboardingFormProps) => {
     } = useFetch();
 
     const { 
+        control,
         register,
         handleSubmit,
         setValue,
@@ -104,61 +106,76 @@ export const OnboardingForm = ({ industries } : OnboardingFormProps) => {
 
                 <CardContent>
                     <form action="" className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
+                        {/* Industry */}
                         <div className="space-y-2">
                             <Label htmlFor="industry">* Industry</Label>
-                            <Select onValueChange={(val) => {
-                                setValue('industry', val);
-                                setSelectedIndustry(
-                                    industries.find((ind) => ind.id === val) || null
-                                );
-                                setValue('subIndustry', '');
-                            }}
-                            >
-                                <SelectTrigger id="industry" className="w-full hover:cursor-pointer">
-                                    <SelectValue placeholder="Select an Industry" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {industries.map((ind) => {
-                                        return <SelectItem value={ind.id} key={ind.id} className="hover:cursor-pointer">
-                                            {ind.name}
-                                        </SelectItem>
-                                    })}
-                                </SelectContent>
-                            </Select>
+                            <Controller
+                                control={control}
+                                name="industry"
+                                render={({ field }) => (
+                                    <Select
+                                        value={field.value}
+                                        onValueChange={(val) => {
+                                            field.onChange(val);
+                                            setSelectedIndustry(industries.find((ind) => ind.id === val) || null);
+                                            setValue('subIndustry', '');
+                                        }}
+                                    >
+                                        <SelectTrigger id="industry" className="w-full hover:cursor-pointer">
+                                            <SelectValue placeholder="Select an Industry" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {industries.map((ind) => (
+                                                <SelectItem value={ind.id} key={ind.id} className="hover:cursor-pointer">
+                                                    {ind.name}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                )}
+                            />
                             {
                                 errors.industry && (
-                                    <p className="text-red-500 text-sm">{errors.industry.message}</p>
+                                    <p className="text-red-500 text-xs md:text-sm">{errors.industry.message}</p>
                                 )
                             }
                         </div>
                         
+                        {/* Sub-Industry (Specialization) */}
                         {
                         selectedIndustry && watchIndustry && 
                         <div className="space-y-2">
                             <Label htmlFor="sub-industry">* Specialization</Label>
-                            <Select onValueChange={(val) => {
-                                setValue('subIndustry', val);
-                            }}
-                            >
-                                <SelectTrigger id="sub-industry" className="w-full hover:cursor-pointer">
-                                    <SelectValue placeholder="Select a Sub-Industry" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {selectedIndustry.subIndustries.map((subInd) => {
-                                        return <SelectItem value={subInd} key={subInd} className="hover:cursor-pointer">
-                                            {subInd}
-                                        </SelectItem>
-                                    })}
-                                </SelectContent>
-                            </Select>
+                            <Controller
+                                control={control}
+                                name="subIndustry"
+                                render={({ field }) => (
+                                    <Select
+                                        value={field.value}
+                                        onValueChange={field.onChange}
+                                    >
+                                        <SelectTrigger id="sub-industry" className="w-full hover:cursor-pointer">
+                                            <SelectValue placeholder="Select a Sub-Industry" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                        {selectedIndustry.subIndustries.map((subInd) => (
+                                            <SelectItem value={subInd} key={subInd} className="hover:cursor-pointer">
+                                                {subInd}
+                                            </SelectItem>
+                                        ))}
+                                        </SelectContent>
+                                    </Select>
+                                )}
+                            />
                             {
                                 errors.subIndustry && (
-                                    <p className="text-red-500 text-sm">{errors.subIndustry.message}</p>
+                                    <p className="text-red-500 text-xs md:text-sm">{errors.subIndustry.message}</p>
                                 )
                             }
                         </div> 
                         }
 
+                        {/* YOE */}
                         <div className="space-y-2">
                             <Label htmlFor="experience">Years of Experience</Label>
                             <Input  id="experience" 
@@ -172,11 +189,12 @@ export const OnboardingForm = ({ industries } : OnboardingFormProps) => {
                             />
                             {
                                 errors.experience && (
-                                    <p className="text-red-500 text-sm">Enter valid years of experience (0 - 50)</p>
+                                    <p className="text-red-500 text-xs md:text-sm">Enter valid years of experience (0 - 50)</p>
                                 )
                             }
                         </div>
                         
+                        {/* Skills */}
                         <div className="space-y-2">
                             <Label htmlFor="skills">Skills</Label>
                             <Input  id="skills" 
@@ -189,21 +207,29 @@ export const OnboardingForm = ({ industries } : OnboardingFormProps) => {
                             <p className="text-sm text-muted-foreground">Separate multiple skills with commas (,)</p>
                             {
                                 errors.skills && (
-                                    <p className="text-red-500 text-sm">{errors.skills.message}</p>
+                                    <p className="text-red-500 text-xs md:text-sm">{errors.skills.message}</p>
                                 )
                             }
                         </div>
                         
+                        {/* Bio */}
                         <div className="space-y-2">
                             <Label htmlFor="bio">Bio</Label>
-                            <Textarea   id="bio"
+                            <Controller
+                                control={control}
+                                name="bio"
+                                render={({ field }) => (
+                                    <Textarea
+                                        {...field}
+                                        id="bio"
                                         placeholder="Tell us about your professional background and interests."
                                         className="resize-none"
-                                        {...register("bio")}
+                                    />
+                                )}
                             />
                             {
                                 errors.bio && (
-                                    <p className="text-red-500 text-sm">{errors.bio.message}</p>
+                                    <p className="text-red-500 text-xs md:text-sm">{errors.bio.message}</p>
                                 )
                             }
                         </div>

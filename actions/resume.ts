@@ -1,3 +1,5 @@
+'use server'
+
 import { db } from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 import { GoogleGenAI } from "@google/genai";
@@ -138,5 +140,5 @@ export async function improveWithAI(type: string, currentContent: string){
 //TO-DO
 //generate AI Professional-Summary
 export async function generateAiSummary(){
-    
+
 }

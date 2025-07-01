@@ -4,6 +4,7 @@ import { db } from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 import { generateAiInsight } from "./dashboard";
+import { checkUser } from "@/lib/checkUser";
 //onboarding page server actions
 
 interface updateUserProps {
@@ -90,32 +91,42 @@ export async function getUserOnboardingStatus() {
     try {
         const { userId } = await auth();
         if(!userId) {
-            throw new Error("Unauthorized");
+            // Instead of throwing, return not onboarded
+            return {
+                isUser: false,
+                isOnboarded: false 
+            };
         }
         
-        const user = await db.user.findUnique({
-            where: {
-                clerkUserId: userId
-            },
-            select: {
-                industry: true
-            }
-        })
-        if(!user){
-            throw new Error("User not found");
+        const user = await checkUser();
+
+        // If user is null, treat as not onboarded
+        if (!user) {
+            return {
+                isUser: false, 
+                isOnboarded: false 
+            };
         }
 
         return {
-            isOnboarded: user.industry !== null,
+            isUser: true,
+            isOnboarded: user?.industry !== null,
         };
     } catch(error) {
         if(error instanceof Error) {
             console.log("Error while getting the user onboarding status:", error.message);
-            throw new Error("Error while getting the user onboarding status. Please try again later.");        
+            // Instead of throwing, return not onboarded
+            return { 
+                isUser: false,
+                isOnboarded: false 
+            };
         }
         else{
             console.log("An unknown error occured while getting the user onboarding status.");
-            throw new Error("An unknown error occured while getting the user onboarding status. Please try again later.");
+            return { 
+                isUser: false,
+                isOnboarded: false 
+            };
         }
     }
 }

@@ -34,10 +34,8 @@ export const checkUser = async () => {
     } catch (error) {
         if (error instanceof Error) {
             console.log(error.message);
-            toast.error(error.message);
         } else {
             console.log("An unknown error occurred while checking the user.");
-            toast.error("An unknown error occurred while checking the user.");
         }
     }
 }
