@@ -81,7 +81,7 @@ const projectSchema = z.object({
                     { message: "Invalid GitHub URL" }
                 )
                 .optional(),
-        lievLink:   z
+        liveLink:   z
                     .string()
                     .url(),
         startDate: z.string().min(1, "Start date is required"),

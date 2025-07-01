@@ -107,7 +107,6 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
                         action="submit"
                         onSubmit={handleSubmit(onSubmit)}
                     >
-
                     </form>
                 </TabsContent>
                 <TabsContent value="markdown-preview"> MD </TabsContent>
