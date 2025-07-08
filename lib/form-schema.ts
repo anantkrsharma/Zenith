@@ -32,27 +32,9 @@ export const contactSchema = z.object({
     twitter: z.string().optional()
 });
 
-const educationSchema = z.object({
-        title: z.string().min(1, "Education details are required"),
-        institute: z.string().min(1, "Institute is required"),
-        description: z.string().optional(),
-        startDate: z.string().min(1, "Start date is required"),
-        endDate: z.string().optional(),
-        current: z.boolean().default(false)
-    })
-    .refine((data) => {
-        if(!data.current && !data.endDate)
-            return false;
-        
-        return true;
-    }, {
-        message: "End date is required unless you're not studying here currently",
-        path: ["endDate"]
-    });
-
-const workExpSchema = z.object({
+export const workExpSchema = z.object({
         title: z.string().min(1, "Title is required"),
-        company: z.string().min(1, "Organization is required"),
+        organization: z.string().min(1, "Organization is required"),
         description: z.string().min(1, "Description is required"),
         startDate: z.string().min(1, "Start date is required"),
         endDate: z.string().optional(),
@@ -70,7 +52,7 @@ const workExpSchema = z.object({
 
 const githubUrlRegex = /^https?:\/\/(www\.)?github\.com\/[A-Za-z0-9_.-]+(\/[A-Za-z0-9_.-]+)?(\/)?$/;
 
-const projectSchema = z.object({
+export const projectSchema = z.object({
         title: z.string().min(1, "Title is required"),
         description: z.string().min(1, "Description is required"),
         github: z
@@ -98,11 +80,29 @@ const projectSchema = z.object({
         path: ["endDate"]
     });
 
+export const educationSchema = z.object({
+        title: z.string().min(1, "Education details are required"),
+        institute: z.string().min(1, "Institute is required"),
+        description: z.string().optional(),
+        startDate: z.string().min(1, "Start date is required"),
+        endDate: z.string().optional(),
+        current: z.boolean().default(false)
+    })
+    .refine((data) => {
+        if(!data.current && !data.endDate)
+            return false;
+        
+        return true;
+    }, {
+        message: "End date is required unless you're not studying here currently",
+        path: ["endDate"]
+    });
+
 export const resumeSchema = z.object({
     contactInfo: contactSchema,
     summary: z.string().min(1, "Enter more details in your summary").optional(),
     skills: z.string().min(1, "Skills are required"),
-    education: z.array(educationSchema),
     workExp: z.array(workExpSchema),
-    projects: z.array(projectSchema)
+    projects: z.array(projectSchema),
+    education: z.array(educationSchema),
 })

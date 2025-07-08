@@ -13,6 +13,10 @@ import React, { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
+import ExperienceForm from './experience-form';
+import ProjectForm from './project-form';
+import EducationForm from './education-form';
+import { saveResume } from '@/actions/resume';
 
 const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
     const [activeTab, setActiveTab] = useState<string>('form');
@@ -57,7 +61,7 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
 
     const onSubmit = async (val: resumeFormType) => {
         try {
-            
+            await saveResumeFn(saveResume, JSON.stringify(val));
         } catch (error) {
             if(error instanceof Error){
                 toast.error("Error while saving the resume");
@@ -210,7 +214,7 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
                                 render={({ field }) => (
                                     <Textarea 
                                         {...field}
-                                        className='resize-none bg-black/69 h-30'
+                                        className='bg-black/69 min-h-24'
                                         placeholder='Write an appropriate professional summary'
                                     />
                                 )}
@@ -232,7 +236,7 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
                                 render={({ field }) => (
                                     <Textarea 
                                         {...field}
-                                        className='resize-none bg-black/69 h-30'
+                                        className='bg-black/69 min-h-24'
                                         placeholder='Enter your key skills'
                                     />
                                 )}
@@ -246,8 +250,16 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
 
                         {/* Work Experience */}
                         <div className='space-y-2'>
-                            <Label htmlFor='exp' className='text-lg font-medium'> Work Experience </Label>
-                            
+                            {/* <Controller
+                                name='workExp'
+                                control={control}
+                                render={({ field }) => (
+                                    <ExperienceForm 
+                                        fields={field.value}
+                                        onChange={field.onChange}
+                                    />
+                                )}
+                            /> */}
                             {errors.workExp &&
                                 <p className='text-xs md:text-sm text-red-500'>
                                     {errors.workExp.message}
@@ -257,8 +269,16 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
 
                         {/* Projects */}
                         <div className='space-y-2'>
-                            <Label htmlFor='exp' className='text-lg font-medium'> Work Experience </Label>
-                            
+                            {/* <Controller
+                                name='projects'
+                                control={control}
+                                render={({ field }) => (
+                                    <ProjectForm 
+                                        fields={field.value}
+                                        onChange={field.onChange}
+                                    />
+                                )}
+                            /> */}
                             {errors.projects &&
                                 <p className='text-xs md:text-sm text-red-500'>
                                     {errors.projects.message}
@@ -268,8 +288,16 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
 
                         {/* Education */}
                         <div className='space-y-2'>
-                            <Label htmlFor='exp' className='text-lg font-medium'> Work Experience </Label>
-                            
+                            {/* <Controller
+                                name='education'
+                                control={control}
+                                render={({ field }) => (
+                                    <EducationForm 
+                                        fields={field.value}
+                                        onChange={field.onChange}
+                                    />
+                                )}
+                            /> */}
                             {errors.education &&
                                 <p className='text-xs md:text-sm text-red-500'>
                                     {errors.education.message}
