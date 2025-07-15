@@ -214,7 +214,8 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
                                 render={({ field }) => (
                                     <Textarea 
                                         {...field}
-                                        className='bg-black/69 min-h-24'
+                                        id='summary'
+                                        className='bg-black/69 h-24'
                                         placeholder='Write an appropriate professional summary'
                                     />
                                 )}
@@ -236,7 +237,8 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
                                 render={({ field }) => (
                                     <Textarea 
                                         {...field}
-                                        className='bg-black/69 min-h-24'
+                                        id='skills'
+                                        className='bg-black/69 h-24'
                                         placeholder='Enter your key skills'
                                     />
                                 )}
@@ -247,19 +249,20 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
                                 </p>
                             }
                         </div>
-
+                        
                         {/* Work Experience */}
                         <div className='space-y-2'>
-                            {/* <Controller
+                            <h3 className='text-lg font-medium'> Work Experience </h3>
+                            <Controller
                                 name='workExp'
                                 control={control}
                                 render={({ field }) => (
                                     <ExperienceForm 
-                                        fields={field.value}
+                                        entries={field.value}
                                         onChange={field.onChange}
                                     />
                                 )}
-                            /> */}
+                            />
                             {errors.workExp &&
                                 <p className='text-xs md:text-sm text-red-500'>
                                     {errors.workExp.message}
@@ -269,16 +272,17 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
 
                         {/* Projects */}
                         <div className='space-y-2'>
-                            {/* <Controller
+                            <h3 className='text-lg font-medium'> Projects </h3>
+                            <Controller
                                 name='projects'
                                 control={control}
                                 render={({ field }) => (
-                                    <ProjectForm 
-                                        fields={field.value}
+                                    <ProjectForm
+                                        entries={field.value}
                                         onChange={field.onChange}
                                     />
                                 )}
-                            /> */}
+                            />
                             {errors.projects &&
                                 <p className='text-xs md:text-sm text-red-500'>
                                     {errors.projects.message}
@@ -288,16 +292,17 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
 
                         {/* Education */}
                         <div className='space-y-2'>
-                            {/* <Controller
+                            <h3 className='text-lg font-medium'> Education </h3>
+                            <Controller
                                 name='education'
                                 control={control}
                                 render={({ field }) => (
                                     <EducationForm 
-                                        fields={field.value}
+                                        entries={field.value}
                                         onChange={field.onChange}
                                     />
                                 )}
-                            /> */}
+                            />
                             {errors.education &&
                                 <p className='text-xs md:text-sm text-red-500'>
                                     {errors.education.message}

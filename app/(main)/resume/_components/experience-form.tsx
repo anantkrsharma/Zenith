@@ -1,27 +1,29 @@
 'use client';
 
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import useFetch from '@/hooks/use-fetch';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import { workExpSchema } from '@/lib/form-schema'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { PlusCircle } from 'lucide-react';
 import React, { useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { z } from 'zod'
+import { Controller, useForm } from 'react-hook-form'
 
 type ExperienceFormProps = {
-    entries: z.infer<typeof workExpSchema>[],
+    entries: any,
     onChange: (...event: any[]) => void
 }
 
 const ExperienceForm = ({ entries, onChange }: ExperienceFormProps) => {
-    const [isAdding, setIsAdding] = useState(false);
+    const [addBtn, setAddBtn] = useState(false);
 
     const {
         register,
         watch,
         setValue,
+        reset,
         handleSubmit: handleValidation,
         formState: {
             errors
@@ -40,111 +42,108 @@ const ExperienceForm = ({ entries, onChange }: ExperienceFormProps) => {
 
     const watchCurrent = watch('current');
 
-    const {
-        data: aiData,
-        loading: aiLoading,
-        error: aiError,
-        fn: aiFunction
-    } = useFetch();
-
     return (
         <div className='p-4'>
-            <Card>
-                <CardHeader>
-                    <CardTitle>Work Experience</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    { isAdding &&
-                        <div className='grid grid-cols-2 gap-4'>
-                            <div className='space-y-2'>
-                                <Input
-                                    {...register('title')}
-                                    placeholder='Enter the job title'
-                                />
-                                {errors.title &&
-                                    <p className='text-xs md:text-sm text-red-500'>
-                                        {errors.title.message}
-                                    </p>
-                                }
+            {addBtn && (
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Add Work Experience</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className='space-y-4'>
+                            <div className='grid grid-cols-2 gap-4'>
+                                <div className='space-y-2'>
+                                    <Input
+                                        {...register('title')}
+                                        placeholder='Title/Positon'
+                                    />
+                                    { errors.title &&
+                                        <p className='text-sm text-red-500'>{errors.title.message}</p>
+                                    }
+                                </div>
+                                <div className='space-y-2'>
+                                    <Input
+                                        {...register('organization')}
+                                        placeholder='Organization/Company'
+                                    />
+                                    { errors.organization &&
+                                        <p className='text-sm text-red-500'>{errors.organization.message}</p>
+                                    }
+                                </div>
                             </div>
                             
-                            <div className='space-y-2'>
-                                <Input
-                                    {...register('organization')}
-                                    placeholder='Enter the organization'
-                                />
-                                {errors.organization &&
-                                    <p className='text-xs md:text-sm text-red-500'>
-                                        {errors.organization.message}
-                                    </p>
-                                }
+                            <div className='grid grid-cols-2 gap-4'>
+                                <div className='space-y-2'>
+                                    <Input
+                                        {...register('startDate')}
+                                        type="text"
+                                        placeholder="Start Date"
+                                        onFocus={e => (e.currentTarget.type = 'month')}
+                                        onBlur={e => (e.currentTarget.type = 'text')}
+                                    />
+                                    { errors.startDate &&
+                                        <p className='text-sm text-red-500'>{errors.startDate.message}</p>
+                                    }
+                                </div>
+                                <div className='space-y-2'>
+                                    <Input
+                                        {...register('endDate')}
+                                        type="text"
+                                        placeholder="End Date"
+                                        onFocus={e => (e.currentTarget.type = 'month')}
+                                        onBlur={e => (e.currentTarget.type = 'text')}
+                                        disabled={watchCurrent}
+                                    />
+                                    { errors.endDate &&
+                                        <p className='text-sm text-red-500'>{errors.endDate.message}</p>
+                                    }
+                                </div>
                             </div>
-                            
+
+                            <div className='flex items-center space-x-2'>
+                                <input
+                                    {...register('current')}
+                                    id='current'
+                                    type='checkbox'
+                                    onChange={(e) => {
+                                        setValue('current', e.target.checked);
+                                        if(e.target.checked)
+                                            setValue('endDate', '');
+                                    }}
+                                    className='hover:cursor-pointer'
+                                />
+                                <Label htmlFor='current'>
+                                    Current
+                                </Label>
+                            </div>
+
                             <div className='space-y-2'>
                                 <Textarea
                                     {...register('description')}
-                                    placeholder='Enter the job description'
+                                    placeholder='Description of your Work Experience'
+                                    className='h-20'
                                 />
-                                {errors.description &&
-                                    <p className='text-xs md:text-sm text-red-500'>
-                                        {errors.description.message}
-                                    </p>
-                                }
-                            </div>
-
-                            <div className='space-y-2'>
-                                <Input
-                                    type='month'
-                                    {...register('startDate')}
-                                    placeholder='From'
-                                />
-                                {errors.startDate &&
-                                    <p className='text-xs md:text-sm text-red-500'>
-                                        {errors.startDate.message}
-                                    </p>
-                                }
-                            </div>
-
-                            <div className='space-y-2'>
-                                <Input
-                                    type='month'
-                                    {...register('endDate')}
-                                    placeholder='To'
-                                    disabled={watchCurrent}
-                                    onChange={() => {
-                                        setValue('current', false);
-                                    }}
-                                />
-                                {errors.endDate &&
-                                    <p className='text-xs md:text-sm text-red-500'>
-                                        {errors.endDate.message}
-                                    </p>
-                                }
-                            </div>
-
-                            <div className='space-y-2'>
-                                <Input
-                                    type='checkbox'
-                                    {...register('endDate')}
-                                    placeholder='Working currently'
-                                    onChange={() => {
-                                        setValue('endDate', '');
-                                    }}
-                                />
-                                {errors.current &&
-                                    <p className='text-xs md:text-sm text-red-500'>
-                                        {errors.current.message}
-                                    </p>
+                                { errors.description &&
+                                    <p className='text-sm text-red-500'>{errors.description.message}</p>
                                 }
                             </div>
                         </div>
-                    }
-
-                </CardContent>
-                <CardFooter>
-                    <p>Card Footer</p>
-                </CardFooter>
-            </Card>
+                    </CardContent>
+                    <CardFooter>
+                        <p>Card Footer</p>
+                    </CardFooter>
+                </Card>
+            )}
+            
+            {!addBtn && (
+                <Button 
+                    onClick={() => { setAddBtn(true) }}
+                    className='hover:cursor-pointer'
+                >   
+                    <PlusCircle className='h-4 w-4'/>
+                    Add Work Experience
+                </Button>
+            )}
         </div>
     )
 }

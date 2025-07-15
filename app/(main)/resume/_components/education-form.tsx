@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
 type ProjectFormProps = {
-    entries: z.infer<typeof educationSchema>,
+    entries: any,
     onChange: (...event: any[]) => void
 }
 
@@ -14,6 +14,7 @@ const EducationForm = ({ entries, onChange }: ProjectFormProps) => {
         register,
         watch,
         setValue,
+        reset,
         handleSubmit: handleValidation,
         formState: {
             errors
