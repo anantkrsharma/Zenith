@@ -1,13 +1,16 @@
+import { improveWithAI } from '@/actions/resume'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
+import useFetch from '@/hooks/use-fetch'
 import { projectSchema } from '@/lib/form-schema'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { PlusCircle } from 'lucide-react'
-import React, { useState } from 'react'
+import { Loader2, PlusCircle, Sparkle, X } from 'lucide-react'
+import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 
 type ProjectFormProps = {
     entries: any,
@@ -31,6 +34,7 @@ const ProjectForm = ({ entries, onChange }: ProjectFormProps) => {
         defaultValues: {
             title: '',
             description: '',
+            skills: '',
             github: '',
             liveLink: '',
             startDate: '',
@@ -40,6 +44,60 @@ const ProjectForm = ({ entries, onChange }: ProjectFormProps) => {
     })
 
     const watchCurrent = watch('current');
+
+    const {
+        data: aiData,
+        loading: aiLoading,
+        error: aiError,
+        fn: aiFunction
+    } = useFetch();
+
+    const handleImproveDescription = async () => {
+        const description = watch('description');
+        if (!description) {
+            toast.error("Project description cannot be empty");
+            return;
+        }
+        try {
+            await aiFunction(
+                improveWithAI,  
+                {
+                    type: "Project".toLowerCase(),
+                    currentDesc: description, 
+                    title: watch('title'),
+                    skills: watch('skills') ? watch('skills').split(',').map(skill => skill.trim()) : undefined,
+                }
+            );
+        } catch (error) {
+            if(error instanceof Error){
+                toast.error(`Error: ${error.message}`);
+            }
+            else {
+                toast.error("Unknown error occurred while improving the project description");
+            }
+        }
+    }
+
+    useEffect(() => {
+        if (aiData && !aiLoading) {
+            setValue('description', aiData);
+            toast.success("Project description improved successfully!");
+        }
+        if (aiError) {
+            if(aiError instanceof Error)
+                toast.error(`Error: ${aiError.message}`);
+            else
+                toast.error(`Unknown error occurred while improving the project description`);
+        }
+    }, [aiData, aiError, aiLoading]);
+
+    const handleAdd = () => {
+        
+    }
+
+    const handleDelete = () => {
+
+    }
     
     return (
         <div className='py-1 px-1 md:px-2'>
@@ -48,7 +106,7 @@ const ProjectForm = ({ entries, onChange }: ProjectFormProps) => {
                     <CardContent>
                         <div className='space-y-4'>
                             <div className='grid grid-cols-2 gap-4'>
-                                <div className='space-y-2 col-span-2'>
+                                <div className='space-y-2'>
                                     <Input
                                         {...register('title')}
                                         placeholder='Title'
@@ -56,6 +114,16 @@ const ProjectForm = ({ entries, onChange }: ProjectFormProps) => {
                                     />
                                     { errors.title &&
                                         <p className='text-sm text-red-500'>{errors.title.message}</p>
+                                    }
+                                </div>
+                                <div className='space-y-2'>
+                                    <Input
+                                        {...register('skills')}
+                                        placeholder='Skills (comma separated)'
+                                        className='bg-black/69'
+                                    />
+                                    { errors.skills &&
+                                        <p className='text-sm text-red-500'>{errors.skills.message}</p>
                                     }
                                 </div>
                                 <div className='space-y-2'>
@@ -133,12 +201,58 @@ const ProjectForm = ({ entries, onChange }: ProjectFormProps) => {
                                     placeholder='Description of your project'
                                     className='h-20 bg-black/69'
                                 />
+                                
+                                <Button 
+                                    className='hover:cursor-pointer border hover:border-cyan-800 hover:bg-cyan-500/10 transition-all duration-150 ease-in-out'
+                                    variant={'ghost'}
+                                    size={'sm'}
+                                    onClick={handleImproveDescription}
+                                    disabled={aiLoading || !watch('description')}
+                                >   { aiLoading ?
+                                    <>
+                                        <Loader2 className='animate-spin h-4 w-4' />
+                                        <p className='text-sm'>Improving...</p>
+                                    </>
+                                    : 
+                                    <>
+                                        <Sparkle className='h-4 w-4'/>
+                                        <p className='text-sm'>
+                                            Improve with AI
+                                        </p>
+                                    </>
+                                    }
+                                </Button>
                                 { errors.description &&
                                     <p className='text-sm text-red-500'>{errors.description.message}</p>
                                 }
                             </div>
                         </div>
                     </CardContent>
+                    <CardFooter className='flex items-center justify-end gap-2'>
+                        <Button
+                            type='button'
+                            variant={'outline'}
+                            size={'sm'}
+                            className='hover:cursor-pointer hover:border-red-800 hover:bg-red-700/10 transition-all duration-150 ease-in-out'
+                            onClick={() => {
+                                reset();
+                                setAddBtn(false);
+                            }}
+                        >   
+                            <X className='h-4 w-4'/>
+                            Cancel
+                        </Button>
+                        <Button
+                            type='button'
+                            variant={'outline'}
+                            size={'sm'}
+                            className='hover:cursor-pointer hover:border-neutral-400 transition-all duration-150 ease-in-out'
+                            onClick={handleAdd}
+                        >
+                            <PlusCircle className='h-4 w-4'/>
+                            Add Project
+                        </Button>
+                    </CardFooter>
                 </Card>
             )}
             

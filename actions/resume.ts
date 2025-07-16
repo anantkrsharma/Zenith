@@ -87,11 +87,12 @@ type ImproveWithAIParams = {
     type: string, 
     currentDesc: string, 
     title: string, 
-    organization?: string
+    organization?: string,
+    skills?: string[]
 }
 
 //generate AI improved content (project, job, skills, etc)
-export async function improveWithAI({ type, currentDesc, title, organization }: ImproveWithAIParams){
+export async function improveWithAI({ type, currentDesc, title, organization, skills }: ImproveWithAIParams){
     try {    
         const { userId } = await auth();
         if(!userId){
@@ -116,6 +117,7 @@ export async function improveWithAI({ type, currentDesc, title, organization }: 
             Current description: ${currentDesc.toString()}
             Title: ${title.toString()}
             ${organization && `Organization: ${organization.toString()}`}
+            ${skills && `Skills: ${skills.join(', ')}`}
 
             Requirements:
             1. Use action verbs

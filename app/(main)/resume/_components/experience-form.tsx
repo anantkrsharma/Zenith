@@ -9,10 +9,9 @@ import { Textarea } from '@/components/ui/textarea';
 import useFetch from '@/hooks/use-fetch';
 import { workExpSchema } from '@/lib/form-schema'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { set } from 'date-fns';
 import { Loader2, PlusCircle, Sparkle, X } from 'lucide-react';
 import React, { useEffect, useState } from 'react'
-import { Controller, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { toast } from 'sonner';
 
 type ExperienceFormProps = {
@@ -53,13 +52,12 @@ const ExperienceForm = ({ entries, onChange }: ExperienceFormProps) => {
         fn: aiFunction
     } = useFetch();
 
-    const handleImproveDesc = async () => {
+    const handleImproveDescription = async () => {
         const description = watch('description');
         if (!description) {
-            toast.error("Description cannot be empty");
+            toast.error("Work experience description cannot be empty");
             return;
         }
-        
         try {
             await aiFunction(
                 improveWithAI,  
@@ -69,13 +67,13 @@ const ExperienceForm = ({ entries, onChange }: ExperienceFormProps) => {
                     title: watch('title'),
                     organization: watch('organization')
                 }
-            )
+            );
         } catch (error) {
             if(error instanceof Error){
                 toast.error(`Error: ${error.message}`);
             }
             else {
-                toast.error("An unknown error occurred while improving the description.");
+                toast.error("Unknown error occurred while improving the work experience description");
             }
         }
     }
@@ -83,13 +81,13 @@ const ExperienceForm = ({ entries, onChange }: ExperienceFormProps) => {
     useEffect(() => {
         if (aiData && !aiLoading) {
             setValue('description', aiData);
-            toast.success("Description improved successfully!");
+            toast.success(" Work experience description improved successfully!");
         }
         if (aiError) {
             if(aiError instanceof Error)
                 toast.error(`Error: ${aiError.message}`);
             else
-                toast.error(`An unknown error occurred while improving the description`);
+                toast.error(`Unknown error occurred while improving the work experience description`);
         }
     }, [aiData, aiError, aiLoading]);
 
@@ -187,7 +185,7 @@ const ExperienceForm = ({ entries, onChange }: ExperienceFormProps) => {
                                     className='hover:cursor-pointer border hover:border-cyan-800 hover:bg-cyan-500/10 transition-all duration-150 ease-in-out'
                                     variant={'ghost'}
                                     size={'sm'}
-                                    onClick={handleImproveDesc}
+                                    onClick={handleImproveDescription}
                                     disabled={aiLoading || !watch('description')}
                                 >   { aiLoading ?
                                     <>
