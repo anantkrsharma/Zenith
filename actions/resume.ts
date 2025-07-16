@@ -83,8 +83,15 @@ export async function saveResume(resumeContent: string){
     }
 }
 
+type ImproveWithAIParams = {
+    type: string, 
+    currentDesc: string, 
+    title: string, 
+    organization?: string
+}
+
 //generate AI improved content (project, job, skills, etc)
-export async function improveWithAI(type: string, currentContent: string){
+export async function improveWithAI({ type, currentDesc, title, organization }: ImproveWithAIParams){
     try {    
         const { userId } = await auth();
         if(!userId){
@@ -106,7 +113,9 @@ export async function improveWithAI(type: string, currentContent: string){
         const prompt = `
             As an expert resume writer, improve the following ${type} description for a ${user.industry} professional.
             Make it more impactful, quantifiable, and aligned with industry standards.
-            Current content: "${currentContent}"
+            Current description: ${currentDesc.toString()}
+            Title: ${title.toString()}
+            ${organization && `Organization: ${organization.toString()}`}
 
             Requirements:
             1. Use action verbs
@@ -124,7 +133,7 @@ export async function improveWithAI(type: string, currentContent: string){
             contents: prompt
         });
         
-        return res.text?.trim() || "";
+        return res.text?.trim().replace(/^"|"$/g, '') || "";
         
     } catch (error) {
         if (error instanceof Error) {

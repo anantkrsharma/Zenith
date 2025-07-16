@@ -42,9 +42,9 @@ const ProjectForm = ({ entries, onChange }: ProjectFormProps) => {
     const watchCurrent = watch('current');
     
     return (
-        <div className='p-4'>
+        <div className='py-1 px-1 md:px-2'>
             {addBtn && (
-                <Card>
+                <Card className='bg-neutral-800/40 border-none'>
                     <CardContent>
                         <div className='space-y-4'>
                             <div className='grid grid-cols-2 gap-4'>
@@ -52,6 +52,7 @@ const ProjectForm = ({ entries, onChange }: ProjectFormProps) => {
                                     <Input
                                         {...register('title')}
                                         placeholder='Title'
+                                        className='bg-black/69'
                                     />
                                     { errors.title &&
                                         <p className='text-sm text-red-500'>{errors.title.message}</p>
@@ -60,7 +61,8 @@ const ProjectForm = ({ entries, onChange }: ProjectFormProps) => {
                                 <div className='space-y-2'>
                                     <Input
                                         {...register('github')}
-                                        placeholder='Github'
+                                        placeholder='GitHub'
+                                        className='bg-black/69'
                                     />
                                     { errors.github &&
                                         <p className='text-sm text-red-500'>{errors.github.message}</p>
@@ -70,6 +72,7 @@ const ProjectForm = ({ entries, onChange }: ProjectFormProps) => {
                                     <Input
                                         {...register('liveLink')}
                                         placeholder='Link'
+                                        className='bg-black/69'
                                     />
                                     { errors.liveLink &&
                                         <p className='text-sm text-red-500'>{errors.liveLink.message}</p>
@@ -85,6 +88,7 @@ const ProjectForm = ({ entries, onChange }: ProjectFormProps) => {
                                         placeholder="Start Date"
                                         onFocus={e => (e.currentTarget.type = 'month')}
                                         onBlur={e => (e.currentTarget.type = 'text')}
+                                        className='bg-black/69'
                                     />
                                     { errors.startDate &&
                                         <p className='text-sm text-red-500'>{errors.startDate.message}</p>
@@ -98,6 +102,7 @@ const ProjectForm = ({ entries, onChange }: ProjectFormProps) => {
                                         onFocus={e => (e.currentTarget.type = 'month')}
                                         onBlur={e => (e.currentTarget.type = 'text')}
                                         disabled={watchCurrent}
+                                        className='bg-black/69'
                                     />
                                     { errors.endDate &&
                                         <p className='text-sm text-red-500'>{errors.endDate.message}</p>
@@ -115,7 +120,7 @@ const ProjectForm = ({ entries, onChange }: ProjectFormProps) => {
                                         if(e.target.checked)
                                             setValue('endDate', '');
                                     }}
-                                    className='hover:cursor-pointer'
+                                    className='hover:cursor-pointer bg-black/69`'
                                 />
                                 <Label htmlFor='current'>
                                     Current
@@ -125,8 +130,8 @@ const ProjectForm = ({ entries, onChange }: ProjectFormProps) => {
                             <div className='space-y-2'>
                                 <Textarea
                                     {...register('description')}
-                                    placeholder='Description of your Project'
-                                    className='h-20'
+                                    placeholder='Description of your project'
+                                    className='h-20 bg-black/69'
                                 />
                                 { errors.description &&
                                     <p className='text-sm text-red-500'>{errors.description.message}</p>
@@ -134,9 +139,6 @@ const ProjectForm = ({ entries, onChange }: ProjectFormProps) => {
                             </div>
                         </div>
                     </CardContent>
-                    <CardFooter>
-                        <p>Card Footer</p>
-                    </CardFooter>
                 </Card>
             )}
             
