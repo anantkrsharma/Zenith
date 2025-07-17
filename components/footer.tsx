@@ -46,18 +46,18 @@ const Footer = () => {
                 
                 <div>
                     <h3 className="text-base font-semibold mb-3">Stay Connected</h3>
-                    <form className="flex flex-col sm:flex-row md:flex-col gap-3">
-                    <input
-                        type="email"
-                        placeholder="Your email"
-                        className="px-4 py-2 rounded-lg text-gray-300 w-full border border-zinc-400"
-                    />
-                    <Button 
-                        variant={'outline'}
-                        className="bg-zinc-700 border-zinc-500 hover:cursor-pointer hover:bg-zinc-600 hover:border-zinc-400 transition-all duration-75 ease-in-out rounded-lg px-4 py-2 w-full"
-                    >   
-                        Subscribe
-                    </Button>
+                    <form className="flex flex-col gap-3">
+                        <input
+                            type="email"
+                            placeholder="Your email"
+                            className="px-4 py-2 rounded-lg text-gray-300 w-full border border-zinc-400"
+                        />
+                        <Button 
+                            variant={'outline'}
+                            className="bg-zinc-700 border-zinc-500 hover:cursor-pointer hover:bg-zinc-600 hover:border-zinc-400 transition-all duration-75 ease-in-out rounded-lg px-4 py-2 w-full"
+                        >   
+                            Subscribe
+                        </Button>
                     </form>
                 </div>
             </div>

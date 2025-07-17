@@ -1,4 +1,5 @@
 import { improveWithAI } from '@/actions/resume'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -124,17 +125,17 @@ const ProjectForm = ({ entries, onChange }: ProjectFormProps) => {
                     <CardHeader className='-mb-2'>
                         <CardTitle className='text-lg space-y-1'>
                             <div className=' flex items-center justify-between'>
-                                <div className='flex items-center gap-3'>
+                                <div className='flex items-center gap-4'>
                                     <p>{entry.title}</p>
 
-                                    <div className='flex items-center gap-1'>
+                                    <div className='flex items-center gap-2'>
                                         { entry.github && (
-                                            <Link href={entry.github} className='bg-neutral-950 border rounded-lg flex items-center gap-1 px-2 py-0.5 text-sm text-neutral-400 hover:text-neutral-200 transition-colors duration-150 ease-in-out'>
+                                            <Link href={entry.github} className='bg-black-950 rounded-md border-y border-neutral-700 flex items-center gap-1 px-2 py-0.5 text-sm text-neutral-300 hover:text-neutral-200 transition-colors duration-150 ease-in-out'>
                                                 <Code className='h-4 w-4'/> GitHub
                                             </Link>
                                         )}
                                         { entry.liveLink && (
-                                            <Link href={entry.liveLink} className='bg-neutral-950 border rounded-lg flex items-center gap-1 px-2 py-0.5 text-sm text-neutral-400 hover:text-neutral-200 transition-colors duration-150 ease-in-out'>
+                                            <Link href={entry.liveLink} className='bg-black-950 rounded-md border-y border-neutral-700 flex items-center gap-1 px-2 py-0.5 text-sm text-neutral-300 hover:text-neutral-200 transition-colors duration-150 ease-in-out'>
                                                 <ExternalLink className='h-4 w-4'/> Live
                                             </Link>
                                         )}
@@ -157,6 +158,13 @@ const ProjectForm = ({ entries, onChange }: ProjectFormProps) => {
                     <CardContent className=''>
                         <div>
                             <p className='text-sm text-justify'>{entry.description}</p>
+                        </div>
+                        <div className='flex items-center gap-2 mt-2'>
+                            { entry.skills && entry.skills.length > 0 && entry.skills.map((skill: string, i: number) => (
+                                <Badge key={i} variant={'outline'} className='border-cyan-950 bg-cyan-800/10'>
+                                    {skill}
+                                </Badge>
+                            ))}
                         </div>
                     </CardContent>
                 </Card>
