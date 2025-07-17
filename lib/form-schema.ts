@@ -43,10 +43,19 @@ export const workExpSchema = z.object({
     .refine((data) => {
         if(!data.current && !data.endDate)
             return false;
-        
         return true;
     }, {
         message: "End date is required unless this is your current position",
+        path: ["endDate"]
+    })
+    .refine((data) => {
+        if (data.endDate && data.startDate) {
+            // Compare as yyyy-MM
+            return data.endDate >= data.startDate;
+        }
+        return true;
+    }, {
+        message: "End date cannot be earlier than start date",
         path: ["endDate"]
     })
 
@@ -76,10 +85,18 @@ export const projectSchema = z.object({
     .refine((data) => {
         if(!data.current && !data.endDate)
             return false;
-        
         return true;
     }, {
         message: "End date is required unless working on the project currently",
+        path: ["endDate"]
+    })
+    .refine((data) => {
+        if (data.endDate && data.startDate) {
+            return data.endDate >= data.startDate;
+        }
+        return true;
+    }, {
+        message: "End date cannot be earlier than start date",
         path: ["endDate"]
     });
 
@@ -94,10 +111,18 @@ export const educationSchema = z.object({
     .refine((data) => {
         if(!data.current && !data.endDate)
             return false;
-        
         return true;
     }, {
         message: "End date is required unless you're not studying here currently",
+        path: ["endDate"]
+    })
+    .refine((data) => {
+        if (data.endDate && data.startDate) {
+            return data.endDate >= data.startDate;
+        }
+        return true;
+    }, {
+        message: "End date cannot be earlier than start date",
         path: ["endDate"]
     });
 

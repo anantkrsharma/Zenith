@@ -9,10 +9,12 @@ import { Textarea } from '@/components/ui/textarea';
 import useFetch from '@/hooks/use-fetch';
 import { workExpSchema } from '@/lib/form-schema'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { format, parse } from 'date-fns';
 import { Loader2, PlusCircle, Sparkle, X } from 'lucide-react';
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner';
+import { z } from 'zod';
 
 type ExperienceFormProps = {
     entries: any,
@@ -51,6 +53,12 @@ const ExperienceForm = ({ entries, onChange }: ExperienceFormProps) => {
         error: aiError,
         fn: aiFunction
     } = useFetch();
+
+    const formatDate  = (dateString: string) => {
+        if(!dateString) return '';
+        const date = parse(dateString, 'yyyy-MM', new Date());
+        return format(date, 'MMM yyyy');
+    }
 
     const handleImproveDescription = async () => {
         const description = watch('description');
@@ -91,16 +99,55 @@ const ExperienceForm = ({ entries, onChange }: ExperienceFormProps) => {
         }
     }, [aiData, aiError, aiLoading]);
 
-    const handleAdd = () => {
-        
-    }
+    const handleAdd = handleValidation((data) => {
+        const formattedData = {
+            ...data,
+            startDate: formatDate(data.startDate),
+            endDate: data.current ? '' : formatDate(data.endDate ?? '')
+        }
 
-    const handleDelete = () => {
+        // Add the new entry to the existing workExp-entries of the original resume form
+        onChange([...entries, formattedData]);
+        reset();
+        setAddBtn(false);
+    })
 
+    const handleDelete = (index: number) => {
+        onChange(entries.filter((_: z.infer<typeof workExpSchema>, i: number) => i !== index));
     }
 
     return (
-        <div className='py-1 px-1 md:px-2'>
+        <div className='space-y-4'>
+            { entries.map((entry: z.infer<typeof workExpSchema>, index: number) => (
+                <Card key={index} className='bg-neutral-800/40 border-none'>
+                    <CardHeader className='-mb-2'>
+                        <CardTitle className='text-lg'>
+                            <div className=' flex items-center justify-between'>
+                                <p>
+                                    {entry.title} <span className='text-neutral-400'>at</span> {entry.organization}
+                                </p>
+                                <Button
+                                    variant={'outline'}
+                                    size={'sm'}
+                                    className='hover:cursor-pointer hover:border-red-800 hover:bg-red-700/10 transition-all duration-150 ease-in-out'
+                                    onClick={() => handleDelete(index)}
+                                >
+                                    <X className='h-4 w-4'/>
+                                </Button>
+                            </div>
+                            <p className='font-medium text-sm text-neutral-400'>
+                                {entry.startDate} - {entry.endDate || 'Present'}
+                            </p>
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div>
+                            <p className='text-sm text-justify'>{entry.description}</p>
+                        </div>
+                    </CardContent>
+                </Card>
+            ))}
+
             {addBtn && (
                 <Card className='bg-neutral-800/40 border-none'>
                     <CardContent>
@@ -146,19 +193,19 @@ const ExperienceForm = ({ entries, onChange }: ExperienceFormProps) => {
                                     <Input
                                         {...register('endDate')}
                                         type="text"
-                                        placeholder="End Date"
+                                        placeholder={current ? "Present" : "End Date"}
                                         onFocus={e => (e.currentTarget.type = 'month')}
                                         onBlur={e => (e.currentTarget.type = 'text')}
                                         disabled={current}
                                         className='bg-black/69'
                                     />
-                                    { errors.endDate &&
+                                    { errors.endDate && !current &&
                                         <p className='text-sm text-red-500'>{errors.endDate.message}</p>
                                     }
                                 </div>
                             </div>
 
-                            <div className='flex items-center space-x-2'>
+                            <div className='flex items-center space-x-2 hover:cursor-pointer [&>*]:hover:cursor-pointer w-min'>
                                 <input
                                     {...register('current')}
                                     id='current'
@@ -168,9 +215,9 @@ const ExperienceForm = ({ entries, onChange }: ExperienceFormProps) => {
                                         if(e.target.checked)
                                             setValue('endDate', '');
                                     }}
-                                    className='hover:cursor-pointer bg-black/69'
+                                    className='bg-black/69'
                                 />
-                                <Label htmlFor='current'>
+                                <Label htmlFor='current' className='text-sm'>
                                     Current
                                 </Label>
                             </div>
