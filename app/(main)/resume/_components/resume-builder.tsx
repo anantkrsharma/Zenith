@@ -8,7 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import useFetch from '@/hooks/use-fetch';
 import { resumeSchema } from '@/lib/form-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Download, Save } from 'lucide-react'
+import { Download, Edit, FileWarning, Monitor, Save, TriangleAlert } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -21,10 +21,11 @@ import { saveResume } from '@/actions/resume';
 const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
     const [activeTab, setActiveTab] = useState<string>('form');
     const [toastId, setToastId] = useState<string | number | null>(null);
+    const [isEditing, setIsEditing] = useState<boolean>(false);
 
     useEffect(() => {
         if(initialContent.length > 0)
-            setActiveTab('markdown-preview');
+            setActiveTab('md-preview');
     }, [initialContent]);
 
     const { 
@@ -85,7 +86,7 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
 
             if(saveResumeData){
                 toast.success("Saved resume successfully");
-                setActiveTab("markdown-preview")
+                setActiveTab("md-preview")
             }
         }
     }, [toastId, saveResumeLoading])
@@ -123,7 +124,7 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
             >
                 <TabsList className='[&>*]:hover:cursor-pointer'>
                     <TabsTrigger value="form"> Form </TabsTrigger>
-                    <TabsTrigger value="markdown-preview"> Markdown-preview </TabsTrigger>
+                    <TabsTrigger value="md-preview"> Preview </TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="form" className='p-1'> 
@@ -312,8 +313,31 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
                     </form> 
                 </TabsContent>
 
-                <TabsContent value="markdown-preview" className='p-1'> 
-                    MD 
+                <TabsContent value="md-preview" className='p-1'> 
+                    <Button 
+                        variant={'outline'} 
+                        type='button' 
+                        className='mb-2 flex items-center bg-zinc-900 border-neutral-700 hover:cursor-pointer hover:bg-neutral-800 hover:border-zinc-500 transition-all duration-75 ease-in-out'
+                        onClick={() => setIsEditing(!isEditing)}
+                    >   
+                        { isEditing ? 
+                            <>
+                                <Monitor className='h-4 w-4' />
+                                Markdown Preview
+                            </>
+                            :
+                            <>
+                                <Edit className='h-4 w-4' />
+                                Edit Resume
+                            </>
+                        }
+                    </Button>
+                    { isEditing &&
+                        <div className='text-sm sm:text-base flex items-center px-2 py-1 rounded-lg text-neutral-300 bg-yellow-700/20 border border-yellow-600/50 w-fit'>
+                            <TriangleAlert className='h-4 w-4 mr-1 text-yellow-500' />
+                            You will lose the edited markdown if you update the form data
+                        </div>
+                    }
                 </TabsContent>
             </Tabs>
         </div>
