@@ -22,6 +22,7 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
     const [activeTab, setActiveTab] = useState<string>('form');
     const [toastId, setToastId] = useState<string | number | null>(null);
     const [isEditing, setIsEditing] = useState<boolean>(false);
+    const [previewContent, setPreviewContent] = useState<string>(initialContent);
 
     useEffect(() => {
         if(initialContent.length > 0)
@@ -317,7 +318,7 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
                     <Button 
                         variant={'outline'} 
                         type='button' 
-                        className='mb-2 flex items-center bg-zinc-900 border-neutral-700 hover:cursor-pointer hover:bg-neutral-800 hover:border-zinc-500 transition-all duration-75 ease-in-out'
+                        className='mb-2 flex items-center bg-black border-neutral-700 hover:cursor-pointer hover:bg-neutral-900 hover:border-zinc-500 transition-all duration-75 ease-in-out'
                         onClick={() => setIsEditing(!isEditing)}
                     >   
                         { isEditing ? 
@@ -333,10 +334,14 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
                         }
                     </Button>
                     { isEditing &&
-                        <div className='text-sm sm:text-base flex items-center px-2 py-1 rounded-lg text-neutral-300 bg-yellow-700/20 border border-yellow-600/50 w-fit'>
-                            <TriangleAlert className='h-4 w-4 mr-1 text-yellow-500' />
-                            You will lose the edited markdown if you update the form data
+                    <div className='flex items-center justify-center mb-2'>    
+                        <div className='w-full flex items-center justify-center px-2 py-1.5 rounded-xl text-neutral-300 bg-yellow-700/15 border-r border-b border-yellow-600/55 '>
+                            <TriangleAlert className='h-5 w-5 mr-2 text-yellow-500' />
+                            <p className='text-sm md:text-base'>
+                                You will lose the edited markdown if you update the form data
+                            </p>
                         </div>
+                    </div>
                     }
                 </TabsContent>
             </Tabs>
