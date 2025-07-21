@@ -8,7 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import useFetch from '@/hooks/use-fetch';
 import { resumeSchema } from '@/lib/form-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Download, Edit, FileWarning, Monitor, Save, TriangleAlert } from 'lucide-react'
+import { Download, Edit, Monitor, Save, TriangleAlert } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -17,6 +17,9 @@ import ExperienceForm from './experience-form';
 import ProjectForm from './project-form';
 import EducationForm from './education-form';
 import { saveResume } from '@/actions/resume';
+import MDEditor from '@uiw/react-md-editor';
+import rehypeSanitize from "rehype-sanitize";
+import { contactToMarkdown, contentToMarkdown, projectsToMarkdown } from '@/lib/toMarkdown';
 
 const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
     const [activeTab, setActiveTab] = useState<string>('form');
@@ -49,10 +52,8 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
             projects: []
         }
     });
-    
-    const watchForm = watch();
-    
-    type resumeFormType = z.infer<typeof resumeSchema>
+
+    const formValues = watch();
 
     const {
         data: saveResumeData,
@@ -61,7 +62,20 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
         error: saveResumeError,
     } = useFetch();
 
-    const onSubmit = async (val: resumeFormType) => {
+    const getMarkdownContent = () => {
+        const { contactInfo, skills, summary, workExp, projects, education } = formValues;
+
+        return [
+            contactToMarkdown(contactInfo),
+            summary && `## Professional Summary\n\n${summary}`,
+            skills && `## Skills\n\n${skills}`,
+            workExp && contentToMarkdown("Work Experience", workExp),
+            projects && projectsToMarkdown(projects),
+            education && contentToMarkdown("Education", education),
+        ]
+    }
+
+    const onSubmit = async (val: z.infer<typeof resumeSchema>) => {
         try {
             await saveResumeFn(saveResume, JSON.stringify(val));
         } catch (error) {
@@ -343,6 +357,14 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
                         </div>
                     </div>
                     }
+                    <div className="container">
+                        <MDEditor
+                            value={getMarkdownContent().join('\n\n')}
+                            previewOptions={{
+                            rehypePlugins: [[rehypeSanitize]],
+                            }}
+                        />
+                    </div>
                 </TabsContent>
             </Tabs>
         </div>
