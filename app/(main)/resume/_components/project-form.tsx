@@ -155,14 +155,14 @@ const ProjectForm = ({ entries, onChange }: ProjectFormProps) => {
                             </p>
                         </CardTitle>
                     </CardHeader>
-                    <CardContent className=''>
+                    <CardContent>
                         <div>
                             <p className='text-sm text-justify'>{entry.description}</p>
                         </div>
-                        <div className='flex items-center gap-2 mt-2'>
-                            { entry.skills && entry.skills.length > 0 && entry.skills.map((skill: string, i: number) => (
-                                <Badge key={i} variant={'outline'} className='border-cyan-950 bg-cyan-800/10'>
-                                    {skill}
+                        <div className='flex items-center flex-wrap gap-2 mt-4'>
+                            { entry.skills && entry.skills.length > 0 && entry.skills.split(',').map((skill: string, i: number) => (
+                                <Badge key={i} variant={'outline'} className='border-cyan-900 bg-cyan-800/10'>
+                                    {skill.trim()}
                                 </Badge>
                             ))}
                         </div>

@@ -64,9 +64,7 @@ const githubUrlRegex = /^https?:\/\/(www\.)?github\.com\/[A-Za-z0-9_.-]+(\/[A-Za
 export const projectSchema = z.object({
         title: z.string().min(1, "Title is required"),
         description: z.string().min(1, "Description is required"),
-        skills: z
-                .string()
-                .transform((val) => val ? val.split(",").map((skill) => skill.trim()).filter(Boolean) : undefined),
+        skills: z.string().min(1, "Skills are required"),
         github: z
                 .string()
                 .url()

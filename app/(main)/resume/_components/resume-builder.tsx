@@ -19,13 +19,15 @@ import EducationForm from './education-form';
 import { saveResume } from '@/actions/resume';
 import MDEditor from '@uiw/react-md-editor';
 import rehypeSanitize from "rehype-sanitize";
-import { contactToMarkdown, contentToMarkdown, projectsToMarkdown } from '@/lib/toMarkdown';
+import { contactToMarkdown, workExpToMarkdown, projectsToMarkdown, educationToMarkdown } from '@/lib/toMarkdown';
+import { useUser } from '@clerk/nextjs';
 
 const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
     const [activeTab, setActiveTab] = useState<string>('form');
     const [toastId, setToastId] = useState<string | number | null>(null);
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const [previewContent, setPreviewContent] = useState<string>(initialContent);
+    const { user } = useUser();
 
     useEffect(() => {
         if(initialContent.length > 0)
@@ -66,12 +68,27 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
         const { contactInfo, skills, summary, workExp, projects, education } = formValues;
 
         return [
-            contactToMarkdown(contactInfo),
+            contactToMarkdown(user?.fullName || '' ,contactInfo),
             summary && `## Professional Summary\n\n${summary}`,
             skills && `## Skills\n\n${skills}`,
-            workExp && contentToMarkdown("Work Experience", workExp),
-            projects && projectsToMarkdown(projects),
-            education && contentToMarkdown("Education", education),
+            workExp && workExpToMarkdown(
+                workExp.map((exp: any) => ({
+                    ...exp,
+                    current: exp.current ?? false,
+                }))
+            ),
+            projects && projectsToMarkdown(
+                projects.map((proj: any) => ({
+                    ...proj,
+                    current: proj.current ?? false,
+                }))
+            ),
+            education && educationToMarkdown(
+                education.map((edu: any) => ({
+                    ...edu,
+                    current: edu.current ?? false,
+                }))
+            ),
         ]
     }
 
@@ -357,12 +374,13 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
                         </div>
                     </div>
                     }
-                    <div className="container">
+                    <div className="container minh-screen">
                         <MDEditor
                             value={getMarkdownContent().join('\n\n')}
                             previewOptions={{
                             rehypePlugins: [[rehypeSanitize]],
                             }}
+                            className='h-full'
                         />
                     </div>
                 </TabsContent>
