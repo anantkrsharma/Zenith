@@ -49,6 +49,40 @@ export const workExpSchema = z.object({
         path: ["endDate"]
     })
     .refine((data) => {
+        // Prevent future startDate
+        if (data.startDate) {
+            const now = new Date();
+            const [startYear, startMonth] = data.startDate.split('-').map(Number);
+            if (
+                startYear > now.getFullYear() ||
+                (startYear === now.getFullYear() && startMonth > (now.getMonth() + 1))
+            ) {
+                return false;
+            }
+        }
+        return true;
+    }, {
+        message: "Start date cannot be in the future.",
+        path: ["startDate"]
+    })
+    .refine((data) => {
+        // Prevent future endDate
+        if (data.endDate) {
+            const now = new Date();
+            const [endYear, endMonth] = data.endDate.split('-').map(Number);
+            if (
+                endYear > now.getFullYear() ||
+                (endYear === now.getFullYear() && endMonth > (now.getMonth() + 1))
+            ) {
+                return false;
+            }
+        }
+        return true;
+    }, {
+        message: "End date cannot be in the future. If you are currently in this position, please select 'Current' instead.",
+        path: ["endDate"]
+    })
+    .refine((data) => {
         if (data.endDate && data.startDate) {
             // Compare as yyyy-MM
             return data.endDate >= data.startDate;
@@ -89,6 +123,40 @@ export const projectSchema = z.object({
         path: ["endDate"]
     })
     .refine((data) => {
+        // Prevent future startDate
+        if (data.startDate) {
+            const now = new Date();
+            const [startYear, startMonth] = data.startDate.split('-').map(Number);
+            if (
+                startYear > now.getFullYear() ||
+                (startYear === now.getFullYear() && startMonth > (now.getMonth() + 1))
+            ) {
+                return false;
+            }
+        }
+        return true;
+    }, {
+        message: "Start date cannot be in the future.",
+        path: ["startDate"]
+    })
+    .refine((data) => {
+        // Prevent future endDate
+        if (data.endDate) {
+            const now = new Date();
+            const [endYear, endMonth] = data.endDate.split('-').map(Number);
+            if (
+                endYear > now.getFullYear() ||
+                (endYear === now.getFullYear() && endMonth > (now.getMonth() + 1))
+            ) {
+                return false;
+            }
+        }
+        return true;
+    }, {
+        message: "End date cannot be in the future. If you are currently working on this project, please select 'Current' instead.",
+        path: ["endDate"]
+    })
+    .refine((data) => {
         if (data.endDate && data.startDate) {
             return data.endDate >= data.startDate;
         }
@@ -112,6 +180,40 @@ export const educationSchema = z.object({
         return true;
     }, {
         message: "End date is required unless you're not studying here currently",
+        path: ["endDate"]
+    })
+    .refine((data) => {
+        // Prevent future startDate
+        if (data.startDate) {
+            const now = new Date();
+            const [startYear, startMonth] = data.startDate.split('-').map(Number);
+            if (
+                startYear > now.getFullYear() ||
+                (startYear === now.getFullYear() && startMonth > (now.getMonth() + 1))
+            ) {
+                return false;
+            }
+        }
+        return true;
+    }, {
+        message: "Start date cannot be in the future.",
+        path: ["startDate"]
+    })
+    .refine((data) => {
+        // Prevent future endDate
+        if (data.endDate) {
+            const now = new Date();
+            const [endYear, endMonth] = data.endDate.split('-').map(Number);
+            if (
+                endYear > now.getFullYear() ||
+                (endYear === now.getFullYear() && endMonth > (now.getMonth() + 1))
+            ) {
+                return false;
+            }
+        }
+        return true;
+    }, {
+        message: "End date cannot be in the future. If you are currently studying here, please select 'Current' instead.",
         path: ["endDate"]
     })
     .refine((data) => {

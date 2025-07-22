@@ -92,6 +92,13 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
         ]
     }
 
+    useEffect(() => {
+        if(formValues)
+            setPreviewContent(getMarkdownContent().join('\n\n'));
+        else
+            setPreviewContent(initialContent);
+    }, [initialContent, formValues])
+
     const onSubmit = async (val: z.infer<typeof resumeSchema>) => {
         try {
             await saveResumeFn(saveResume, JSON.stringify(val));
@@ -346,47 +353,71 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
                 </TabsContent>
 
                 <TabsContent value="md-preview" className='p-1'> 
-                    <Button 
-                        variant={'outline'} 
-                        type='button' 
-                        className='mb-2 flex items-center bg-black border-neutral-700 hover:cursor-pointer hover:bg-neutral-900 hover:border-zinc-500 transition-all duration-75 ease-in-out'
-                        onClick={() => setIsEditing(!isEditing)}
-                    >   
-                        { isEditing ? 
-                            <>
-                                <Monitor className='h-4 w-4' />
-                                Markdown Preview
-                            </>
-                            :
-                            <>
-                                <Edit className='h-4 w-4' />
-                                Edit Resume
-                            </>
-                        }
-                    </Button>
-                    { isEditing &&
-                    <div className='flex items-center justify-center mb-2'>    
-                        <div className='w-full flex items-center justify-center px-2 py-1.5 rounded-xl text-neutral-300 bg-yellow-700/15 border-r border-b border-yellow-600/55 '>
-                            <TriangleAlert className='h-5 w-5 mr-2 text-yellow-500' />
-                            <p className='text-sm md:text-base'>
-                                You will lose the edited markdown if you update the form data
-                            </p>
-                        </div>
-                    </div>
+                    { (initialContent || previewContent.trim().replace(/^\n+|\n+$/g, '').length > 0) ?
+                        <>
+                            <Button 
+                                variant={'outline'} 
+                                type='button' 
+                                className='mb-2 flex items-center bg-black border-neutral-700 hover:cursor-pointer hover:bg-neutral-900 hover:border-zinc-500 transition-all duration-75 ease-in-out'
+                                onClick={() => setIsEditing(!isEditing)}
+                                >   
+                                { isEditing ? 
+                                    <>
+                                        <Monitor className='h-4 w-4' />
+                                        Markdown Preview
+                                    </>
+                                    :
+                                    <>
+                                        <Edit className='h-4 w-4' />
+                                        Edit Resume
+                                    </>
+                                }
+                            </Button>
+                            { isEditing &&
+                            <div className='flex items-center justify-center mb-2'>    
+                                <div className='w-full flex items-center justify-center px-2 py-1.5 rounded-xl text-neutral-300 bg-yellow-700/15 border-r border-b border-yellow-600/55 '>
+                                    <TriangleAlert className='h-5 w-5 mr-2 text-yellow-500' />
+                                    <p className='text-sm md:text-base'>
+                                        You will lose the edited markdown if you update the form data
+                                    </p>
+                                </div>
+                            </div>
+                            }
+                            <div className="container minh-screen">
+                                { isEditing ?
+                                    <MDEditor
+                                        value={previewContent}
+                                        onChange={(val) => {
+                                            if(isEditing){
+                                                setPreviewContent(val || '');
+                                            }
+                                        }}
+                                        previewOptions={{
+                                            rehypePlugins: [[rehypeSanitize]],
+                                        }}
+                                        className='px-4 py-2 rounded-md'
+                                        style={{ border: '1px solid #09303e', backgroundColor: '#121212' }}
+                                    />
+                                    :
+                                    <MDEditor.Markdown 
+                                        source={previewContent} 
+                                        className='px-4 py-2 rounded-md'
+                                        style={{ border: '1px solid #09303e', backgroundColor: '#121212' }}
+                                    />
+                                }
+                            </div>
+                        </>
+                        : 
+                        <>
+                            <div className='flex items-center justify-center h-full'>
+                                <p className='text-lg text-neutral-500'>No content to preview, please enter your resume details</p>
+                            </div>
+                        </>
                     }
-                    <div className="container minh-screen">
-                        <MDEditor
-                            value={getMarkdownContent().join('\n\n')}
-                            previewOptions={{
-                            rehypePlugins: [[rehypeSanitize]],
-                            }}
-                            className='h-full'
-                        />
-                    </div>
                 </TabsContent>
             </Tabs>
-        </div>
-    )
+            </div>
+        )
 }
 
 export default ResumeBuilder
