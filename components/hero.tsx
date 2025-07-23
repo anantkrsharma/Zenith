@@ -12,7 +12,7 @@ const HeroSection = () => {
                             <br />
                             Professional Success
                         </h1>
-                        <p className='mx-auto max-w-[600px] text-muted-foreground md:text-xl'>
+                        <p className='mx-auto max-w-[450px] md:max-w-[600px] text-muted-foreground md:text-xl'>
                             Advance your career with personalized guidance, interview prep, and AI-powered tools for job success.
                         </p>
                     </div>

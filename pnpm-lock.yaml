@@ -110,6 +110,9 @@ importers:
       recharts:
         specifier: ^2.15.3
         version: 2.15.3(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      rehype-raw:
+        specifier: ^7.0.0
+        version: 7.0.0
       rehype-sanitize:
         specifier: ^6.0.0
         version: 6.0.0

@@ -1,6 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button'
+import { motion, AnimatePresence } from 'framer-motion';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -19,6 +20,7 @@ import EducationForm from './education-form';
 import { saveResume } from '@/actions/resume';
 import MDEditor from '@uiw/react-md-editor';
 import rehypeSanitize from "rehype-sanitize";
+import rehypeRaw from "rehype-raw";
 import { contactToMarkdown, workExpToMarkdown, projectsToMarkdown, educationToMarkdown } from '@/lib/toMarkdown';
 import { useUser } from '@clerk/nextjs';
 
@@ -90,11 +92,13 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
                 }))
             ),
         ]
+        .filter(Boolean)
+        .join('\n\n');
     }
 
     useEffect(() => {
         if(formValues)
-            setPreviewContent(getMarkdownContent().join('\n\n'));
+            setPreviewContent(getMarkdownContent());
         else
             setPreviewContent(initialContent);
     }, [initialContent, formValues])
@@ -373,38 +377,38 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
                                     </>
                                 }
                             </Button>
+                            
                             { isEditing &&
-                            <div className='flex items-center justify-center mb-2'>    
-                                <div className='w-full flex items-center justify-center px-2 py-1.5 rounded-xl text-neutral-300 bg-yellow-700/15 border-r border-b border-yellow-600/55 '>
-                                    <TriangleAlert className='h-5 w-5 mr-2 text-yellow-500' />
-                                    <p className='text-sm md:text-base'>
-                                        You will lose the edited markdown if you update the form data
-                                    </p>
-                                </div>
-                            </div>
+                            <AnimatePresence>
+                                {isEditing && (
+                                    <motion.div
+                                        className='flex items-center justify-center mb-2'
+                                        initial={{ opacity: 0, y: -20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: -20 }}
+                                        transition={{ duration: 0.3, ease: 'easeInOut' }}
+                                    >
+                                        <div className='w-full flex items-center justify-center px-2 py-1.5 my-1 rounded-md text-neutral-300 bg-yellow-700/15 border-r border-b border-yellow-600/55 '>
+                                            <TriangleAlert className='h-5 w-5 mr-2 text-yellow-500' />
+                                            <p className='text-sm md:text-base'>
+                                                You will lose the edited markdown if you update the form data
+                                            </p>
+                                        </div>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
                             }
+                            
                             <div className="container minh-screen">
-                                { isEditing ?
-                                    <MDEditor
-                                        value={previewContent}
-                                        onChange={(val) => {
-                                            if(isEditing){
-                                                setPreviewContent(val || '');
-                                            }
-                                        }}
-                                        previewOptions={{
-                                            rehypePlugins: [[rehypeSanitize]],
-                                        }}
-                                        className='px-4 py-2 rounded-md'
-                                        style={{ border: '1px solid #09303e', backgroundColor: '#121212' }}
-                                    />
-                                    :
-                                    <MDEditor.Markdown 
-                                        source={previewContent} 
-                                        className='px-4 py-2 rounded-md'
-                                        style={{ border: '1px solid #09303e', backgroundColor: '#121212' }}
-                                    />
-                                }
+                                <MDEditor
+                                    value={previewContent}
+                                    onChange={(val) => setPreviewContent(val || '')}
+                                    previewOptions={{
+                                        rehypePlugins: [[rehypeRaw], [rehypeSanitize]],
+                                    }}
+                                    style={{ border: '1px solid #09303e', backgroundColor: '#121212' }}
+                                    preview={isEditing ? 'live' : 'preview'}
+                                />
                             </div>
                         </>
                         : 
