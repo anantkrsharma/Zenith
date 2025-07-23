@@ -20,8 +20,14 @@
     ],
     "paths": {
       "@/*": ["./*"]
-    }
+    },
+    "baseUrl": ".",
+    "typeRoots": ["types", "node_modules/@types"],
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "data/features.js", "data/howItWorks.js", "data/faqs.js", "data/industries.js", "data/testimonial.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "data/features.js", "data/howItWorks.js", "data/faqs.js", "data/industries.js", "data/testimonial.js",
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "types/**/*.d.ts"],
   "exclude": ["node_modules"]
 }

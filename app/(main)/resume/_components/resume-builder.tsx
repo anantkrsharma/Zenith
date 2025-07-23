@@ -9,8 +9,8 @@ import { Textarea } from '@/components/ui/textarea';
 import useFetch from '@/hooks/use-fetch';
 import { resumeSchema } from '@/lib/form-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Download, Edit, Monitor, Save, TriangleAlert } from 'lucide-react'
-import React, { useEffect, useState } from 'react'
+import { Download, Edit, Loader2, Monitor, Save, TriangleAlert } from 'lucide-react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
@@ -29,8 +29,10 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
     const [toastId, setToastId] = useState<string | number | null>(null);
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const [previewContent, setPreviewContent] = useState<string>(initialContent);
+    const [isDownloading, setIsDownloading] = useState<boolean>(false);
     const { user } = useUser();
-
+    const pdfLib = useRef<any>(null);
+    
     useEffect(() => {
         if(initialContent.length > 0)
             setActiveTab('md-preview');
@@ -97,15 +99,12 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
     }
 
     useEffect(() => {
-        if(formValues)
-            setPreviewContent(getMarkdownContent());
-        else
-            setPreviewContent(initialContent);
+        setPreviewContent(initialContent ? initialContent : getMarkdownContent());
     }, [initialContent, formValues])
 
     const onSubmit = async (val: z.infer<typeof resumeSchema>) => {
         try {
-            await saveResumeFn(saveResume, JSON.stringify(val));
+            await saveResumeFn(saveResume, previewContent);
         } catch (error) {
             if(error instanceof Error){
                 toast.error("Error while saving the resume");
@@ -134,6 +133,51 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
         }
     }, [toastId, saveResumeLoading])
 
+    useEffect(() => {
+        import('html2pdf.js/dist/html2pdf.min.js')
+        .then(mod => {
+            pdfLib.current = mod.default;
+        })
+        .catch(err => {
+            console.error('Failed to load html2pdf.js:', err);
+        });
+    }, []);
+
+    const generatePDF = async () => {
+        if (!pdfLib.current) {
+            console.warn('PDF library not loaded yet');
+            return;
+        }
+
+        setIsDownloading(true);
+        try {
+            const element = document.getElementById('resume-pdf');
+            if (!element) {
+                console.error('PDF export failed: #resume-pdf not found');
+                toast.error('PDF generation error: content not found');
+                setIsDownloading(false);
+                return;
+            }
+
+            const opt = {
+                margin: [0, 10],
+                filename: `${user?.fullName} Resume.pdf`,
+                image: { type: 'jpeg', quality: 1 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+            };
+
+            await pdfLib.current().set(opt).from(element).save();
+
+            toast.success('PDF generated successfully');
+        } catch (error) {
+            console.log(error);
+            toast.error('PDF generation error');
+        } finally {
+            setIsDownloading(false);
+        }
+    };
+
     return (
         <div className='space-y-4'>
             <div className='flex-col md:flex md:flex-row md:items-center md:justify-between border-b py-2 md:py-4'>
@@ -145,7 +189,7 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
                     <Button 
                         variant={'outline'}
                         className='flex items-center bg-zinc-900 border-neutral-700 hover:cursor-pointer hover:bg-neutral-800 hover:border-zinc-500 transition-all duration-75 ease-in-out'
-                        >
+                    >
                         <Save />
                         Save
                     </Button>
@@ -153,9 +197,19 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
                     <Button 
                         variant={'outline'}
                         className='flex items-center text-white bg-cyan-950 border-cyan-800 hover:cursor-pointer hover:bg-cyan-900 hover:border-cyan-600 transition-all duration-75 ease-in-out'
-                        >
-                        <Download />
-                        Download
+                        disabled={isDownloading}
+                        onClick={generatePDF}
+                    >   { isDownloading ?
+                            <>
+                                <Loader2 className='h-4 w-4 animate-spin' />
+                                Generating PDF...
+                            </>
+                            :
+                            <>
+                                <Download />
+                                Download PDF
+                            </>
+                        }
                     </Button>
                 </div>
             </div>
@@ -399,7 +453,7 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
                             </AnimatePresence>
                             }
                             
-                            <div className="container minh-screen">
+                            <div className="container">
                                 <MDEditor
                                     value={previewContent}
                                     onChange={(val) => setPreviewContent(val || '')}
@@ -407,8 +461,17 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
                                         rehypePlugins: [[rehypeRaw], [rehypeSanitize]],
                                     }}
                                     height={800}
+                                    style={{borderRadius: '0.5rem', overflow: 'hidden'}}
                                     preview={isEditing ? 'live' : 'preview'}
                                 />
+                            </div>
+                            <div className='hidden'>
+                                <div id='resume-pdf'>
+                                    <MDEditor.Markdown
+                                        source={previewContent}
+                                        style={{ background: 'white', color: 'black' }}
+                                    />
+                                </div>
                             </div>
                         </>
                         : 

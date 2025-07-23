@@ -11,8 +11,8 @@ export const contactToMarkdown = (userInfo: string, contactInfo: z.infer<typeof 
     if (twitter) parts.push(`[Twitter](${twitter})`);
 
     return parts.length > 0
-        ? `## <div align="center">${userInfo}</div>
-            \n\n<div align="center">\n\n${parts.join(" | ")}\n\n</div>`
+        ? `# <div align="center">${userInfo}\n</div>
+            <div align="center">\n\n${parts.join(" | ")}\n</div>`
         : "";
 };
 
@@ -40,7 +40,7 @@ export const projectsToMarkdown = (projects: z.infer<typeof projectSchema>[]) =>
         return `### ${project.title}\n${dateRange}\n\n${githubLink}\n${liveLink}\n\n${project.description}\n\n${skills}`;
     });
     
-    return `## Projects\n\n` + mdArray.join("\n\n");
+    return `## Projects\n` + mdArray.join("\n\n");
 }
 
 export const educationToMarkdown = (education: z.infer<typeof educationSchema>[]) => {
