@@ -12,7 +12,7 @@ export const contactToMarkdown = (userInfo: string, contactInfo: z.infer<typeof 
 
     return parts.length > 0
         ? `## <div align="center">${userInfo}</div>
-            \n<div align="center">\n${parts.join(" | ")}\n\n</div>`
+            \n\n<div align="center">\n\n${parts.join(" | ")}\n\n</div>`
         : "";
 };
 

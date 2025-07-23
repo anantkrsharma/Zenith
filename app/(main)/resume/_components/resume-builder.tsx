@@ -406,7 +406,7 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
                                     previewOptions={{
                                         rehypePlugins: [[rehypeRaw], [rehypeSanitize]],
                                     }}
-                                    style={{ border: '1px solid #09303e', backgroundColor: '#121212' }}
+                                    height={800}
                                     preview={isEditing ? 'live' : 'preview'}
                                 />
                             </div>
