@@ -235,17 +235,17 @@ const ExperienceForm = ({ entries, onChange }: ExperienceFormProps) => {
                                     onClick={handleImproveDescription}
                                     disabled={aiLoading || !watch('description')}
                                 >   { aiLoading ?
-                                    <>
-                                        <Loader2 className='animate-spin h-4 w-4' />
-                                        <p className='text-sm'>Improving...</p>
-                                    </>
-                                    : 
-                                    <>
-                                        <Sparkle className='h-4 w-4'/>
-                                        <p className='text-sm'>
-                                            Improve with AI
-                                        </p>
-                                    </>
+                                        <>
+                                            <Loader2 className='animate-spin h-4 w-4' />
+                                            <p className='text-sm'>Improving...</p>
+                                        </>
+                                        : 
+                                        <>
+                                            <Sparkle className='h-4 w-4'/>
+                                            <p className='text-sm'>
+                                                Improve with AI
+                                            </p>
+                                        </>
                                     }
                                 </Button>
                                 { errors.description &&

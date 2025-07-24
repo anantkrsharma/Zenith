@@ -27,7 +27,13 @@ export const onboardingSchema = z.object({
 //resume form schema
 export const contactSchema = z.object({
     email: z.string().email("Invalid email address"),
-    mobile: z.number().optional(),
+    mobile: z
+            .string()
+            .optional()
+            .refine(
+                (val) => !val || /^\+?\d{7,15}$/.test(val),
+                { message: "Invalid mobile number" }
+            ),
     linkedin: z.string().optional(),
     twitter: z.string().optional()
 });
@@ -230,7 +236,7 @@ export const resumeSchema = z.object({
     contactInfo: contactSchema,
     summary: z.string().min(1, "Enter more details in your summary").optional(),
     skills: z.string().min(1, "Skills are required"),
-    workExp: z.array(workExpSchema),
-    projects: z.array(projectSchema),
-    education: z.array(educationSchema),
+    workExp: z.array(workExpSchema).optional(),
+    projects: z.array(projectSchema).optional(),
+    education: z.array(educationSchema).optional(),
 })

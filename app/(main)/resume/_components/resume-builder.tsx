@@ -9,7 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import useFetch from '@/hooks/use-fetch';
 import { resumeSchema } from '@/lib/form-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Download, Edit, Loader2, Monitor, Save, TriangleAlert } from 'lucide-react'
+import { Download, Edit, Loader2, Monitor, Save, Sparkle, TriangleAlert } from 'lucide-react'
 import React, { useEffect, useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -17,7 +17,7 @@ import { z } from 'zod';
 import ExperienceForm from './experience-form';
 import ProjectForm from './project-form';
 import EducationForm from './education-form';
-import { saveResume } from '@/actions/resume';
+import { generateAiSummary, saveResume } from '@/actions/resume';
 import MDEditor from '@uiw/react-md-editor';
 import rehypeSanitize from "rehype-sanitize";
 import rehypeRaw from "rehype-raw";
@@ -61,11 +61,20 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
 
     const formValues = watch();
 
+    //save resume data
     const {
         data: saveResumeData,
         fn: saveResumeFn,
         loading: saveResumeLoading,
         error: saveResumeError,
+    } = useFetch();
+    
+    //generate AI Professional Summary
+    const {
+        data: aiSummaryData,
+        fn: aiSummaryFn,
+        loading: aiSummaryLoading,
+        error: aiSummaryError,
     } = useFetch();
 
     const getMarkdownContent = () => {
@@ -101,6 +110,41 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
     useEffect(() => {
         setPreviewContent(initialContent ? initialContent : getMarkdownContent());
     }, [initialContent, formValues])
+
+    const handleAiSummary = async () => {
+        const { summary, skills, workExp, projects, education } = formValues;
+        if(!skills || skills.length === 0){
+            toast.error("Please enter your skills before generating AI Professional Summary");
+            return;
+        }
+
+        try {
+            await aiSummaryFn(generateAiSummary, {
+                summary: summary,
+                skills: skills,
+                workExp: workExp?.map((item: any) => JSON.stringify(item)),
+                projects: projects?.map((item: any) => JSON.stringify(item)),
+                education: education?.map((item: any) => JSON.stringify(item)),
+            });
+        } catch (error) {
+            if(error instanceof Error){
+                toast.error("Error while generating AI Professional Summary");
+                console.log(error.message);
+            }
+            else{
+                toast.error("Error while generating AI Professional Summary");
+                console.log(error);
+            }
+        }
+    }
+
+    // Update summary field when aiSummaryData changes
+    useEffect(() => {
+        if (typeof aiSummaryData === 'string' && aiSummaryData.length > 0) {
+            setValue('summary', aiSummaryData, { shouldDirty: true });
+            toast.success("AI Professional Summary generated successfully");
+        }
+    }, [aiSummaryData, setValue]);
 
     const onSubmit = async (val: z.infer<typeof resumeSchema>) => {
         try {
@@ -189,6 +233,7 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
                     <Button 
                         variant={'outline'}
                         className='flex items-center bg-zinc-900 border-neutral-700 hover:cursor-pointer hover:bg-neutral-800 hover:border-zinc-500 transition-all duration-75 ease-in-out'
+                        onClick={handleSubmit(onSubmit)}
                     >
                         <Save />
                         Save
@@ -323,11 +368,32 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
                                     {errors.summary.message}
                                 </p>
                             }
+                            <Button 
+                                variant={'ghost'}
+                                className='hover:cursor-pointer border hover:border-cyan-800 hover:bg-cyan-500/10 transition-all duration-150 ease-in-out'
+                                onClick={handleAiSummary}
+                                size={'sm'}
+                                disabled={aiSummaryLoading || !formValues.summary}
+                            >
+                                { aiSummaryLoading ?
+                                    <>
+                                        <Loader2 className='animate-spin h-4 w-4' />
+                                        <p className='text-sm'>Improving...</p>
+                                    </>
+                                    : 
+                                    <>
+                                        <Sparkle className='h-4 w-4'/>
+                                        <p className='text-sm'>
+                                            Improve with AI
+                                        </p>
+                                    </>
+                                }
+                            </Button>
                         </div>
 
                         {/* Skills */}
                         <div className='space-y-2'>
-                            <Label htmlFor='skills' className='text-lg font-medium'> Skills </Label>
+                            <Label htmlFor='skills' className='text-lg font-medium'> * Skills </Label>
                             <p className="text-sm text-muted-foreground ml-0.5">Separate multiple skills with commas (,)</p>
                             <Controller
                                 name='skills'
