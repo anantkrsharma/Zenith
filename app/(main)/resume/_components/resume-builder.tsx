@@ -106,10 +106,25 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
         .filter(Boolean)
         .join('\n\n');
     }
-
     useEffect(() => {
-        setPreviewContent(initialContent ? initialContent : getMarkdownContent());
-    }, [initialContent, formValues])
+        // Check if all form fields are empty
+        const isFormEmpty = () => {
+            const { contactInfo, summary, skills, education, workExp, projects } = formValues || {};
+            const isContactEmpty = !contactInfo || Object.values(contactInfo).every(v => !v);
+            const isSummaryEmpty = !summary;
+            const isSkillsEmpty = !skills;
+            const isEducationEmpty = !education || education.length === 0;
+            const isWorkExpEmpty = !workExp || workExp.length === 0;
+            const isProjectsEmpty = !projects || projects.length === 0;
+            return isContactEmpty && isSummaryEmpty && isSkillsEmpty && isEducationEmpty && isWorkExpEmpty && isProjectsEmpty;
+        };
+
+        if (initialContent && isFormEmpty()) {
+            setPreviewContent(initialContent);
+        } else {
+            setPreviewContent(getMarkdownContent());
+        }
+    }, [initialContent, formValues]);
 
     const handleAiSummary = async () => {
         const { summary, skills, workExp, projects, education } = formValues;
