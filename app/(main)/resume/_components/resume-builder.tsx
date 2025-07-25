@@ -79,7 +79,6 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
 
     const getMarkdownContent = () => {
         const { contactInfo, skills, summary, workExp, projects, education } = formValues;
-
         return [
             contactToMarkdown(user?.fullName || '' ,contactInfo),
             summary && `## Professional Summary\n\n${summary}`,
@@ -106,6 +105,7 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
         .filter(Boolean)
         .join('\n\n');
     }
+
     useEffect(() => {
         // Check if all form fields are empty
         const isFormEmpty = () => {
@@ -119,12 +119,15 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
             return isContactEmpty && isSummaryEmpty && isSkillsEmpty && isEducationEmpty && isWorkExpEmpty && isProjectsEmpty;
         };
 
-        if (initialContent && isFormEmpty()) {
-            setPreviewContent(initialContent);
-        } else {
-            setPreviewContent(getMarkdownContent());
+        // Only update previewContent from form if not editing markdown directly
+        if (!isEditing) {
+            if (initialContent && isFormEmpty()) {
+                setPreviewContent(initialContent);
+            } else {
+                setPreviewContent(getMarkdownContent());
+            }
         }
-    }, [initialContent, formValues]);
+    }, [initialContent, formValues, isEditing]);
 
     const handleAiSummary = async () => {
         const { summary, skills, workExp, projects, education } = formValues;
@@ -160,7 +163,7 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
         }
     }, [aiSummaryData, setValue]);
 
-    const onSubmit = async (val: z.infer<typeof resumeSchema>) => {
+    const onSubmit = async () => {
         try {
             await saveResumeFn(saveResume, previewContent);
         } catch (error) {
@@ -206,16 +209,9 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
             console.warn('PDF library not loaded yet');
             return;
         }
-
         setIsDownloading(true);
         try {
             const element = document.getElementById('resume-pdf');
-            if (!element) {
-                console.error('PDF export failed: #resume-pdf not found');
-                toast.error('PDF generation error: content not found');
-                setIsDownloading(false);
-                return;
-            }
 
             const opt = {
                 margin: [0, 10],
@@ -229,8 +225,13 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
 
             toast.success('PDF generated successfully');
         } catch (error) {
-            console.log(error);
-            toast.error('PDF generation error');
+            if (error instanceof Error) {
+                console.log(error.message);
+                toast.error('PDF generation error');
+            } else {
+                console.error('Unexpected error:', error);
+                toast.error('PDF generation error');
+            }
         } finally {
             setIsDownloading(false);
         }
@@ -247,7 +248,11 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
                     <Button 
                         variant={'outline'}
                         className='flex items-center bg-zinc-900 border-neutral-700 hover:cursor-pointer hover:bg-neutral-800 hover:border-zinc-500 transition-all duration-75 ease-in-out'
-                        onClick={handleSubmit(onSubmit)}
+                        onClick={
+                            activeTab === 'form'
+                                ? handleSubmit(onSubmit)
+                                : onSubmit
+                        }
                         disabled={saveResumeLoading}
                     >
                         { saveResumeLoading ?
@@ -283,7 +288,7 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
                     </Button>
                 </div>
             </div>
-
+            
             <Tabs 
                 className="space-y-2"
                 value={activeTab} 
@@ -295,10 +300,7 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
                 </TabsList>
 
                 <TabsContent value="form" className='p-1'> 
-                    <form 
-                        className='space-y-6'
-                        onSubmit={handleSubmit(onSubmit)}
-                    >   
+                    <form className='space-y-6'>   
                         {/* Contact Info */}
                         <div className='space-y-2'>
                             <h3 className='text-lg font-medium'> 
@@ -552,16 +554,14 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
                                     }}
                                     height={800}
                                     style={{borderRadius: '0.5rem', overflow: 'hidden'}}
-                                    preview={isEditing ? 'live' : 'preview'}
+                                    preview={
+                                        isEditing
+                                            ? (typeof window !== 'undefined' && window.matchMedia('(min-width: 768px)').matches
+                                                ? 'live'
+                                                : 'edit')
+                                            : 'preview'
+                                    }
                                 />
-                            </div>
-                            <div className='hidden'>
-                                <div id='resume-pdf'>
-                                    <MDEditor.Markdown
-                                        source={previewContent}
-                                        style={{ background: 'white', color: 'black' }}
-                                    />
-                                </div>
                             </div>
                         </>
                         : 
@@ -572,8 +572,16 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
                         </>
                     }
                 </TabsContent>
+                <div className='hidden'>
+                    <div id='resume-pdf'>
+                        <MDEditor.Markdown
+                            source={previewContent}
+                            style={{ background: 'white', color: 'black' }}
+                        />
+                    </div>
+                </div>
             </Tabs>
-            </div>
+        </div>
         )
 }
 
