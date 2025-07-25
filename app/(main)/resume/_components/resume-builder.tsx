@@ -132,7 +132,6 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
             toast.error("Please enter your skills before generating AI Professional Summary");
             return;
         }
-
         try {
             await aiSummaryFn(generateAiSummary, {
                 summary: summary,
@@ -249,9 +248,19 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
                         variant={'outline'}
                         className='flex items-center bg-zinc-900 border-neutral-700 hover:cursor-pointer hover:bg-neutral-800 hover:border-zinc-500 transition-all duration-75 ease-in-out'
                         onClick={handleSubmit(onSubmit)}
+                        disabled={saveResumeLoading}
                     >
-                        <Save />
-                        Save
+                        { saveResumeLoading ?
+                            <>
+                                <Loader2 className='h-4 w-4 animate-spin' />
+                                Saving...
+                            </>
+                            :
+                            <>
+                                <Save />
+                                Save
+                            </>
+                        }
                     </Button>
                     
                     <Button 
@@ -259,7 +268,8 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
                         className='flex items-center text-white bg-cyan-950 border-cyan-800 hover:cursor-pointer hover:bg-cyan-900 hover:border-cyan-600 transition-all duration-75 ease-in-out'
                         disabled={isDownloading}
                         onClick={generatePDF}
-                    >   { isDownloading ?
+                    >   
+                        { isDownloading ?
                             <>
                                 <Loader2 className='h-4 w-4 animate-spin' />
                                 Generating PDF...
@@ -286,7 +296,6 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
 
                 <TabsContent value="form" className='p-1'> 
                     <form 
-                        action="submit"
                         className='space-y-6'
                         onSubmit={handleSubmit(onSubmit)}
                     >   
@@ -318,8 +327,8 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
                                     <Input 
                                         {...register('contactInfo.mobile')}
                                         id='mobile' 
-                                        type='tel'
-                                        placeholder='XXXXX XXXXX'    
+                                        type='text'
+                                        placeholder='+1 234 567 8900'    
                                         className='bg-black/69'
                                     />
                                     {errors.contactInfo?.mobile && 
