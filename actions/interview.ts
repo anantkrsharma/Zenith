@@ -161,6 +161,7 @@ export async function getInterviewAssessments(){
             throw new Error("User not found");
         }
 
+        //chronological (oldest first)
         const assessments = await db.assessment.findMany({
             where: {
                 userId: user.id,
