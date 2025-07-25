@@ -29,80 +29,121 @@ function monthsDiff(from: { year: number, month: number }, to: { year: number, m
     return (to.year - from.year) * 12 + (to.month - from.month);
 }
 
-function enhanceSchema(orig: z.ZodObject<any>, missingEndMsg: string, futureEndMsg: string) {
-    return orig.superRefine((data, ctx) => {
-        const now = new Date();
-        const currentYM = { year: now.getFullYear(), month: now.getMonth() + 1 };
-        const sd = parseYearMonth(data.startDate);
+export const workExpSchema = z.object({
+    title: z.string().min(1, { message: "Title is required" }),
+    organization: z.string().min(1, { message: "Organization is required" }),
+    description: z.string().min(1, { message: "Description is required" }),
+    startDate: z.string().min(1, { message: "Start date is required" }),
+    endDate: z.string().optional(),
+    current: z.boolean().default(false),
+})
+.superRefine((data, ctx) => {
+    const now = new Date();
+    const currentYM = { year: now.getFullYear(), month: now.getMonth() + 1 };
+    const sd = parseYearMonth(data.startDate);
 
-        if (!data.current && !data.endDate) {
-        ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['endDate'], message: missingEndMsg });
-        }
+    if (!data.current && !data.endDate) {
+    ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['endDate'], message: "End date is required unless this is your current position" });
+    }
 
-        if (isFuture(sd)) {
-        ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['startDate'], message: "Start date cannot be in the future." });
-        }
+    if (isFuture(sd)) {
+    ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['startDate'], message: "Start date cannot be in the future." });
+    }
 
-        if (data.endDate) {
-        const ed = parseYearMonth(data.endDate);
+    if (data.endDate) {
+    const ed = parseYearMonth(data.endDate);
 
-        if (isFuture(ed)) {
-            ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['endDate'], message: futureEndMsg });
-        }
+    if (isFuture(ed)) {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['endDate'], message: "End date cannot be in the future. If you are currently in this position, please select 'Current'." });
+    }
 
-        const diff = monthsDiff(sd, ed);
-        const isRecent = ed.year === currentYM.year && (ed.month === currentYM.month || ed.month === currentYM.month - 1);
+    const diff = monthsDiff(sd, ed);
+    const isRecent = ed.year === currentYM.year && (ed.month === currentYM.month || ed.month === currentYM.month - 1);
 
-        if (diff < 0 && !(isRecent && diff >= -2)) {
-            ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['endDate'], message: "End date cannot be earlier than start date" });
-        }
-        }
-    });
-}
+    if (diff < 0 && !(isRecent && diff >= -2)) {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['endDate'], message: "End date cannot be earlier than start date" });
+    }
+    }
+});
 
-export const workExpSchema = enhanceSchema(
-    z.object({
-        title: z.string().min(1, { message: "Title is required" }),
-        organization: z.string().min(1, { message: "Organization is required" }),
-        description: z.string().min(1, { message: "Description is required" }),
-        startDate: z.string().min(1, { message: "Start date is required" }),
-        endDate: z.string().optional(),
-        current: z.boolean().default(false),
-    }),
-    "End date is required unless this is your current position",
-    "End date cannot be in the future. If you are currently in this position, please select 'Current'."
-);
+export const projectSchema = z.object({
+    title: z.string().min(1, { message: "Title is required" }),
+    description: z.string().min(1, { message: "Description is required" }),
+    skills: z.string().min(1, { message: "Skills are required" }),
+    github: z.string().url().refine(
+    url => /^https?:\/\/(www\.)?github\.com\/[A-Za-z0-9_.-]+(\/[A-Za-z0-9_.-]+)?\/?$/.test(url),
+    { message: "Invalid GitHub URL" }
+    ).optional(),
+    liveLink: z.string().url().optional(),
+    startDate: z.string().min(1, { message: "Start date is required" }),
+    endDate: z.string().optional(),
+    current: z.boolean().default(false),
+})
+.superRefine((data, ctx) => {
+    const now = new Date();
+    const currentYM = { year: now.getFullYear(), month: now.getMonth() + 1 };
+    const sd = parseYearMonth(data.startDate);
 
-export const projectSchema = enhanceSchema(
-    z.object({
-        title: z.string().min(1, { message: "Title is required" }),
-        description: z.string().min(1, { message: "Description is required" }),
-        skills: z.string().min(1, { message: "Skills are required" }),
-        github: z.string().url().refine(
-        url => /^https?:\/\/(www\.)?github\.com\/[A-Za-z0-9_.-]+(\/[A-Za-z0-9_.-]+)?\/?$/.test(url),
-        { message: "Invalid GitHub URL" }
-        ).optional(),
-        liveLink: z.string().url().optional(),
-        startDate: z.string().min(1, { message: "Start date is required" }),
-        endDate: z.string().optional(),
-        current: z.boolean().default(false),
-    }),
-    "End date is required unless working on the project currently",
-    "End date cannot be in the future. If you are currently working on this project, please select 'Current'."
-);
+    if (!data.current && !data.endDate) {
+    ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['endDate'], message: "End date is required unless working on the project currently" });
+    }
 
-export const educationSchema = enhanceSchema(
-    z.object({
-        title: z.string().min(1, { message: "Education details are required" }),
-        institute: z.string().min(1, { message: "Institute is required" }),
-        description: z.string().optional(),
-        startDate: z.string().min(1, { message: "Start date is required" }),
-        endDate: z.string().optional(),
-        current: z.boolean().default(false),
-    }),
-    "End date is required unless you're currently studying here",
-    "End date cannot be in the future. If you are currently studying here, please select 'Current'."
-);
+    if (isFuture(sd)) {
+    ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['startDate'], message: "Start date cannot be in the future." });
+    }
+
+    if (data.endDate) {
+    const ed = parseYearMonth(data.endDate);
+
+    if (isFuture(ed)) {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['endDate'], message: "End date cannot be in the future. If you are currently working on this project, please select 'Current'." });
+    }
+
+    const diff = monthsDiff(sd, ed);
+    const isRecent = ed.year === currentYM.year && (ed.month === currentYM.month || ed.month === currentYM.month - 1);
+
+    if (diff < 0 && !(isRecent && diff >= -2)) {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['endDate'], message: "End date cannot be earlier than start date" });
+    }
+    }
+});
+
+export const educationSchema = z.object({
+    title: z.string().min(1, { message: "Education details are required" }),
+    institute: z.string().min(1, { message: "Institute is required" }),
+    description: z.string().optional(),
+    startDate: z.string().min(1, { message: "Start date is required" }),
+    endDate: z.string().optional(),
+    current: z.boolean().default(false),
+})
+.superRefine((data, ctx) => {
+    const now = new Date();
+    const currentYM = { year: now.getFullYear(), month: now.getMonth() + 1 };
+    const sd = parseYearMonth(data.startDate);
+
+    if (!data.current && !data.endDate) {
+    ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['endDate'], message: "End date is required unless you're currently studying here" });
+    }
+
+    if (isFuture(sd)) {
+    ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['startDate'], message: "Start date cannot be in the future." });
+    }
+
+    if (data.endDate) {
+    const ed = parseYearMonth(data.endDate);
+
+    if (isFuture(ed)) {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['endDate'], message: "End date cannot be in the future. If you are currently studying here, please select 'Current'." });
+    }
+
+    const diff = monthsDiff(sd, ed);
+    const isRecent = ed.year === currentYM.year && (ed.month === currentYM.month || ed.month === currentYM.month - 1);
+
+    if (diff < 0 && !(isRecent && diff >= -2)) {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['endDate'], message: "End date cannot be earlier than start date" });
+    }
+    }
+})
 
 export const resumeSchema = z.object({
     contactInfo: contactSchema,
