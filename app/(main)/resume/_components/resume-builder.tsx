@@ -13,7 +13,6 @@ import { Download, Edit, Loader2, Monitor, Save, Sparkle, TriangleAlert } from '
 import React, { useEffect, useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-import { z } from 'zod';
 import ExperienceForm from './experience-form';
 import ProjectForm from './project-form';
 import EducationForm from './education-form';
@@ -107,7 +106,6 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
     }
 
     useEffect(() => {
-        // Check if all form fields are empty
         const isFormEmpty = () => {
             const { contactInfo, summary, skills, education, workExp, projects } = formValues || {};
             const isContactEmpty = !contactInfo || Object.values(contactInfo).every(v => !v);
@@ -119,7 +117,7 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
             return isContactEmpty && isSummaryEmpty && isSkillsEmpty && isEducationEmpty && isWorkExpEmpty && isProjectsEmpty;
         };
 
-        // Only update previewContent from form if not editing markdown directly
+        //only update previewContent from form if not editing markdown directly
         if (!isEditing) {
             if (initialContent && isFormEmpty()) {
                 setPreviewContent(initialContent);
@@ -155,7 +153,7 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
         }
     }
 
-    // Update summary field when aiSummaryData changes
+    //update summary field when aiSummaryData changes
     useEffect(() => {
         if (typeof aiSummaryData === 'string' && aiSummaryData.length > 0) {
             setValue('summary', aiSummaryData, { shouldDirty: true });
@@ -194,6 +192,7 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
         }
     }, [toastId, saveResumeLoading])
 
+    //load html2pdf.js library
     useEffect(() => {
         import('html2pdf.js/dist/html2pdf.min.js')
         .then(mod => {
@@ -572,6 +571,7 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
                         </>
                     }
                 </TabsContent>
+
                 <div className='hidden'>
                     <div id='resume-pdf'>
                         <MDEditor.Markdown
