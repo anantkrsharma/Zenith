@@ -15,7 +15,7 @@ type CoverLetterInput = {
     jobDescription?: string;
 }
 
-export async function generateCoverLetter({ jobTitle, companyName, jobDescription }: CoverLetterInput){
+export async function createCoverLetter({ jobTitle, companyName, jobDescription }: CoverLetterInput){
     try {
         const { userId } = await auth();
         if (!userId) {

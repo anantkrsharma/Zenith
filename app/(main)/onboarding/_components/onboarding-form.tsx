@@ -136,7 +136,9 @@ export const OnboardingForm = ({ industries } : OnboardingFormProps) => {
                             />
                             {
                                 errors.industry && (
-                                    <p className="text-red-500 text-xs md:text-sm">{errors.industry.message}</p>
+                                    <p className="text-red-500 text-xs md:text-sm">
+                                        {errors.industry.message}
+                                    </p>
                                 )
                             }
                         </div>
@@ -168,7 +170,9 @@ export const OnboardingForm = ({ industries } : OnboardingFormProps) => {
                             />
                             {
                                 errors.subIndustry && (
-                                    <p className="text-red-500 text-xs md:text-sm">{errors.subIndustry.message}</p>
+                                    <p className="text-red-500 text-xs md:text-sm">
+                                        {errors.subIndustry.message}
+                                    </p>
                                 )
                             }
                         </div> 
@@ -188,7 +192,9 @@ export const OnboardingForm = ({ industries } : OnboardingFormProps) => {
                             />
                             {
                                 errors.experience && (
-                                    <p className="text-red-500 text-xs md:text-sm">Enter valid years of experience (0 - 50)</p>
+                                    <p className="text-red-500 text-xs md:text-sm">
+                                        Enter valid years of experience (0 - 50)
+                                    </p>
                                 )
                             }
                         </div>
@@ -206,7 +212,9 @@ export const OnboardingForm = ({ industries } : OnboardingFormProps) => {
                             <p className="text-sm text-muted-foreground">Separate multiple skills with commas (,)</p>
                             {
                                 errors.skills && (
-                                    <p className="text-red-500 text-xs md:text-sm">{errors.skills.message}</p>
+                                    <p className="text-red-500 text-xs md:text-sm">
+                                        {errors.skills.message}
+                                    </p>
                                 )
                             }
                         </div>
@@ -228,7 +236,9 @@ export const OnboardingForm = ({ industries } : OnboardingFormProps) => {
                             />
                             {
                                 errors.bio && (
-                                    <p className="text-red-500 text-xs md:text-sm">{errors.bio.message}</p>
+                                    <p className="text-red-500 text-xs md:text-sm">
+                                        {errors.bio.message}
+                                    </p>
                                 )
                             }
                         </div>
