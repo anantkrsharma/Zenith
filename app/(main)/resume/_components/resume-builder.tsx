@@ -238,7 +238,7 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
 
     return (
         <div className='space-y-4'>
-            <div className='flex-col md:flex md:flex-row md:items-center md:justify-between border-b py-2 md:py-4'>
+            <div className='flex-col md:flex md:flex-row md:items-center md:justify-between border-b py-2'>
                 <div className="text-4xl md:text-5xl gradient-title">
                     Resume Builder
                 </div>

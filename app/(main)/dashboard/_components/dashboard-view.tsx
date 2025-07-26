@@ -278,7 +278,7 @@ export const DashboardView = ({ insights }: { insights: IndustryInsight }) => {
                         <div className='flex items-center flex-wrap gap-[6px]'>
                             {insights.recommendedSkills.map((skill, index) => {
                                     return <div className='flex items-center gap-[1px]' key={index}>
-                                        <Badge variant={'outline'} className='text-sm bg-neutral-800'>
+                                        <Badge variant={'outline'} className='text-sm border-cyan-900 bg-cyan-800/10'>
                                             {skill}
                                         </Badge>
                                     </div>
