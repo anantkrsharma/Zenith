@@ -3,6 +3,7 @@
 import { db } from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 import { GoogleGenAI } from "@google/genai";
+import { revalidatePath } from "next/cache";
 
 const ai = new GoogleGenAI({
     apiKey: process.env.GENAI_API_KEY
@@ -11,7 +12,7 @@ const ai = new GoogleGenAI({
 type CoverLetterInput = {
     jobTitle: string;
     companyName: string;
-    jobDescription: string;
+    jobDescription?: string;
 }
 
 export async function generateCoverLetter({ jobTitle, companyName, jobDescription }: CoverLetterInput){
@@ -39,7 +40,7 @@ export async function generateCoverLetter({ jobTitle, companyName, jobDescriptio
             - Skills: ${user.skills?.join(", ")}
             - Professional Background: ${user.bio}
             
-            Job Description: ${jobDescription}
+            ${jobDescription && `Job Description: ${jobDescription}`}
             
             Requirements:
             1. Use a professional, enthusiastic tone
@@ -173,12 +174,15 @@ export async function deleteCoverLetter(id: string){
             throw new Error("User not found");
         }
 
-        return await db.coverLetter.delete({
+        const deletedCoverLetter = await db.coverLetter.delete({
             where: {
                 userId: user.id,
                 id
             }
-        })
+        });
+
+        revalidatePath('/ai-cover-letter');
+        return deleteCoverLetter;
     } catch (error) {
         if (error instanceof Error) {
             console.error("Error while deleting cover letter", error.message);

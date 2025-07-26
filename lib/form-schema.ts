@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+//onboarding form schema
 export const onboardingSchema = z.object({
     industry: z.string({ required_error: "Please select an industry" }),
     subIndustry: z.string({ required_error: "Please select a specialization" }),
@@ -150,6 +151,7 @@ export const educationSchema = z.object({
     }
 })
 
+//resume form schema
 export const resumeSchema = z.object({
     contactInfo: contactSchema,
     summary: z.string().min(1, "Enter more details in your summary").optional(),
@@ -158,3 +160,10 @@ export const resumeSchema = z.object({
     projects: z.array(projectSchema).optional(),
     education: z.array(educationSchema).optional(),
 });
+
+//cover-letter form schema
+export const coverLetterSchema = z.object({
+    jobTitle: z.string().min(1, "Job title is required"),
+    companyName: z.string().min(1, "Company/Organisation name is required"),
+    jobDescription: z.string().min(1, "Enter more details about the job").optional(),
+})

@@ -261,7 +261,7 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
                             </>
                             :
                             <>
-                                <Save />
+                                <Save className='w-4 h-4'/>
                                 Save
                             </>
                         }
