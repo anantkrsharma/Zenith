@@ -262,7 +262,7 @@ export const Quiz = () => {
                                     </Button>
                                     : 
                                     <Button variant={'outline'} 
-                                            className='flex items-center justify-center gap-1 bg-zinc-900 border-blue-900 hover:cursor-pointer hover:bg-neutral-800 hover:border-blue-700 transition-all duration-75 ease-in-out'
+                                            className='flex items-center justify-center gap-1 bg-zinc-900 border-cyan-900 hover:cursor-pointer hover:bg-neutral-800 hover:border-cyan-800 transition-all duration-75 ease-in-out'
                                             onClick={() => {
                                                 setShowExplanation(true)
                                                 setDisableQuizOptn(true)
