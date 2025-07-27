@@ -137,6 +137,7 @@ const Landing = () => {
                                         width={40} 
                                         height={40} 
                                         className="rounded-full object-cover border-2 border-primary/20 mx-auto mb-4"
+                                        unoptimized
                                 />
                                 </div>
                                 <div>
