@@ -101,7 +101,7 @@ const CoverLetterPage = ({ params }: { params: Promise<{ id: string }> }) => {
                     </Link>
 
                     <h1 className="text-6xl font-bold gradient-title mb-6">
-                        {letterData?.jobTitle} <span className='font-medium text-muted-foreground/50'> at </span> {letterData?.companyName}
+                        {letterData?.jobTitle} <span className='font-normal text-neutral-800/50'> at </span> {letterData?.companyName}
                     </h1>
 
                     <div id='cover-letter'>
