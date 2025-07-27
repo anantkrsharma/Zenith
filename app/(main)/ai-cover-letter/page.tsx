@@ -1,4 +1,5 @@
 export const dynamic = "force-dynamic";
+
 import React, { Suspense } from 'react'
 import CoverLetterCards from './_components/cover-letters'
 import { BarLoader } from 'react-spinners'

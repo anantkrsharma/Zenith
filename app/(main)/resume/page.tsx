@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { getResume } from '@/actions/resume'
 import React from 'react'
 import ResumeBuilder from './_components/resume-builder';

@@ -1,10 +1,11 @@
+export const dynamic = "force-dynamic";
+
 import { getInterviewAssessments } from '@/actions/interview'
 import React, { Suspense } from 'react'
 import QuizStats from './_components/quiz-stats';
 import PerformanceChart from './_components/performance-chart';
 import QuizList from './_components/quiz-list';
 import { BarLoader } from 'react-spinners';
-export const dynamic = "force-dynamic";
 
 const InterviewPage = async () => {
     const assessments = await getInterviewAssessments();
