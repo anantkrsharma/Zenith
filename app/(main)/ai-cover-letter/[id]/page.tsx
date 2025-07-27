@@ -1,7 +1,6 @@
 'use client';
-export const dynamic = "force-dynamic";
-'use client';
 
+export const dynamic = "force-dynamic";
 import { getCoverLetter } from '@/actions/cover-letter'
 import { Button } from '@/components/ui/button';
 import useFetch from '@/hooks/use-fetch'
