@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button'
 import { ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 import { Quiz } from '../_components/quiz'
+export const dynamic = "force-dynamic";
 
 const MockInterviewPage = () => {
     return (

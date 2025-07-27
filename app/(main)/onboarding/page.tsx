@@ -3,6 +3,7 @@ import { OnboardingForm } from './_components/onboarding-form'
 import { industries }  from '@/data/industries'
 import { getUserOnboardingStatus } from '@/actions/user'
 import { redirect } from 'next/navigation'
+export const dynamic = "force-dynamic";
 
 const OnboardingPage = async () => {
     // redirect to the dashboard if already onboarded
