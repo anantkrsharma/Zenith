@@ -137,7 +137,7 @@ const NewCover = () => {
 
                         <div className='space-y-2'>
                             <Label htmlFor='job-desc'>
-                                Job Description
+                                * Job Description
                             </Label>
                             <Controller
                                 control={control}

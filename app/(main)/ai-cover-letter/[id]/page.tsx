@@ -2,10 +2,9 @@
 
 import { getCoverLetter } from '@/actions/cover-letter'
 import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton'
 import useFetch from '@/hooks/use-fetch'
 import MDEditor from '@uiw/react-md-editor'
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Download, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import React, { useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
@@ -61,7 +60,6 @@ const CoverLetterPage = ({ params }: { params: Promise<{ id: string }> }) => {
         setIsDownloading(true);
         try {
             const element = document.getElementById('cover-letter');
-
             const opt = {
                 margin: [0, 10],
                 filename: `Cover Letter.pdf`,
@@ -89,34 +87,60 @@ const CoverLetterPage = ({ params }: { params: Promise<{ id: string }> }) => {
     return (
         <div className="container mx-auto">
             {letterData ? (
-                <div className="flex flex-col space-y-2">
+                <div className="flex flex-col space-y-2 md:space-y-4">
                     <Link href={'/ai-cover-letter'}>
                         <Button
                             variant={'outline'}
                             className='flex items-center pl-0 gap-2 border bg-neutral-950 border-zinc-700 hover:bg-black hover:border-zinc-500 hover:cursor-pointer hover:no-underline transition-colors duration-75 ease-in-out'
-                        >
+                            >
                             <ArrowLeft className='w-4 h-4'/>
                             Back to Cover Letters
                         </Button>
                     </Link>
-
-                    <h1 className="text-6xl font-bold gradient-title mb-6">
-                        {letterData?.jobTitle} <span className='font-normal text-neutral-800/50'> at </span> {letterData?.companyName}
-                    </h1>
-
-                    <div id='cover-letter'>
-                        <MDEditor.Markdown 
-                            source={letterData?.content}
-                            style={{ 
-                                borderRadius: '0.7rem', 
-                                overflow: 'hidden', 
-                                paddingLeft: 15, 
-                                paddingRight: 15, 
-                                paddingTop: 10, 
-                                paddingBottom: 10, 
-                                border: '1px solid #333333'
-                            }}
-                        />
+                    <div className='flex flex-col sm:flex-row md:items-center justify-between'>
+                        <h1 className="text-3xl md:text-5xl font-bold gradient-title">
+                            {letterData?.jobTitle} <span className='font-normal text-neutral-800/50'> at </span> {letterData?.companyName}
+                        </h1>
+                        <div className='flex justify-end'>
+                            <Button 
+                                variant={'outline'}
+                                className='flex items-center text-white bg-cyan-950 border-cyan-800 hover:cursor-pointer hover:bg-cyan-900 hover:border-cyan-600 transition-all duration-75 ease-in-out'
+                                disabled={isDownloading}
+                                onClick={generatePDF}
+                                >   
+                                { isDownloading ?
+                                    <>
+                                        <Loader2 className='h-4 w-4 animate-spin' />
+                                        Generating PDF...
+                                    </>
+                                    :
+                                    <>
+                                        <Download />
+                                        Download PDF
+                                    </>
+                                }
+                            </Button>
+                        </div>
+                    </div>
+                    <MDEditor.Markdown 
+                        source={letterData?.content}
+                        style={{ 
+                            borderRadius: '0.7rem', 
+                            overflow: 'hidden', 
+                            paddingLeft: 15, 
+                            paddingRight: 15, 
+                            paddingTop: 10, 
+                            paddingBottom: 10, 
+                            border: '1px solid #333333'
+                        }}
+                    />
+                    <div className='hidden'>
+                        <div id='cover-letter'>
+                            <MDEditor.Markdown
+                                source={letterData?.content}
+                                style={{ background: 'white', color: 'black' }}
+                            />
+                        </div>
                     </div>
                 </div>
             ) : (
