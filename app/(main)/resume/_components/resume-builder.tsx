@@ -144,9 +144,9 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
             await aiSummaryFn(generateAiSummary, {
                 summary: summary,
                 skills: skills,
-                workExp: workExp?.map((item: any) => JSON.stringify(item)),
-                projects: projects?.map((item: any) => JSON.stringify(item)),
-                education: education?.map((item: any) => JSON.stringify(item)),
+                workExp: workExp?.map((item) => JSON.stringify(item)),
+                projects: projects?.map((item) => JSON.stringify(item)),
+                education: education?.map((item) => JSON.stringify(item)),
             });
         } catch (error) {
             if(error instanceof Error){
