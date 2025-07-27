@@ -14,7 +14,7 @@ import QuizResult from './quiz-result';
 
 export const Quiz = () => {
     const [currentQues, setCurrentQues] = useState<number>(0);
-    const [userAnswers, setUserAnswers] = useState<any[]>([]);
+    const [userAnswers, setUserAnswers] = useState<(string | null)[]>([]);
     const [showExplanation, setShowExplanation] = useState<boolean>(false);
     const [disableQuizOptn, setDisableQuizOptn] = useState<boolean>(false);
     
@@ -72,7 +72,7 @@ export const Quiz = () => {
                 toast.success("Generated mock interview quiz successfully");
             }
         }
-    }, [questionsData, questionsLoading]);
+    }, [questionsData, questionsLoading, quesLoadingToastId]);
     
     const handleChange = (val: string) => {  //fn to fill the radio component option selected by the user in the userAnswer array
         const userAnswersNew = [...userAnswers];
@@ -122,7 +122,7 @@ export const Quiz = () => {
             if(submitData)
                 toast.success("Submitted the quiz successfully");
         }
-    }, [submitData, submitLoading]);
+    }, [submitData, submitLoading, submitLoadingToastId]);
     
     const startNewQuiz = () => { //function to clear all state variables, or to set them to null. Called when the user clicks to start a new quiz
         setCurrentQues(0);

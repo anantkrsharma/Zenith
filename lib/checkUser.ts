@@ -29,9 +29,14 @@ export const checkUser = async () => {
                 }
             });
             return newUser;
-        } catch (createError: any) {
+        } catch (createError: unknown) {
             // Prisma unique constraint error code
-            if (createError.code === 'P2002') {
+            if (
+                typeof createError === "object" &&
+                createError !== null &&
+                "code" in createError &&
+                (createError as { code?: string }).code === "P2002"
+            ) {
                 //another parallel request created the user (getUserOnboardingStatus() OR header.tsx), fetch and return
                 return await db.user.findUnique({
                     where: { clerkUserId: user.id }

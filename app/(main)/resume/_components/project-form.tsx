@@ -9,7 +9,7 @@ import useFetch from '@/hooks/use-fetch'
 import { projectSchema } from '@/lib/form-schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { format, parse } from 'date-fns'
-import { Code, ExternalLink, Github, Loader2, PlusCircle, Sparkle, X } from 'lucide-react'
+import { Code, ExternalLink, Loader2, PlusCircle, Sparkle, X } from 'lucide-react'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -17,8 +17,8 @@ import { toast } from 'sonner'
 import { z } from 'zod'
 
 type ProjectFormProps = {
-    entries: any,
-    onChange: (...event: any[]) => void
+    entries: z.infer<typeof projectSchema>[],
+    onChange: (values: z.infer<typeof projectSchema>[]) => void
 }
 
 const ProjectForm = ({ entries, onChange }: ProjectFormProps) => {

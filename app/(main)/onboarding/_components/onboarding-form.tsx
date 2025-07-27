@@ -94,7 +94,7 @@ export const OnboardingForm = ({ industries } : OnboardingFormProps) => {
                 router.push("/dashboard");
             }
         }
-    }, [onboardResult, onboardLoading]);
+    }, [onboardResult, onboardLoading, toastId]);
 
     return (
         <div className="flex items-center justify-center bg-background">

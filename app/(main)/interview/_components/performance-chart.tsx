@@ -1,6 +1,6 @@
 'use client'
 
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Assessment } from '@/lib/generated/client'
 import { format } from 'date-fns';
 import React, { useEffect, useState } from 'react'
@@ -87,7 +87,7 @@ const PerformanceChart = ({ assessments }: { assessments: Assessment[] }) => {
                             <YAxis 
                                 domain={[0, 100]}
                             />
-                            <Tooltip content={({ active, payload, label }) => {
+                            <Tooltip content={({ active, payload }) => {
                                 if (active && payload && payload.length) {
                                     return (
                                         <div className="bg-neutral-900 border border-zinc-700 rounded-lg p-2 space-y-[2px] shadow-lg text-center">

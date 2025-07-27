@@ -12,11 +12,14 @@ const HeroSectionImage = () => {
         const handleScroll = () => {
             const scrollPosition = window.scrollY;
             const scrollThreshold = 400;
-            if(scrollPosition > scrollThreshold) {
-                imageElement && imageElement.classList.add('scrolled');
-            }
-            else{
-                imageElement && imageElement.classList.remove('scrolled');
+            if (scrollPosition > scrollThreshold) {
+                if (imageElement) {
+                    imageElement.classList.add('scrolled');
+                }
+            } else {
+                if (imageElement) {
+                    imageElement.classList.remove('scrolled');
+                }
             }
         }
 

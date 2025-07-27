@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Textarea } from '@/components/ui/textarea';
 import useFetch from '@/hooks/use-fetch';
-import { resumeSchema } from '@/lib/form-schema';
+import { educationSchema, projectSchema, resumeSchema, workExpSchema } from '@/lib/form-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Download, Edit, Loader2, Monitor, Save, Sparkle, TriangleAlert } from 'lucide-react'
 import React, { useEffect, useRef, useState } from 'react'
@@ -22,6 +22,15 @@ import rehypeSanitize from "rehype-sanitize";
 import rehypeRaw from "rehype-raw";
 import { contactToMarkdown, workExpToMarkdown, projectsToMarkdown, educationToMarkdown } from '@/lib/toMarkdown';
 import { useUser } from '@clerk/nextjs';
+import { z } from 'zod';
+
+type Html2PdfChainable = {
+    set: (options: object) => Html2PdfChainable;
+    from: (element: HTMLElement | null) => Html2PdfChainable;
+    save: () => Promise<void>;
+};
+
+type Html2PdfFn = () => Html2PdfChainable;
 
 const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
     const [activeTab, setActiveTab] = useState<string>('form');
@@ -30,7 +39,7 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
     const [previewContent, setPreviewContent] = useState<string>(initialContent);
     const [isDownloading, setIsDownloading] = useState<boolean>(false);
     const { user } = useUser();
-    const pdfLib = useRef<any>(null);
+    const pdfLib = useRef<Html2PdfFn | null>(null);
     
     useEffect(() => {
         if(initialContent.length > 0)
@@ -65,7 +74,6 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
         data: saveResumeData,
         fn: saveResumeFn,
         loading: saveResumeLoading,
-        error: saveResumeError,
     } = useFetch();
     
     //generate AI Professional Summary
@@ -73,7 +81,6 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
         data: aiSummaryData,
         fn: aiSummaryFn,
         loading: aiSummaryLoading,
-        error: aiSummaryError,
     } = useFetch();
 
     const getMarkdownContent = () => {
@@ -83,19 +90,19 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
             summary && `## Professional Summary\n\n${summary}`,
             skills && `## Skills\n\n${skills}`,
             workExp && workExpToMarkdown(
-                workExp.map((exp: any) => ({
+                workExp.map((exp) => ({
                     ...exp,
                     current: exp.current ?? false,
                 }))
             ),
             projects && projectsToMarkdown(
-                projects.map((proj: any) => ({
+                projects.map((proj) => ({
                     ...proj,
                     current: proj.current ?? false,
                 }))
             ),
             education && educationToMarkdown(
-                education.map((edu: any) => ({
+                education.map((edu) => ({
                     ...edu,
                     current: edu.current ?? false,
                 }))
@@ -447,7 +454,12 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
                                 control={control}
                                 render={({ field }) => (
                                     <ExperienceForm 
-                                        entries={field.value}
+                                        entries={
+                                            (field.value ?? []).map((exp) => ({
+                                            ...exp,
+                                            current: exp.current ?? false,
+                                            })) as z.infer<typeof workExpSchema>[]
+                                        }
                                         onChange={field.onChange}
                                     />
                                 )}
@@ -467,7 +479,12 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
                                 control={control}
                                 render={({ field }) => (
                                     <ProjectForm
-                                        entries={field.value}
+                                        entries={
+                                            (field.value ?? []).map((proj) => ({
+                                                ...proj,
+                                                current: proj.current ?? false,
+                                            })) as z.infer<typeof projectSchema>[]
+                                        }
                                         onChange={field.onChange}
                                     />
                                 )}
@@ -487,7 +504,12 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
                                 control={control}
                                 render={({ field }) => (
                                     <EducationForm 
-                                        entries={field.value}
+                                        entries={
+                                            (field.value ?? []).map((edu) => ({
+                                                ...edu,
+                                                current: edu.current ?? false,
+                                            }))as z.infer<typeof educationSchema>[]
+                                        }
                                         onChange={field.onChange}
                                     />
                                 )}

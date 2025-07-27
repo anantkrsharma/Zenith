@@ -10,15 +10,22 @@ import React, { useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
 import CoverLetterSkeleton from '../_components/cover-letter-skeleton';
 
+type Html2PdfChainable = {
+    set: (options: object) => Html2PdfChainable;
+    from: (element: HTMLElement | null) => Html2PdfChainable;
+    save: () => Promise<void>;
+};
+
+type Html2PdfFn = () => Html2PdfChainable;
+
 const CoverLetterPage = ({ params }: { params: Promise<{ id: string }> }) => {
     const { id } = React.use(params);
     const [isDownloading, setIsDownloading] = useState<boolean>(false);
-    const pdfLib = useRef<any>(null);
+    const pdfLib = useRef<Html2PdfFn | null>(null);
 
     const {
         data: letterData,
         loading: letterLoading,
-        error: letterError,
         fn: letterFn
     } = useFetch();
 

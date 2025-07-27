@@ -17,8 +17,8 @@ import { toast } from 'sonner';
 import { z } from 'zod';
 
 type ExperienceFormProps = {
-    entries: any,
-    onChange: (...event: any[]) => void
+    entries: z.infer<typeof workExpSchema>[],
+    onChange: (value: z.infer<typeof workExpSchema>[]) => void
 }
 
 const ExperienceForm = ({ entries, onChange }: ExperienceFormProps) => {

@@ -15,8 +15,8 @@ import { toast } from 'sonner'
 import { z } from 'zod'
 
 type ProjectFormProps = {
-    entries: any,
-    onChange: (...event: any[]) => void
+    entries: z.infer<typeof educationSchema>[],
+    onChange: (value: z.infer<typeof educationSchema>[]) => void
 }
 
 const EducationForm = ({ entries, onChange }: ProjectFormProps) => {

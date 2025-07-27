@@ -1,12 +1,12 @@
 'use client';
 
 import { format, formatDistanceToNow } from 'date-fns';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Rectangle } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Rectangle } from 'recharts';
 import { IndustryInsight } from '@/lib/generated/client'
 import { Brain, BriefcaseIcon, Dot, LineChart, TrendingDown, TrendingUp } from 'lucide-react';
 import React, { useEffect, useState } from 'react'
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 
 type SalaryRange = {
