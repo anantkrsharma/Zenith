@@ -1,11 +1,14 @@
 import React, { Suspense } from 'react'
-import CoverLetters from './_components/cover-letters'
+import CoverLetterCards from './_components/cover-letters'
 import { BarLoader } from 'react-spinners'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Plus } from 'lucide-react'
+import { getCoverLetters } from '@/actions/cover-letter'
 
-const CoverLettersPage = () => {
+const CoverLettersPage = async () => {
+    const coverLetters = await getCoverLetters();
+
     return (
         <div className='space-y-4 md:space-y-6'>
             <div className='flex-col md:flex md:flex-row md:items-center md:justify-between border-b py-2 space-y-1 md:space-y-0'>
@@ -25,7 +28,7 @@ const CoverLettersPage = () => {
             </div>
 
             <Suspense fallback={<BarLoader className='mt-3' width={'100%'} color='gray' />}>
-                <CoverLetters />
+                <CoverLetterCards coverLettersData={coverLetters}/>
             </Suspense>
         </div>
     )

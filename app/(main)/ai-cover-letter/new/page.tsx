@@ -9,7 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import useFetch from '@/hooks/use-fetch';
 import { coverLetterSchema } from '@/lib/form-schema'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { ArrowLeft, Sparkles } from 'lucide-react';
+import { ArrowLeft, Loader2, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
@@ -39,15 +39,15 @@ const NewCover = () => {
     });
 
     const {
-        data: letterData,
-        loading: letterLoading,
-        error: letterError,
-        fn: letterFn
+        data: newLetterData,
+        loading: newLetterLoading,
+        error: newLetterError,
+        fn: newLetterFn
     } = useFetch();
 
     const onSubmit = async (data: z.infer<typeof coverLetterSchema>) => {
         try {
-            await letterFn(createCoverLetter, data);
+            await newLetterFn(createCoverLetter, data);
         } catch (error) {
             if(error instanceof Error){
                 toast.error("Error while creating cover letter");
@@ -60,20 +60,20 @@ const NewCover = () => {
     }
 
     useEffect(() => {
-        if(letterLoading && toastId == null){
+        if(newLetterLoading && toastId == null){
             const id = toast.loading("Creating cover letter...")
             setToastId(id);
         }
-        if(!letterLoading && toastId != null){
+        if(!newLetterLoading && toastId != null){
             toast.dismiss(toastId);
             setToastId(null);
 
-            if(letterData){
+            if(newLetterData){
                 toast.success("Cover letter created successfully");
-                router.push(`/ai-cover-letter/${letterData.id}`)
+                router.push(`/ai-cover-letter/${newLetterData.id}`)
             }
         }
-    }, [toastId, letterLoading, letterData])
+    }, [toastId, newLetterLoading, newLetterData])
 
     return (
         <div className='space-y-6'>
@@ -92,7 +92,7 @@ const NewCover = () => {
                 </div>
             </div>
 
-            <Card className='bg-neutral-800/40 border-none'>
+            <Card className='bg-neutral-800/40 border-none mx-2'>
                 <CardContent>
                     <form 
                         action="submit"
@@ -163,9 +163,19 @@ const NewCover = () => {
                             variant={'outline'}
                             size={'lg'}
                             className='text-md flex items-center bg-zinc-950 border-neutral-700 hover:cursor-pointer hover:bg-neutral-900 hover:border-zinc-500 transition-all duration-75 ease-in-out'
+                            disabled={newLetterLoading}
                         >   
-                            Create 
-                            <Sparkles className='w-4 h-4' />
+                            { newLetterLoading ?
+                                <>
+                                    <Loader2 className='h-4 w-4 animate-spin' />
+                                    Creating...
+                                </>
+                                :
+                                <>
+                                    <Sparkles className='w-4 h-4' />
+                                    Create 
+                                </>
+                            }
                         </Button>
                     </form>
                 </CardContent>

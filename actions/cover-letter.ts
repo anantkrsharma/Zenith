@@ -32,33 +32,45 @@ export async function createCoverLetter({ jobTitle, companyName, jobDescription 
         }
 
         const prompt = `
-            Write a professional cover letter for a ${jobTitle} position at ${companyName}.
-            
-            About the candidate:
-            - Industry: ${user.industry}
-            - Years of Experience: ${user.experience}
-            - Skills: ${user.skills?.join(", ")}
-            - Professional Background: ${user.bio}
-            
-            ${jobDescription && `Job Description: ${jobDescription}`}
-            
-            Requirements:
-            1. Use a professional, enthusiastic tone
-            2. Highlight relevant skills and experience
-            3. Show understanding of the company's needs
-            4. Keep it concise (max 400 words)
-            5. Use proper business letter formatting in markdown
-            6. Include specific examples of achievements
-            7. Relate candidate's background to job requirements
-            
-            Format the letter in markdown.
-        `
+            You are a professional career assistant AI.
+
+            Generate a **cover letter** in **valid Markdown format** for the following job application:
+
+            **Job Title**: ${jobTitle}  
+            **Company**: ${companyName}
+
+            ### About the candidate:
+            - **Name**: ${user.name}
+            - **Industry**: ${user.industry}
+            - **Experience**: ${user.experience} years
+            - **Skills**: ${user.skills?.join(", ")}
+            - **Background**: ${user.bio}
+
+            ${jobDescription ? `- **Job Description**:\n${jobDescription}` : ""}
+
+            ### Instructions:
+            - Do not include any introductory text, comments, or explanation.
+            - Output only a business cover letter written in valid **Markdown**, properly formatted as:
+            - Date
+            - Greeting
+            - Body (1–3 paragraphs)
+            - Closing statement
+            - Signature (Candidate's name)
+            - Keep it under 400 words.
+            - Use a **professional yet enthusiastic tone**.
+            - Include specific examples of achievements
+            - Relate candidate's background to job requirements
+            - Use bullet points if necessary to highlight achievements.
+        `.trim();
         
         const res = await ai.models.generateContent({
             model: "gemini-2.0-flash",
             contents: prompt
         });
-        const content = res.text?.trim() || '';
+
+        let content = res.text?.trim() || "";
+        const regex = /^[\s\S]*?(?=\n#|Dear|To|Date:)/i;
+        content = content.replace(regex, "").trim();
 
         return await db.coverLetter.create({
             data: {
