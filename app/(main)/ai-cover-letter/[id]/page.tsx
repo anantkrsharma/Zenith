@@ -130,18 +130,24 @@ const CoverLetterPage = ({ params }: { params: Promise<{ id: string }> }) => {
                             </Button>
                         </div>
                     </div>
-                    <MDEditor.Markdown 
-                        source={letterData?.content}
-                        style={{ 
-                            borderRadius: '0.7rem', 
-                            overflow: 'hidden', 
-                            paddingLeft: 15, 
-                            paddingRight: 15, 
-                            paddingTop: 10, 
-                            paddingBottom: 10, 
-                            border: '1px solid #333333'
-                        }}
-                    />
+                    <motion.div
+                        initial={{ opacity: 0, y: 32 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.32, ease: [0.4, 0, 0.2, 1] }}
+                    >
+                        <MDEditor.Markdown 
+                            source={letterData?.content}
+                            style={{ 
+                                borderRadius: '0.7rem', 
+                                overflow: 'hidden', 
+                                paddingLeft: 15, 
+                                paddingRight: 15, 
+                                paddingTop: 10, 
+                                paddingBottom: 10, 
+                                border: '1px solid #333333'
+                            }}
+                        />
+                    </motion.div>
                     <div className='hidden'>
                         <div id='cover-letter'>
                             <MDEditor.Markdown
@@ -165,4 +171,5 @@ const CoverLetterPage = ({ params }: { params: Promise<{ id: string }> }) => {
     )
 }
 
+import { motion } from 'framer-motion';
 export default CoverLetterPage

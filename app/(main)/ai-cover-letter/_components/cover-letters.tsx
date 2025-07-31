@@ -23,7 +23,7 @@ const CoverLetterCards = ({ coverLettersData }: { coverLettersData: CoverLetter[
             y: 0,
             scale: 1,
             transition: {
-                duration: 0.85,
+                duration: 0.69,
                 type: 'spring',
                 bounce: 0.35,
                 ease: [0.22, 1, 0.36, 1],

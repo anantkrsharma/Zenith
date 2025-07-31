@@ -31,8 +31,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           <ThemeProvider
             attribute="class"
             defaultTheme="dark"
-            enableSystem
-            disableTransitionOnChange
           >
             <Header />
             

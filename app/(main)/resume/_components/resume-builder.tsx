@@ -306,7 +306,13 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
                 </TabsList>
 
                 <TabsContent value="form" className='p-1'> 
-                    <form className='space-y-6'>   
+                    <motion.form
+                        className='space-y-6'
+                        initial={{ opacity: 0, y: 24 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 24 }}
+                        transition={{ duration: 0.25, ease: 'easeInOut' }}
+                    >
                         {/* Contact Info */}
                         <div className='space-y-2'>
                             <h3 className='text-lg font-medium'> 
@@ -520,7 +526,7 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
                                 </p>
                             }
                         </div>
-                    </form> 
+                    </motion.form>
                 </TabsContent>
 
                 <TabsContent value="md-preview" className='p-1'> 
@@ -553,7 +559,7 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
                                         initial={{ opacity: 0, y: -20 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         exit={{ opacity: 0, y: -20 }}
-                                        transition={{ duration: 0.3, ease: 'easeInOut' }}
+                                        transition={{ duration: 0.25, ease: 'easeInOut' }}
                                     >
                                         <div className='w-full flex items-center justify-center px-2 py-1.5 my-1 rounded-md text-neutral-300 bg-yellow-700/15 border-r border-b border-yellow-600/55 '>
                                             <TriangleAlert className='h-5 w-5 mr-2 text-yellow-500' />
@@ -566,7 +572,13 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
                             </AnimatePresence>
                             }
                             
-                            <div className="container">
+                            <motion.div
+                                className="container"
+                                initial={{ opacity: 0, y: 24 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: 24 }}
+                                transition={{ duration: 0.25, ease: 'easeInOut' }}
+                            >
                                 <MDEditor
                                     value={previewContent}
                                     onChange={(val) => setPreviewContent(val || '')}
@@ -583,7 +595,7 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
                                             : 'preview'
                                     }
                                 />
-                            </div>
+                            </motion.div>
                         </>
                         : 
                         <>

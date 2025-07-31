@@ -14,6 +14,7 @@ import { ArrowLeft, Loader2, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
+import { motion } from 'framer-motion';
 import { Controller, useForm } from "react-hook-form";
 import { toast } from 'sonner';
 import { z } from 'zod';
@@ -91,94 +92,100 @@ const NewCover = () => {
                 </div>
             </div>
 
-            <Card className='bg-neutral-800/40 border-none mx-2'>
-                <CardContent>
-                    <form 
-                        action="submit"
-                        className='space-y-6'
-                        onSubmit={handleSubmit(onSubmit)}
-                    >   
-                        <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-                            <div className='space-y-2 flex flex-col'>
-                                <Label htmlFor='job-title'>
-                                    * Job Title
-                                </Label>
-                                <Input
-                                    {...register('jobTitle')}
-                                    id='job-title'
-                                    placeholder='e.g. Software Engineer'
-                                    className='bg-black/69'
-                                />
-                                { errors.jobTitle &&
-                                    <p className='text-xs sm:text-sm text-red-500'>
-                                        {errors.jobTitle.message}
-                                    </p>
-                                }
-                            </div>
-
-                            <div className='space-y-2 flex flex-col'>
-                                <Label htmlFor='company-name'>
-                                    * Company Name
-                                </Label>
-                                <Input
-                                    {...register('companyName')}
-                                    id='company-name'
-                                    placeholder='e.g. Google'
-                                    className='bg-black/69'
-                                />
-                                { errors.companyName &&
-                                    <p className='text-xs sm:text-sm text-red-500'>
-                                        {errors.companyName.message}
-                                    </p>
-                                }
-                            </div>
-                        </div>
-
-                        <div className='space-y-2'>
-                            <Label htmlFor='job-desc'>
-                                * Job Description
-                            </Label>
-                            <Controller
-                                control={control}
-                                name='jobDescription'
-                                render={({ field }) => (
-                                    <Textarea
-                                        {...field}
-                                        id='job-desc'
-                                        placeholder='Tell us more about your job role.'
-                                        className='h-24 bg-black/69'
-                                    />
-                                )}
-                            />
-                            { errors.jobDescription &&
-                                    <p className='text-xs sm:text-sm text-red-500'>
-                                        {errors.jobDescription.message}
-                                    </p>
-                                }
-                        </div>
-
-                        <Button
-                            type='submit'
-                            variant={'outline'}
-                            size={'lg'}
-                            className='text-md flex items-center bg-zinc-950 border-neutral-700 hover:cursor-pointer hover:bg-neutral-900 hover:border-zinc-500 transition-all duration-75 ease-in-out'
-                            disabled={newLetterLoading}
+            <motion.div
+                initial={{ opacity: 0, y: 32 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.33, ease: [0.4, 0, 0.2, 1] }}
+            >
+                <Card className='bg-neutral-800/40 border-none mx-2'>
+                    <CardContent>
+                        <form 
+                            action="submit"
+                            className='space-y-6'
+                            onSubmit={handleSubmit(onSubmit)}
                         >   
-                            { newLetterLoading ?
-                                <>
-                                    <Loader2 className='h-4 w-4 animate-spin' />
-                                    Creating...
-                                </>
-                                :
-                                <>
-                                    <Sparkles className='w-4 h-4' />
-                                    Create 
-                                </>
-                            }
-                        </Button>
-                    </form>
-                </CardContent>
-            </Card>
+                            <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+                                <div className='space-y-2 flex flex-col'>
+                                    <Label htmlFor='job-title'>
+                                        * Job Title
+                                    </Label>
+                                    <Input
+                                        {...register('jobTitle')}
+                                        id='job-title'
+                                        placeholder='e.g. Software Engineer'
+                                        className='bg-black/69'
+                                    />
+                                    { errors.jobTitle &&
+                                        <p className='text-xs sm:text-sm text-red-500'>
+                                            {errors.jobTitle.message}
+                                        </p>
+                                    }
+                                </div>
+
+                                <div className='space-y-2 flex flex-col'>
+                                    <Label htmlFor='company-name'>
+                                        * Company Name
+                                    </Label>
+                                    <Input
+                                        {...register('companyName')}
+                                        id='company-name'
+                                        placeholder='e.g. Google'
+                                        className='bg-black/69'
+                                    />
+                                    { errors.companyName &&
+                                        <p className='text-xs sm:text-sm text-red-500'>
+                                            {errors.companyName.message}
+                                        </p>
+                                    }
+                                </div>
+                            </div>
+
+                            <div className='space-y-2'>
+                                <Label htmlFor='job-desc'>
+                                    * Job Description
+                                </Label>
+                                <Controller
+                                    control={control}
+                                    name='jobDescription'
+                                    render={({ field }) => (
+                                        <Textarea
+                                            {...field}
+                                            id='job-desc'
+                                            placeholder='Tell us more about your job role.'
+                                            className='h-24 bg-black/69'
+                                        />
+                                    )}
+                                />
+                                { errors.jobDescription &&
+                                        <p className='text-xs sm:text-sm text-red-500'>
+                                            {errors.jobDescription.message}
+                                        </p>
+                                    }
+                            </div>
+
+                            <Button
+                                type='submit'
+                                variant={'outline'}
+                                size={'lg'}
+                                className='text-md flex items-center bg-zinc-950 border-neutral-700 hover:cursor-pointer hover:bg-neutral-900 hover:border-zinc-500 transition-all duration-75 ease-in-out'
+                                disabled={newLetterLoading}
+                            >   
+                                { newLetterLoading ?
+                                    <>
+                                        <Loader2 className='h-4 w-4 animate-spin' />
+                                        Creating...
+                                    </>
+                                    :
+                                    <>
+                                        <Sparkles className='w-4 h-4' />
+                                        Create 
+                                    </>
+                                }
+                            </Button>
+                        </form>
+                    </CardContent>
+                </Card>
+            </motion.div>
         </div>
     )
 }
