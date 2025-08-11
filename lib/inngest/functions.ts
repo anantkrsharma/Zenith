@@ -30,15 +30,15 @@ export const updateIndustryInsights = inngest.createFunction(
             return status === 429 || status === "429" || status === "RESOURCE_EXHAUSTED";
         };
 
-        // Generic exponential backoff with jitter. Uses step.sleep for observability.
+        // Generic exponential backoff with jitter. Retries only on rate limit style errors.
         const retryWithBackoff = async <T>(
             key: string,
             fn: () => Promise<T>,
             opts?: { attempts?: number; baseMs?: number; maxMs?: number }
         ): Promise<T> => {
-            const attempts = opts?.attempts ?? 5; // total tries
-            const baseMs = opts?.baseMs ?? 1000; // initial backoff
-            const maxMs = opts?.maxMs ?? 60_000; // cap
+            const attempts = opts?.attempts ?? 5;
+            const baseMs = opts?.baseMs ?? 1000;
+            const maxMs = opts?.maxMs ?? 60_000;
             let lastErr: unknown;
             for (let attempt = 1; attempt <= attempts; attempt++) {
                 try {
@@ -47,10 +47,9 @@ export const updateIndustryInsights = inngest.createFunction(
                     lastErr = err;
                     const rateLimited = isRateLimitError(err);
                     const isLast = attempt === attempts;
-                    if (!rateLimited && isLast) break; // non-rate limit final failure
-                    if (!rateLimited && attempt === attempts) break; // bail
+                    if (!rateLimited || isLast) break; // don't retry non-rate limit or last attempt
                     const exp = Math.min(baseMs * 2 ** (attempt - 1), maxMs);
-                    const jitter = exp * (0.5 + Math.random()); // full jitter [0.5x,1.5x]
+                    const jitter = exp * (0.5 + Math.random());
                     const waitMs = Math.round(jitter);
                     await step.sleep(`${key}-backoff-${attempt}`, `${waitMs}ms`);
                 }
@@ -69,48 +68,51 @@ export const updateIndustryInsights = inngest.createFunction(
 
         // Sequential processing reduces concurrent pressure on model provider.
         for (const { industry } of industries) {
-            const prompt = `
-                Analyze the current state of the ${industry} industry and provide insights in ONLY the following JSON format without any additional notes or explanations:
+            const prompt = `You are an expert industry analyst. Return ONLY valid JSON (no markdown, no comments) for industry: ${industry}. Schema:
                 {
-                    "salaryRanges": [
-                    { "role": "string", "min": number, "max": number, "median": number, "location": "string" }
-                    ],
-                    "growthRate": number,
-                    "demandLevel": "High" | "Medium" | "Low",
-                    "topSkills": ["skill1", "skill2"],
-                    "marketOutlook": "POSITIVE" | "NEUTRAL" | "NEGATIVE",
-                    "keyTrends": ["trend1", "trend2"],
-                    "recommendedSkills": ["skill1", "skill2"]
+                "salaryRanges": [{"role": string, "min": number, "max": number, "median": number, "location": string}],
+                "growthRate": number, // percentage like 7.2
+                "demandLevel": "High" | "Medium" | "Low",
+                "topSkills": string[],
+                "marketOutlook": "POSITIVE" | "NEUTRAL" | "NEGATIVE",
+                "keyTrends": string[],
+                "recommendedSkills": string[]
                 }
-                
-                IMPORTANT: Return ONLY the JSON. No additional text, notes, or markdown formatting.
-                Include at least 5 common roles for salary ranges.
-                Growth rate should be a percentage.
-                Include at least 10 skills and trends.
+                Rules:
+                - salaryRanges >= 5 entries with realistic numeric values.
+                - topSkills, keyTrends, recommendedSkills each >= 10 unique entries.
+                - growthRate is a realistic current annual % (e.g. 3.4 not 340).
+                Return only minified JSON.
             `;
-            
-            //binding to prevent the original parent object context of generateContent function, into a new function, and then using the new function in step.ai.wrap
-            const generateInsightFn = ai.models.generateContent.bind(ai.models);
+
+            // Consistent usage with other parts of codebase
+            const runGemini = async ({ prompt }: { prompt: string }) => {
+                const result = await ai.models.generateContent({
+                    model: "gemini-2.0-flash",
+                    contents: prompt
+                });
+                let text: string = (result as any).text ?? ""; // ensure string
+                return { text };
+            };
             
             try {
                 // generating updated insights using Gemini with retry/backoff
                 const { text } = await retryWithBackoff(
                     `gemini-${industry}`,
-                    async () =>
-                        await step.ai.wrap(
-                            `ai-generated-insight-for-${industry}`,
-                            generateInsightFn,
-                            {
-                                model: "gemini-2.0-flash",
-                                contents: prompt
-                            }
-                        ),
+                    async () => await step.ai.wrap(
+                        `ai-generated-insight-for-${industry}`,
+                        runGemini,
+                        { prompt }
+                    ),
                     { attempts: 6, baseMs: 1500, maxMs: 45_000 }
                 );
 
                 let insights: Record<string, any> = {};
                 try {
-                    const cleanedText = (text ?? "").replace(/```(?:json)?\n?/g, "").trim();
+                    const cleanedText = (text as string)
+                        .replace(/```(?:json)?/gi, "")
+                        .replace(/```/g, "")
+                        .trim();
                     if (!cleanedText) throw new Error("Empty JSON from model");
                     insights = JSON.parse(cleanedText);
                 } catch (parseErr) {
