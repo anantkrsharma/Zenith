@@ -91,7 +91,7 @@ export const updateIndustryInsights = inngest.createFunction(
                     model: "gemini-2.0-flash",
                     contents: prompt
                 });
-                let text: string = (result as any).text ?? ""; // ensure string
+                const text: string = (result as any).text ?? ""; // ensure string
                 return { text };
             };
             
