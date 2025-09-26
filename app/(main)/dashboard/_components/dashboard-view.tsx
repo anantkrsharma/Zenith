@@ -8,6 +8,13 @@ import React, { useEffect, useState } from 'react'
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
+import { Roboto_Condensed } from 'next/font/google';
+
+const robotoCondensed = Roboto_Condensed({
+    subsets: ['latin'],
+    weight: ['400', '700'],
+    variable: '--font-roboto-condensed',
+});
 
 type SalaryRange = {
     role: string;
@@ -88,7 +95,23 @@ export const DashboardView = ({ insights }: { insights: IndustryInsight }) => {
 
     return (
         <div className='space-y-6'>
-            <div className='flex items-center justify-between'>
+            <div className='flex items-start md:items-center justify-between flex-col md:flex-row gap-2'>
+                <div className={`
+                        bg-neutral-900 hover:bg-neutral-800 border border-cyan-900 
+                        text-neutral-100/90 px-2.5 py-1.5 text-base md:text-xl lg:text-2xl rounded-lg
+                        font-medium tracking-wide transition-colors
+                        ${robotoCondensed.className}
+                    `}
+                >
+                    {(() => {
+                        const parts = insights.industry.split('-');
+                        const mainIndustry = parts[0].charAt(0).toUpperCase() + parts[0].slice(1);
+                        const subIndustry = parts.slice(1).map(word => 
+                            word.charAt(0).toUpperCase() + word.slice(1)
+                        ).join(' ');
+                        return `${mainIndustry} — ${subIndustry}`;
+                    })()}
+                </div>
                 <Badge variant={'secondary'} className='text-xs md:text-sm py-1 px-3'>
                     Last updated: {lastUpdate}
                 </Badge>

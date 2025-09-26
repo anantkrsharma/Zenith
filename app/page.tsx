@@ -1,5 +1,6 @@
 import HeroSection from "@/components/hero";
 import Landing from '@/components/landing';
+import CreatorBadge from '@/components/creator-badge';
 
 export default function Home() {
   return <>
@@ -8,6 +9,8 @@ export default function Home() {
       <HeroSection />
 
       <Landing />
+      
+      <CreatorBadge />
     </>
   ;
 }
