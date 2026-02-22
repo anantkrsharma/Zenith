@@ -43,7 +43,7 @@ export async function generateInterviewQuestions() {
         `;
 
         const result = await ai.models.generateContent({
-            model: "gemini-2.0-flash",
+            model: "gemini-2.5-flash",
             contents: prompt
         });
 
@@ -119,7 +119,7 @@ export async function saveInterviewAssessment(questions: QuestionDataProp[], ans
             `;
             
             const res = await ai.models.generateContent({
-                model: "gemini-2.0-flash",
+                model: "gemini-2.5-flash",
                 contents: improvementTipPrompt
             });
             improvementTip = res.text?.trim() || "";

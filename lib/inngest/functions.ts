@@ -88,7 +88,7 @@ export const updateIndustryInsights = inngest.createFunction(
             // Consistent usage with other parts of codebase
             const runGemini = async ({ prompt }: { prompt: string }) => {
                 const result = await ai.models.generateContent({
-                    model: "gemini-2.0-flash",
+                    model: "gemini-2.5-flash",
                     contents: prompt
                 });
                 const text: string = (result as any).text ?? ""; // ensure string

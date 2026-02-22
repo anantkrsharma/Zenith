@@ -131,7 +131,7 @@ export async function improveWithAI({ type, currentDesc, title, organization, sk
         `;
 
         const res = await ai.models.generateContent({
-            model: "gemini-2.0-flash",
+            model: "gemini-2.5-flash",
             contents: prompt
         });
         
@@ -234,7 +234,7 @@ export async function generateAiSummary({ summary, skills, workExp = [], project
         `.trim();
 
         const res = await ai.models.generateContent({
-            model: "gemini-2.0-flash",
+            model: "gemini-2.5-flash",
             contents: prompt
         });
 
