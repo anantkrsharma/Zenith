@@ -36,7 +36,7 @@
     "date-fns": "^4.1.0",
     "framer-motion": "^12.12.1",
     "html2pdf.js": "^0.10.1",
-    "inngest": "^3.36.0",
+    "inngest": "^4.2.4",
     "lucide-react": "^0.479.0",
     "motion": "^12.23.22",
     "next": "^15.3.2",
