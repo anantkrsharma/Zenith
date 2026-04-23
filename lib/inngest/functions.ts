@@ -16,11 +16,12 @@ const ai = new GoogleGenAI({
 });
 
 export const updateIndustryInsights = inngest.createFunction(
-    { id: "update-industry-insights", name: "update-industry-insights" },
-    // NOTE: Original schedule was "0 0 * * 0" (Sunday 00:00). Top-of-hour bursts can
-    // collide with provider maintenance & rate limit spikes. Consider shifting to
-    // "10 0 * * 0" (00:10) after deploying if 429s persist. Keeping original for now.
-    { cron: "0 0 * * 0" }, // Runs every Sunday at midnight
+    {
+        id: "update-industry-insights",
+        name: "update-industry-insights",
+        triggers: [{ cron: "0 0 * * 0" }],
+        // This cron expression means "At 00:00 on Sunday" (i.e., every Sunday at midnight)
+    }, // Runs every Sunday at midnight
     async ({ step }) => {
         // Helper: detect provider rate limit style errors (Gemini 429 or generic)
         const isRateLimitError = (err: unknown): boolean => {
