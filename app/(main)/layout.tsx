@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import React from 'react'
 import RedirectToOnboarding from './_components/redirect-to-onboarding';
 import { getUserOnboardingStatus } from '@/actions/user';
