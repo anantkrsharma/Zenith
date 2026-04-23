@@ -22,6 +22,7 @@
       "@/*": ["./*"]
     },
     "baseUrl": ".",
+    "ignoreDeprecations": "6.0",
     "typeRoots": ["types", "node_modules/@types"],
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "data/features.js", "data/howItWorks.js", "data/faqs.js", "data/industries.js", "data/testimonial.js",
