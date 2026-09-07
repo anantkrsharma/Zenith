@@ -1,44 +1,53 @@
-import Link from 'next/link'
-import { Button } from './ui/button'
-import HeroSectionImage from './heroImage';
-
-const HeroSection = () => {
-    return (
-        <section className='w-full pt-36 md:pt-48 pb-10'>
-            <div className='space-y-6 text-center'>
-                    <div className='space-y-6 mx-auto'>
-                        <h1 className='gradient-title font-bold text-4xl md:text-6xl lg:text-7xl'>
-                            Your AI Career Coach for
-                            <br />
-                            Professional Success
-                        </h1>
-                        <p className='mx-auto max-w-[450px] md:max-w-[600px] text-muted-foreground md:text-xl'>
-                            Advance your career with personalized guidance, interview prep, and AI-powered tools for job success.
-                        </p>
-                    </div>
-
-                    <div className='flex justify-center items-center space-x-4'>
-                        <Link href={'/dashboard'}>
-                            <Button size={'default'} 
-                                    variant={'outline'}
-                                    className='px-8 bg-zinc-900 border-neutral-700 hover:cursor-pointer hover:bg-neutral-800 hover:border-zinc-500 transition-all duration-75 ease-in-out'>
-                                Get Started
-                            </Button>
-                        </Link>
-                        <Link href={''}>
-                            <Button size={'default'} 
-                                    variant={'outline'}
-                                    className='px-8 text-white bg-cyan-950 border-cyan-800 hover:cursor-pointer hover:bg-cyan-900 hover:border-cyan-600 transition-all duration-75 ease-in-out' 
-                            >
-                                Watch Demo
-                            </Button>
-                        </Link>
-                    </div>
-
-                    <HeroSectionImage />
-            </div>
-        </section>
-    )
+"use client";
+import Link from "next/link";
+import { ArrowDown, ArrowUpRight, MoveUpRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { CareerAtlas } from "@/components/career-atlas";
+export default function HeroSection() {
+  return (
+    <section className="hero-section" aria-labelledby="hero-title">
+      <div className="site-container hero-layout">
+        <div className="hero-copy">
+          <p className="eyebrow">
+            <span className="status-dot" /> YOUR NEXT CHAPTER STARTS HERE
+          </p>
+          <h1 id="hero-title">
+            You have <br />
+            potential.
+            <br />
+            <span>Give it direction.</span>
+          </h1>
+          <p className="hero-description">
+            A clearer view of where you stand. The tools to move you forward.
+            Your career, with Zenith.
+          </p>
+          <div className="hero-actions">
+            <Button asChild size="lg">
+              <Link href="/dashboard">
+                Find your next level <ArrowUpRight />
+              </Link>
+            </Button>
+            <Link className="text-link" href="#workspace">
+              Explore the journey <ArrowDown size={15} />
+            </Link>
+          </div>
+          <p className="hero-footnote">AI career guidance. Built around you.</p>
+        </div>
+        <CareerAtlas />
+      </div>
+      <div className="site-container hero-bottom">
+        <span>AMBITION, MEET DIRECTION.</span>
+        <div>
+          <span>Understand</span>
+          <MoveUpRight />
+          <span>Develop</span>
+          <MoveUpRight />
+          <span>Become</span>
+        </div>
+        <a href="#workspace" aria-label="Discover the Zenith workspace">
+          <ArrowDown size={17} />
+        </a>
+      </div>
+    </section>
+  );
 }
-
-export default HeroSection;

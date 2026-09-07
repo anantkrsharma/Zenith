@@ -44,6 +44,7 @@ next-env.d.ts
 
 # prisma client
 lib/generated/
-lib/generated/client/
-./lib/generated/
-./lib/generated/client/
+
+# agent reference files
+AGENTS.md
+CLAUDE.md

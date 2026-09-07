@@ -1,8 +1,8 @@
-import { SignUp } from '@clerk/nextjs';
-import React from 'react'
+import { SignUp } from "@clerk/nextjs";
+import React from "react";
 
 function SignUpPage(): React.ReactNode {
-    return <SignUp />       
+  return <SignUp />;
 }
 
 export default SignUpPage;

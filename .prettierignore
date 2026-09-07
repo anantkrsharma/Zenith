@@ -1,0 +1,8 @@
+node_modules
+.next
+lib/generated
+pnpm-lock.yaml
+package-lock.json
+public
+prisma/migrations
+zenith.code-workspace

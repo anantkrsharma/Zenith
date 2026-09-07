@@ -1,16 +1,11 @@
 import HeroSection from "@/components/hero";
-import Landing from '@/components/landing';
-import CreatorBadge from '@/components/creator-badge';
+import Landing from "@/components/landing";
 
 export default function Home() {
-  return <>
-      <div className="grid-background"/>
-      
+  return (
+    <>
       <HeroSection />
-
       <Landing />
-      
-      <CreatorBadge />
     </>
-  ;
+  );
 }

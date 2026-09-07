@@ -1,72 +1,64 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
-import Link from 'next/link'
-import { usePathname } from 'next/navigation';
-import React from 'react'
-import { Button } from './ui/button';
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { ArrowUpRight, Code2 } from "lucide-react";
+import { Brand } from "@/components/brand";
 
-const Footer = () => {
-    const path = usePathname();
-
-    if(path.startsWith('/sign-in') || path.startsWith('/sign-up'))
-        return null;
-
+export default function Footer() {
+  const path = usePathname();
+  if (path.startsWith("/sign-in") || path.startsWith("/sign-up")) return null;
+  if (path !== "/")
     return (
-        <footer className="bg-zinc-900 text-white py-10 px-6 border-t border-zinc-900">
-            <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10">
-                <div className='space-y-3'>
-                    <div className='flex items-center gap-2 md:gap-4'>
-                        <Image src='/Icon.png' alt='logo' width={55} height={50} className='p-1 bg-black rounded-md border' />
-                        <Image src='/logo.png' alt='logo' width={90} height={60} />
-                    </div>
-                    <p className="text-sm text-gray-400">
-                        Empowering your career path with AI driven insights and various career growth tools
-                    </p>
-                </div>
-
-                <div>
-                    <h3 className="text-base font-semibold mb-3">Quick Links</h3>
-                    <ul className="space-y-2 text-sm text-gray-300">
-                    <li><Link href="/" className="hover:text-white">Home</Link></li>
-                    <li><Link href="/dashboard" className="hover:text-white">Dashboard</Link></li>
-                    <li><Link href="/" className="hover:text-white">Services</Link></li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h3 className="text-base font-semibold mb-3">Support</h3>
-                    <ul className="space-y-2 text-sm text-gray-300">
-                    <li><a href="#" className="hover:text-white">Help Center</a></li>
-                    <li><a href="#" className="hover:text-white">Contact Us</a></li>
-                    <li><a href="#" className="hover:text-white">Terms of Service</a></li>
-                    <li><a href="#" className="hover:text-white">Privacy Policy</a></li>
-                    </ul>
-                </div>
-                
-                <div>
-                    <h3 className="text-base font-semibold mb-3">Stay Connected</h3>
-                    <form className="flex flex-col gap-3">
-                        <input
-                            type="email"
-                            placeholder="Your email"
-                            className="px-4 py-2 rounded-lg text-gray-300 w-full border border-zinc-400"
-                        />
-                        <Button 
-                            variant={'outline'}
-                            className="bg-zinc-700 border-zinc-500 hover:cursor-pointer hover:bg-zinc-600 hover:border-zinc-400 transition-all duration-75 ease-in-out rounded-lg px-4 py-2 w-full"
-                        >   
-                            Subscribe
-                        </Button>
-                    </form>
-                </div>
-            </div>
-
-            <div className="mt-10 border-t border-zinc-700 pt-4 text-center text-xs md:text-sm text-gray-400">
-                &copy; {new Date().getFullYear()} Zenith. All rights reserved.
-            </div>
-        </footer>
-    )
+      <footer className="workspace-footer">
+        <span>© {new Date().getFullYear()} Zenith</span>
+        <Link href="/#faq">
+          A little clarity for your next chapter <ArrowUpRight size={12} />
+        </Link>
+      </footer>
+    );
+  return (
+    <footer className="site-footer">
+      <div className="site-container">
+        <div className="footer-grid">
+          <div>
+            <Brand />
+            <p className="mt-5 max-w-xs text-sm leading-7 text-muted-foreground">
+              A little clarity. A lot of possibility.
+              <br />
+              Your personal AI career workspace.
+            </p>
+          </div>
+          <div>
+            <h3>THE WORKSPACE</h3>
+            <Link href="/dashboard">Industry insights</Link>
+            <Link href="/resume">Resume studio</Link>
+            <Link href="/interview">Interview preparation</Link>
+            <Link href="/ai-cover-letter">Cover letters</Link>
+          </div>
+          <div>
+            <h3>EXPLORE</h3>
+            <Link href="/#how-it-works">How it works</Link>
+            <Link href="/#faq">Common questions</Link>
+            <a
+              href="https://github.com/anantkrsharma/Zenith"
+              target="_blank"
+              rel="noreferrer"
+            >
+              View the source <Code2 size={13} />
+            </a>
+            <a href="https://anantx.dev" target="_blank" rel="noreferrer">
+              Made by Anant Kr Sharma <ArrowUpRight size={13} />
+            </a>
+          </div>
+        </div>
+        <div className="footer-bottom">
+          <span>© {new Date().getFullYear()} Zenith. All rights reserved.</span>
+          <span className="flex items-center gap-2">
+            <span className="status-dot" /> BUILT FOR WHAT’S NEXT
+          </span>
+        </div>
+      </div>
+    </footer>
+  );
 }
-
-export default Footer

@@ -1,20 +1,29 @@
-import { Button } from '@/components/ui/button'
-import Link from 'next/link'
-import React from 'react'
+import { ArrowUpRight } from "lucide-react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { BrandMark } from "@/components/brand";
 
-const NotFoundPage = () => {
-    return (
-        <div className='flex flex-col items-center justify-center h-screen gap-4'>    
-            <h1 className='text-4xl md:text-5xl lg:text-6xl gradient-title font-extrabold'>404</h1>
-            <p className='text-lg md:text-xl font-bold'>Page Not Found</p>
-            <p className='text-muted-foreground mb-8'>Oops! the page you&apos;re looking for doesn&apos;t exist or has been moved.</p>
-            <Link href={'/'}>
-                <Button className='hover:cursor-pointer transition-all duration-150 border border-zinc-500' variant='default'>
-                    Return to Home
-                </Button>
-            </Link>
-        </div>
-    )
+export default function NotFoundPage() {
+  return (
+    <div className="mx-auto flex min-h-[80vh] max-w-xl flex-col items-center justify-center gap-6 px-6 text-center">
+      <div className="rounded-2xl border border-primary/20 bg-primary/5 p-5">
+        <BrandMark className="h-10 w-10" />
+      </div>
+      <span className="eyebrow">404 / A SMALL DETOUR</span>
+      <h1 className="text-4xl font-medium tracking-tight md:text-5xl">
+        Let’s get you
+        <br />
+        <span className="text-primary">back on track.</span>
+      </h1>
+      <p className="max-w-sm text-sm leading-7 text-muted-foreground">
+        This page may have moved, or the link may be incomplete. Your next
+        chapter is still waiting.
+      </p>
+      <Button asChild size="lg">
+        <Link href="/">
+          Back to Zenith <ArrowUpRight />
+        </Link>
+      </Button>
+    </div>
+  );
 }
-
-export default NotFoundPage

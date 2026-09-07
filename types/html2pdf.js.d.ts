@@ -1,9 +1,8 @@
-declare module 'html2pdf.js/dist/html2pdf.min.js' {
-    const html2pdf: any;
-    export default html2pdf;
-}
-
-declare module 'html2pdf.js' {
-    const html2pdf: any;
-    export default html2pdf;
+declare module "html2pdf.js" {
+  interface PdfWorker {
+    set(options: object): PdfWorker;
+    from(element: HTMLElement): PdfWorker;
+    save(): Promise<void>;
+  }
+  export default function html2pdf(): PdfWorker;
 }

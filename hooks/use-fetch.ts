@@ -1,35 +1,39 @@
-import { useState } from "react";
+"use client";
+
+import { useCallback, useState } from "react";
 import { toast } from "sonner";
 
-type ServerActionType = (...args: any[]) => any
+export default function useFetch<T>() {
+  const [data, setData] = useState<T | null>();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
 
-const useFetch = () => {
-    const [data, setData] = useState<any>(undefined);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<Error | null | unknown>(null);
+  const fn = useCallback(
+    async <Args extends unknown[]>(
+      action: (...args: Args) => Promise<T>,
+      ...args: Args
+    ) => {
+      setLoading(true);
+      setError(null);
+      setData(undefined);
+      try {
+        const result = await action(...args);
+        setData(result);
+        return result;
+      } catch (cause) {
+        const failure =
+          cause instanceof Error
+            ? cause
+            : new Error("Something went wrong. Please try again.");
+        setError(failure);
+        toast.error(failure.message);
+        return undefined;
+      } finally {
+        setLoading(false);
+      }
+    },
+    [],
+  );
 
-    async function fn(cb: ServerActionType, ...args: any[]) { //...args will expect any number of arguments (rest operator), and combine them into an array, so that's why we'll have to destructure the same using spread operator, while passing them as arguments in the server action function calling.
-        setLoading(true);
-        setError(null);
-        try {
-            const res = await cb(...args);  //cb is the server action that we're using for fetching/updating data (server action calls).
-            setData(res);
-        } catch (error) {
-            if(error instanceof Error) {
-                setError(error);
-                console.log(`error in the use-fetch custom hook - ${error.message}`);
-            }
-            else{
-                setError(error);
-                console.log(`error in the use-fetch custom hook - ${error}`);
-            }
-        }
-        finally {
-            setLoading(false);
-        }
-    }
-
-    return { data, loading, error, fn, setData };
+  return { data, loading, error, fn, setData };
 }
-
-export default useFetch;

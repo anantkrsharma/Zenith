@@ -1,89 +1,102 @@
-import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs';
-import Image from 'next/image';
-import Link from 'next/link';
-import React from 'react'
-import { Button } from './ui/button';
-import { ChevronDown, FileText, GraduationCap, LayoutDashboard, Menu, PenBox, StarsIcon } from 'lucide-react';
+import { Show, SignInButton, UserButton } from "@clerk/nextjs";
+import Link from "next/link";
 import {
-        DropdownMenu,
-        DropdownMenuContent,
-        DropdownMenuItem,
-        DropdownMenuTrigger,
-    } from "@/components/ui/dropdown-menu"
-import { checkUser } from '@/lib/checkUser';
+  ArrowUpRight,
+  ChevronDown,
+  FileText,
+  GraduationCap,
+  LayoutDashboard,
+  Menu,
+  PenLine,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Brand } from "@/components/brand";
+import { checkUser } from "@/lib/checkUser";
 
-const Header = async () => {
-    await checkUser();
-    
-    return (
-        <header className='fixed top-0 w-full border-b border-cyan-950/50 bg-cyan-950 backdrop-blur-md z-50 supports-[backdrop-filter]:bg-cyan-950/10'> 
-            <nav className='container md:min-w-full mx-auto w-full px-4 h-18 flex items-center justify-between'>
-                <Link href='/' className='flex items-center'>
-                    <Image src='/Icon.png' alt='logo' width={55} height={50} className='md:ml-2 p-1 bg-black rounded-md border' />
-                    {/* <Image src='/logo.png' alt='logo' width={90} height={60} className='p-0.5' /> */}
-                </Link>
-                
-                <div className='flex items-center space-x-2 md:space-x-4'>
-                    <SignedIn>
-                        <Link href='/dashboard'>
-                            <Button variant={'outline'} className='cursor-pointer'>
-                                <LayoutDashboard className='h-6 w-6'/>
-                                <span className='hidden md:block'> Industry Insights </span>
-                            </Button>
-                        </Link>
-
-                        <DropdownMenu modal={false}>
-                            <DropdownMenuTrigger asChild>
-                                <Button variant={'outline'} className='cursor-pointer'>
-                                    <StarsIcon className='h-6 w-6 hidden md:block'/>
-                                    <Menu className='h-6 w-6 block md:hidden'></Menu>
-                                    <span className='hidden md:block'> Growth Tools </span>
-                                    <ChevronDown className='h-6 w-6 hidden md:block'/>
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent className="overflow-y-auto [&>*]:text-lg md:[&>*]:text-base">
-                                <DropdownMenuItem>
-                                    <Link href={'/interview'} className='flex items-center gap-2'>
-                                        <GraduationCap className='h-8 w-8 md:h-6 md:w-6'/>
-                                        <span> Interveiw Prep </span>
-                                    </Link>
-                                </DropdownMenuItem>
-                                <DropdownMenuItem>
-                                    <Link href={'/resume'} className='flex items-center gap-2'>
-                                        <FileText className='h-8 w-8 md:h-6 md:w-6'/>
-                                        <span> Resume Builder </span>
-                                    </Link>
-                                </DropdownMenuItem>          
-                                <DropdownMenuItem>
-                                    <Link href={'/ai-cover-letter'} className='flex items-center gap-2'>
-                                        <PenBox className='h-8 w-8 md:h-6 md:w-6'/>
-                                        <span> Cover-Letter Builder </span>
-                                    </Link>
-                                </DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-
-                        <UserButton appearance={{
-                                        elements: {
-                                            avatarBox: 'w-10 h-10',
-                                            userButtonPopoverCard: 'shadow-xl',
-                                            userButtonMainIdentifier: 'font-semibold',
-                                        }
-                                    }}
-                                    afterSignOutUrl='/'
-                        />
-                    </SignedIn>
-
-                    <SignedOut>
-                        <SignInButton>
-                            <Button variant={'outline'} className='cursor-pointer'> Sign In </Button>
-                        </SignInButton>
-                    </SignedOut>
-                </div>
-
-            </nav>
-        </header>
-    )
+export default async function Header() {
+  await checkUser();
+  return (
+    <header className="site-header">
+      <nav
+        className="site-container flex h-[76px] items-center justify-between gap-4"
+        aria-label="Main navigation"
+      >
+        <Brand />
+        <div className="hidden md:flex items-center gap-8 text-xs text-muted-foreground">
+          <Link href="/#workspace">Your career, connected</Link>
+          <Link href="/#how-it-works">How it works</Link>
+          <Link href="/#faq">FAQ</Link>
+        </div>
+        <div className="flex items-center gap-3">
+          <Show when="signed-in">
+            <Button asChild variant="ghost" className="hidden lg:inline-flex">
+              <Link href="/dashboard">
+                <LayoutDashboard />
+                Workspace
+              </Link>
+            </Button>
+            <DropdownMenu modal={false}>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  aria-label="Open career tools"
+                >
+                  <Menu className="md:hidden" />
+                  <span className="hidden md:inline">Career tools</span>
+                  <ChevronDown className="hidden md:block" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56 p-2">
+                {[
+                  {
+                    href: "/dashboard",
+                    label: "Industry insights",
+                    icon: LayoutDashboard,
+                  },
+                  { href: "/resume", label: "Resume studio", icon: FileText },
+                  {
+                    href: "/interview",
+                    label: "Interview preparation",
+                    icon: GraduationCap,
+                  },
+                  {
+                    href: "/ai-cover-letter",
+                    label: "Cover letters",
+                    icon: PenLine,
+                  },
+                ].map(({ href, label, icon: Icon }) => (
+                  <DropdownMenuItem key={href} asChild>
+                    <Link href={href} className="gap-3 py-3">
+                      <Icon size={16} />
+                      {label}
+                    </Link>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <UserButton appearance={{ elements: { avatarBox: "w-8 h-8" } }} />
+          </Show>
+          <Show when="signed-out">
+            <SignInButton>
+              <Button variant="ghost" size="sm">
+                Sign in
+              </Button>
+            </SignInButton>
+            <Button asChild size="sm">
+              <Link href="/sign-up">
+                Get started <ArrowUpRight />
+              </Link>
+            </Button>
+          </Show>
+        </div>
+      </nav>
+    </header>
+  );
 }
-
-export default Header;

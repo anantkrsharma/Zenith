@@ -1,315 +1,384 @@
-'use client';
-
-import { format, formatDistanceToNow } from 'date-fns';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Rectangle } from 'recharts';
-import { IndustryInsight } from '@/lib/generated/client'
-import { Brain, BriefcaseIcon, Dot, LineChart, TrendingDown, TrendingUp } from 'lucide-react';
-import React, { useEffect, useState } from 'react'
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
-import { Roboto_Condensed } from 'next/font/google';
-
-const robotoCondensed = Roboto_Condensed({
-    subsets: ['latin'],
-    weight: ['400', '700'],
-    variable: '--font-roboto-condensed',
-});
+"use client";
+import { useState } from "react";
+import Link from "next/link";
+import { format, formatDistanceToNow } from "date-fns";
+import { IndustryInsight } from "@prisma/client";
+import {
+  ArrowUpRight,
+  ArrowRight,
+  TrendingDown,
+  TrendingUp,
+  Minus,
+  Radar,
+  AudioLines,
+  FileText,
+} from "lucide-react";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
+import { Button } from "@/components/ui/button";
+import { useMediaQuery } from "@/hooks/use-media-query";
 
 type SalaryRange = {
-    role: string;
-    min: number;
-    max: number;
-    median: number;
-    location?: string; // Optional, as not all salary ranges may have a location
+  role: string;
+  min: number;
+  max: number;
+  median: number;
+  location?: string;
 };
-
+const nextSteps = [
+  {
+    label: "Understand the market",
+    title: "Find the skills worth your attention.",
+    text: "Start with the skills and trends below. Use your industry's outlook to choose what to explore next.",
+    href: "#market-skills",
+    action: "Explore the signals",
+    icon: Radar,
+  },
+  {
+    label: "Test my knowledge",
+    title: "Turn what you know into confidence.",
+    text: "Take a personalized assessment, review each answer, and identify where a little practice could make a difference.",
+    href: "/interview",
+    action: "Open interview prep",
+    icon: AudioLines,
+  },
+  {
+    label: "Prepare my application",
+    title: "Put your experience into words.",
+    text: "Build a focused resume, then pair it with a cover letter that connects your experience to the opportunity.",
+    href: "/resume",
+    action: "Open resume studio",
+    icon: FileText,
+  },
+];
 export const DashboardView = ({ insights }: { insights: IndustryInsight }) => {
-    const salaryData = (insights.salaryRanges as SalaryRange[]).map((salRange) => ({
-        name: salRange.role, // Split role name for better readability in the chart
-        min: salRange.min / 1000,
-        max: salRange.max / 1000,
-        median: salRange.median / 1000,
-        location: salRange.location
-    }));
-
-    const getDemandLevelColor = (level: 'High' | 'Medium' | 'Low') => {
-        switch (level.toLowerCase()) {
-            case 'high':
-                return 'bg-green-500';
-            case 'medium':
-                return 'bg-yellow-500';
-            case 'low':
-                return 'bg-red-500';
-            default:
-                return 'bg-gray-500';
-        }
-    };
-    const demandLevelColor = getDemandLevelColor(insights.demandLevel);
-
-    const getMarketOutlookInfo = (outlook: 'POSITIVE' | 'NEUTRAL' | 'NEGATIVE') => {
-        switch (outlook.toLowerCase()) {
-            case 'positive':
-                return { icon: TrendingUp, color: 'text-green-500' };
-            case 'neutral':
-                return { icon: LineChart, color: 'text-yellow-500' };
-            case 'negative':
-                return { icon: TrendingDown, color: 'text-red-500' };
-            default:
-                return { icon: LineChart, color: 'text-gray-500' };
-        }
-    };
-    const MarketOutlookIcon = getMarketOutlookInfo(insights.marketOutlook).icon;
-    const marketOutlookColor = getMarketOutlookInfo(insights.marketOutlook).color;
-
-    const [lastUpdate, setLastUpdate] = useState('');
-    const [nextUpdateDifference, setNextUpdateDifference] = useState('');
-    useEffect(() => {
-        setLastUpdate(format(new Date(insights.lastUpdated), 'dd/MM/yyyy'));
-        setNextUpdateDifference(
-            formatDistanceToNow(new Date(insights.nextUpdate), { addSuffix: true })
-        );
-    }, [insights.lastUpdated, insights.nextUpdate]);
-
-    const [isLargeScreen, setIsLargeScreen] = useState(false);
-    const [isMediumScreen, setIsMediumScreen] = useState(false);
-    const [isSmallScreen, setIsSmallScreen] = useState(false);
-    useEffect(() => {
-        const checkScreenSize = () => {
-            setIsLargeScreen(window.innerWidth >= 1280);
-            setIsMediumScreen(window.innerWidth < 1024);
-            setIsSmallScreen(window.innerWidth < 769);
-        };
-
-        checkScreenSize(); // initial check
-        window.addEventListener('resize', checkScreenSize);
-
-        return () => {
-            if (typeof window !== 'undefined') {
-            window.removeEventListener('resize', checkScreenSize);
-            }
-        };
-    }, []);
-
-    const heightClass = isMediumScreen ? (isSmallScreen ? 'h-[200px]' : 'h-[400px]') : 'h-[500px]';
-
-    return (
-        <div className='space-y-6'>
-            <div className='flex items-start md:items-center justify-between flex-col md:flex-row gap-2'>
-                <div className={`
-                        bg-neutral-900 hover:bg-neutral-800 border border-cyan-900 
-                        text-neutral-100/90 px-2.5 py-1.5 text-base md:text-xl lg:text-2xl rounded-lg
-                        font-medium tracking-wide transition-colors
-                        ${robotoCondensed.className}
-                    `}
-                >
-                    {(() => {
-                        const parts = insights.industry.split('-');
-                        const mainIndustry = parts[0].charAt(0).toUpperCase() + parts[0].slice(1);
-                        const subIndustry = parts.slice(1).map(word => 
-                            word.charAt(0).toUpperCase() + word.slice(1)
-                        ).join(' ');
-                        return `${mainIndustry} — ${subIndustry}`;
-                    })()}
-                </div>
-                <Badge variant={'secondary'} className='text-xs md:text-sm py-1 px-3'>
-                    Last updated: {lastUpdate}
-                </Badge>
-            </div>
-
-            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4'>
-                <Card>
-                    <CardHeader className='flex flex-row items-center justify-between space-y-0'>
-                        <CardTitle className='text-sm font-medium'>
-                            Market Outlook
-                        </CardTitle>
-                        <MarketOutlookIcon className={`${marketOutlookColor} h-4 w-4`} />
-                    </CardHeader>
-                    <CardContent>
-                        <div className='text-2xl font-semibold'>
-                            {insights.marketOutlook}
-                        </div>
-                        <div className='text-sm text-muted-foreground'>
-                            Next update {nextUpdateDifference}
-                        </div>
-                    </CardContent>
-                </Card>
-                
-                <Card>
-                    <CardHeader className='flex flex-row items-center justify-between space-y-0'>
-                        <CardTitle className='text-sm font-medium'>
-                            Industry Growth Rate
-                        </CardTitle>
-                        <TrendingUp className='h-4 w-4 text-muted-foreground'/>
-                    </CardHeader>
-                    <CardContent>
-                        <div className='text-2xl font-semibold'>
-                            {insights.growthRate.toFixed(1)}%
-                        </div>
-                        <Progress value={insights.growthRate} className='mt-2' />
-                    </CardContent>
-                </Card>
-                
-                <Card>
-                    <CardHeader className='flex flex-row items-center justify-between space-y-0'>
-                        <CardTitle className='text-sm font-medium'>
-                            Demand Level
-                        </CardTitle>
-                        <BriefcaseIcon className="text-muted-foreground h-4 w-4" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className='text-2xl font-semibold'>
-                            {insights.demandLevel}
-                        </div>
-                        <div className={`h-[7px] w-full rounded-full mt-2 ${demandLevelColor}`} />
-                    </CardContent>
-                </Card>
-                
-                <Card>
-                    <CardHeader className='flex flex-row items-center justify-between space-y-0'>
-                        <CardTitle className='text-sm font-medium'>
-                            Top Skills
-                        </CardTitle>
-                        <Brain className="text-muted-foreground h-4 w-4" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className='flex flex-wrap gap-1'>
-                            {insights.topSkills.map((skill, index) => (
-                                <Badge key={index} variant={'outline'} className='bg-neutral-900'>
-                                    {skill}
-                                </Badge>
-                            ))}
-                        </div>
-                    </CardContent>
-                </Card>
-                
-                <Card className='col-span-1 md:col-span-2 lg:col-span-4'>
-                    <CardHeader>
-                        <CardTitle className='font-semibold'>
-                            Salary Ranges by Role
-                        </CardTitle>
-                        <CardDescription>
-                            <p className='text-sm text-muted-foreground'>
-                                Displaying minimum, median, and maximum salaries ($)
-                            </p>
-                            <br />
-                            {isSmallScreen && 
-                            <span className='text-sm text-cyan-500'>
-                                * Tap / hover on the graph bars for salary details *
-                            </span>
-                            }
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <div className={`${heightClass} w-full`}>
-                            <ResponsiveContainer width="100%" height="100%">
-                                <BarChart
-                                    data={salaryData}
-                                    margin={{
-                                        left: isSmallScreen ? -25 : -5,
-                                        right: isMediumScreen ? (isSmallScreen ? 10 : 30) : 20,
-                                        bottom: isMediumScreen ? (isSmallScreen ? -15 : 70) : 30
-                                    }}
-                                    barCategoryGap={isSmallScreen ? '15%' : '16%'}
-                                >
-                                    <CartesianGrid strokeDasharray="5 5" />
-                                    <XAxis
-                                        dataKey={"name"}
-                                        interval={0}
-                                        angle={isMediumScreen ? (isSmallScreen ? 0 : -35) : isLargeScreen ? 0 : -10}
-                                        dy={isMediumScreen ? (isSmallScreen ? 0 : 35) : 15}
-                                        tick={!isSmallScreen}
-                                    />
-                                    <YAxis />
-                                    <Tooltip 
-                                        cursor = {{
-                                            fill: '#2e2b2c'
-                                        }}
-                                        content={({ active, payload, label }) => {
-                                            if (active && payload && payload.length) {
-                                                return (
-                                                    <div className='bg-black/80 border rounded-lg p-2 shadow-lg'>
-                                                        <p className='font-medium'>{label}</p>
-                                                        {payload.map((item, index) => (
-                                                            <p key={index} className='text-sm'>
-                                                                {item.name}: ${item.value}K
-                                                            </p>
-                                                        ))}
-                                                    </div>
-                                                )
-                                            }
-                                            return null;
-                                    }} />
-                                    <Bar
-                                        dataKey="min"
-                                        fill="#787878"
-                                        activeBar={<Rectangle fill="#787878" stroke="black" strokeWidth={3}/>}
-                                    />
-                                    <Bar
-                                        dataKey="median"
-                                        fill="#D3D3D3"
-                                        activeBar={<Rectangle fill="#D3D3D3" stroke="black" strokeWidth={3} />}
-                                    />
-                                    <Bar
-                                        dataKey="max"
-                                        fill="#FFFFFF"
-                                        activeBar={<Rectangle fill="#FFFFFF" stroke="black" strokeWidth={3} />}
-                                    />
-                                </BarChart>
-                            </ResponsiveContainer>
-                        </div>
-                    </CardContent>
-                </Card>
-            </div>
-            
-            <div className='grid grid-cols-1 md:grid-cols-2 gap-4 '>
-                <Card>
-                    <CardHeader>
-                        <CardTitle className='font-medium'>
-                            Industry trends
-                        </CardTitle>
-                        <CardDescription className='text-sm text-muted-foreground'>
-                            Ongoing trends shaping the industry.
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <div className='flex flex-col justify-center gap-[6px]'>
-                            {insights.keyTrends.map((trend, index) => {
-                                    return <div className='flex items-center gap-[1px]' key={index}>
-                                        <span>
-                                            <Dot size={26}/>
-                                        </span>
-                                        <p className='text-sm'>
-                                            {trend}.
-                                        </p>
-                                    </div>
-                            })}
-                        </div>
-                    </CardContent>
-                </Card>
-                
-                <Card>
-                    <CardHeader>
-                        <CardTitle className='font-medium'>
-                            Recommended Skills
-                        </CardTitle>
-                        <CardDescription className='text-sm text-muted-foreground'>
-                            Skills to develop for future opportunities.
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <div className='flex items-center flex-wrap gap-[6px]'>
-                            {insights.recommendedSkills.map((skill, index) => {
-                                    return <div className='flex items-center gap-[1px]' key={index}>
-                                        <Badge variant={'outline'} className='text-sm border-cyan-900 bg-cyan-800/10'>
-                                            {skill}
-                                        </Badge>
-                                    </div>
-                            })}
-                        </div>
-                    </CardContent>
-                </Card>
-            </div>
+  const [focus, setFocus] = useState(0);
+  const mobile = useMediaQuery("(max-width: 768px)");
+  const ranges = insights.salaryRanges as SalaryRange[];
+  const salaryData = ranges.map((r) => ({
+    name: r.role,
+    min: r.min / 1000,
+    median: r.median / 1000,
+    max: r.max / 1000,
+  }));
+  const industry = insights.industry
+    .split("-")
+    .map((s) => s.charAt(0).toUpperCase() + s.slice(1))
+    .join(" ");
+  const StepIcon = nextSteps[focus].icon;
+  const OutlookIcon =
+    insights.marketOutlook === "POSITIVE"
+      ? TrendingUp
+      : insights.marketOutlook === "NEGATIVE"
+        ? TrendingDown
+        : Minus;
+  return (
+    <div className="career-dashboard">
+      <section
+        className="career-orientation"
+        aria-labelledby="career-focus-title"
+      >
+        <div className="orientation-context">
+          <span className="eyebrow">YOUR CURRENT LANDSCAPE</span>
+          <h2>{industry}</h2>
+          <p>Choose what you want to move forward today.</p>
+          <div className="orientation-path" aria-hidden="true">
+            <span />
+            <i />
+            <span />
+            <i />
+            <ArrowUpRight />
+          </div>
         </div>
-    );
+        <div className="orientation-action">
+          <div
+            className="focus-options"
+            role="group"
+            aria-label="Choose your next step"
+          >
+            {nextSteps.map((step, i) => (
+              <button
+                key={step.label}
+                type="button"
+                aria-pressed={focus === i}
+                onClick={() => setFocus(i)}
+              >
+                {step.label}
+              </button>
+            ))}
+          </div>
+          <div className="focus-content" aria-live="polite">
+            <StepIcon size={22} />
+            <h3 id="career-focus-title">{nextSteps[focus].title}</h3>
+            <p>{nextSteps[focus].text}</p>
+            <Button asChild>
+              <Link href={nextSteps[focus].href}>
+                {nextSteps[focus].action}
+                <ArrowUpRight />
+              </Link>
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      <div className="data-section-heading">
+        <div>
+          <p className="eyebrow">01 / YOUR INDUSTRY IN PERSPECTIVE</p>
+          <h2>Read the signals.</h2>
+        </div>
+        <span>
+          Updated {format(new Date(insights.lastUpdated), "dd MMM yyyy")}
+        </span>
+      </div>
+      <section className="market-overview" aria-label="Industry overview">
+        <div className="market-primary">
+          <p>MARKET OUTLOOK</p>
+          <div>
+            <strong className="capitalize">
+              {insights.marketOutlook.toLowerCase()}
+            </strong>
+            <OutlookIcon size={38} />
+          </div>
+          <span>
+            Next refresh{" "}
+            {formatDistanceToNow(new Date(insights.nextUpdate), {
+              addSuffix: true,
+            })}
+          </span>
+        </div>
+        <div className="market-stat">
+          <p>INDUSTRY GROWTH</p>
+          <strong>
+            {insights.growthRate.toFixed(1)}
+            <span>%</span>
+          </strong>
+          <span>Estimated annual growth</span>
+        </div>
+        <div className="market-stat">
+          <p>HIRING DEMAND</p>
+          <strong>{insights.demandLevel}</strong>
+          <div className="demand-scale" aria-hidden="true">
+            {[0, 1, 2].map((i) => (
+              <span
+                key={i}
+                data-active={
+                  i < { Low: 1, Medium: 2, High: 3 }[insights.demandLevel]
+                }
+              />
+            ))}
+          </div>
+          <span>Industry demand level</span>
+        </div>
+      </section>
+      <p className="data-note">
+        AI-generated estimates, refreshed weekly. Use these as a starting point
+        for your own market research.
+      </p>
+
+      <section id="market-skills" className="market-skills-section">
+        <div>
+          <div className="data-section-heading">
+            <div>
+              <p className="eyebrow">02 / SKILLS & OPPORTUNITY</p>
+              <h2>What matters in your field.</h2>
+            </div>
+          </div>
+          <p className="text-sm text-muted-foreground leading-7 mb-6">
+            Explore the connections between today’s in-demand skills and areas
+            to develop next.
+          </p>
+        </div>
+        <div className="skill-landscape">
+          <div className="skill-column">
+            <h3>
+              <span className="status-dot" /> In demand now{" "}
+              <span>{insights.topSkills.length} skills</span>
+            </h3>
+            <div className="skill-tags">
+              {insights.topSkills.map((skill, i) => (
+                <span key={i}>{skill}</span>
+              ))}
+            </div>
+          </div>
+          <div className="skill-bridge" aria-hidden="true">
+            <ArrowRight />
+          </div>
+          <div className="skill-column skill-future">
+            <h3>
+              <PlusMark /> Worth exploring{" "}
+              <span>{insights.recommendedSkills.length} skills</span>
+            </h3>
+            <div className="skill-tags">
+              {insights.recommendedSkills.map((skill, i) => (
+                <span key={i}>{skill}</span>
+              ))}
+            </div>
+          </div>
+        </div>
+        <Link href="/interview" className="text-link mt-6">
+          See where your knowledge stands <ArrowUpRight size={16} />
+        </Link>
+      </section>
+
+      <section className="salary-section">
+        <div className="data-section-heading">
+          <div>
+            <p className="eyebrow">03 / UNDERSTAND YOUR POSSIBILITIES</p>
+            <h2>Salary, in context.</h2>
+          </div>
+          <span>Annual salary · USD, thousands</span>
+        </div>
+        <div className="chart-legend">
+          <span>
+            <i style={{ background: "#526648" }} /> Minimum
+          </span>
+          <span>
+            <i style={{ background: "#94b478" }} /> Median
+          </span>
+          <span>
+            <i style={{ background: "#c5e895" }} /> Maximum
+          </span>
+        </div>
+        {salaryData.length ? (
+          <div
+            className="salary-chart"
+            style={{
+              height: Math.max(300, salaryData.length * (mobile ? 78 : 68)),
+            }}
+          >
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart
+                data={salaryData}
+                layout="vertical"
+                margin={{ left: 0, right: 15, top: 15, bottom: 15 }}
+                barCategoryGap="22%"
+              >
+                <CartesianGrid horizontal={false} strokeDasharray="3 5" />
+                <XAxis type="number" tickFormatter={(v) => "$" + v + "k"} />
+                <YAxis
+                  type="category"
+                  dataKey="name"
+                  width={mobile ? 100 : 175}
+                  tick={{ fontSize: mobile ? 10 : 12 }}
+                />
+                <Tooltip
+                  cursor={{ fill: "#c5e89508" }}
+                  content={({ active, payload, label }) =>
+                    active && payload?.length ? (
+                      <div className="chart-tooltip">
+                        <strong>{label}</strong>
+                        {payload.map((p) => (
+                          <p key={String(p.dataKey)}>
+                            {p.name}: ${Number(p.value).toLocaleString("en-US")}
+                            k
+                          </p>
+                        ))}
+                      </div>
+                    ) : null
+                  }
+                />
+                <Bar
+                  isAnimationActive={false}
+                  dataKey="min"
+                  name="Minimum"
+                  fill="#526648"
+                  radius={[0, 2, 2, 0]}
+                />
+                <Bar
+                  isAnimationActive={false}
+                  dataKey="median"
+                  name="Median"
+                  fill="#94b478"
+                  radius={[0, 2, 2, 0]}
+                />
+                <Bar
+                  isAnimationActive={false}
+                  dataKey="max"
+                  name="Maximum"
+                  fill="#c5e895"
+                  radius={[0, 2, 2, 0]}
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        ) : (
+          <p className="empty-note">No salary ranges are available yet.</p>
+        )}
+        <details className="data-table-disclosure">
+          <summary>View all salary figures and locations</summary>
+          <div className="table-scroll">
+            <table>
+              <caption className="sr-only">
+                Annual salary estimates in US dollars
+              </caption>
+              <thead>
+                <tr>
+                  <th scope="col">Role</th>
+                  <th scope="col">Minimum</th>
+                  <th scope="col">Median</th>
+                  <th scope="col">Maximum</th>
+                  <th scope="col">Location</th>
+                </tr>
+              </thead>
+              <tbody>
+                {ranges.map((r, i) => (
+                  <tr key={i}>
+                    <th scope="row">{r.role}</th>
+                    <td>${r.min.toLocaleString("en-US")}</td>
+                    <td>${r.median.toLocaleString("en-US")}</td>
+                    <td>${r.max.toLocaleString("en-US")}</td>
+                    <td>{r.location || "Not specified"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </details>
+      </section>
+
+      <section className="industry-trends">
+        <div className="data-section-heading">
+          <div>
+            <p className="eyebrow">04 / THE BIGGER PICTURE</p>
+            <h2>What’s shaping your industry.</h2>
+          </div>
+        </div>
+        <ol>
+          {insights.keyTrends.map((trend, i) => (
+            <li key={i}>
+              <span>{String(i + 1).padStart(2, "0")}</span>
+              <p>{trend}</p>
+              <ArrowUpRight size={16} />
+            </li>
+          ))}
+        </ol>
+      </section>
+      <div className="workspace-next">
+        <div>
+          <p className="eyebrow">KNOW THE LANDSCAPE. TAKE THE NEXT STEP.</p>
+          <h3>Make your experience count.</h3>
+        </div>
+        <Button asChild variant="outline">
+          <Link href="/resume">
+            Build your resume <ArrowUpRight />
+          </Link>
+        </Button>
+        <Button asChild variant="outline">
+          <Link href="/ai-cover-letter">
+            Tailor your introduction <ArrowUpRight />
+          </Link>
+        </Button>
+      </div>
+    </div>
+  );
+};
+function PlusMark() {
+  return <span className="text-primary text-lg leading-none">+</span>;
 }

@@ -1,55 +1,56 @@
-import { currentUser } from "@clerk/nextjs/server"
+import { currentUser } from "@clerk/nextjs/server";
 import { db } from "./prisma";
 
 export const checkUser = async () => {
-    const user = await currentUser();
-    if(!user) {
-        console.log("Not logged in");
-        return null;
+  const user = await currentUser();
+  if (!user) {
+    return null;
+  }
+
+  try {
+    const loggedInUser = await db.user.findUnique({
+      where: {
+        clerkUserId: user.id,
+      },
+    });
+
+    if (loggedInUser) {
+      return loggedInUser;
     }
-    
+
     try {
-        const loggedInUser = await db.user.findUnique({
-            where: {
-                clerkUserId: user.id
-            }
+      const newUser = await db.user.create({
+        data: {
+          clerkUserId: user.id,
+          name: user.fullName,
+          email:
+            user.primaryEmailAddress?.emailAddress ||
+            user.emailAddresses[0].emailAddress,
+          imageUrl: user.imageUrl,
+        },
+      });
+      return newUser;
+    } catch (createError: unknown) {
+      // Prisma unique constraint error code
+      if (
+        typeof createError === "object" &&
+        createError !== null &&
+        "code" in createError &&
+        (createError as { code?: string }).code === "P2002"
+      ) {
+        //another parallel request created the user (getUserOnboardingStatus() OR header.tsx), fetch and return
+        return await db.user.findUnique({
+          where: { clerkUserId: user.id },
         });
-
-        if(loggedInUser) {
-            return loggedInUser;
-        }
-
-        try {
-            const newUser = await db.user.create({
-                data: {
-                    clerkUserId: user.id,
-                    name: user.fullName,
-                    email: user.primaryEmailAddress?.emailAddress || user.emailAddresses[0].emailAddress,
-                    imageUrl: user.imageUrl,
-                }
-            });
-            return newUser;
-        } catch (createError: unknown) {
-            // Prisma unique constraint error code
-            if (
-                typeof createError === "object" &&
-                createError !== null &&
-                "code" in createError &&
-                (createError as { code?: string }).code === "P2002"
-            ) {
-                //another parallel request created the user (getUserOnboardingStatus() OR header.tsx), fetch and return
-                return await db.user.findUnique({
-                    where: { clerkUserId: user.id }
-                });
-            }
-            throw createError;
-        }
-    } catch (error) {
-        if (error instanceof Error) {
-            console.log(error.message);
-        } else {
-            console.log("An unknown error occurred while checking the user.");
-        }
-        return null;
+      }
+      throw createError;
     }
-}
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error(error.message);
+    } else {
+      console.error("An unknown error occurred while checking the user.");
+    }
+    return null;
+  }
+};

@@ -5,20 +5,20 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'randomuser.me',
-        pathname: '/api/portraits/**'
-      }
-    ]
+        protocol: "https",
+        hostname: "randomuser.me",
+        pathname: "/api/portraits/**",
+      },
+    ],
   },
   allowedDevOrigins: [
-    'http://localhost:3000',
-    'http://localhost:3001',
-    '192.168.29.206',
-    '192.168.1.72',
-    '192.168.1.35',
-    '192.168.1.39'
-  ]
+    "http://localhost:3000",
+    "http://localhost:3001",
+    "192.168.29.206",
+    "192.168.1.72",
+    "192.168.1.35",
+    "192.168.1.39",
+  ],
 };
 
 export default nextConfig;
