@@ -14,7 +14,7 @@ import useFetch from "@/hooks/use-fetch";
 import { educationSchema } from "@/lib/form-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format, parse } from "date-fns";
-import { Loader2, PlusCircle, Sparkle, X } from "lucide-react";
+import { Loader2, PlusCircle, X } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
@@ -278,7 +278,6 @@ const EducationForm = ({ entries, onChange }: ProjectFormProps) => {
                         </>
                       ) : (
                         <>
-                          <Sparkle className="h-4 w-4" />
                           <p className="text-sm">Improve with AI</p>
                         </>
                       )}

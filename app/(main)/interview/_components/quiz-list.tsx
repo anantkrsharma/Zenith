@@ -3,7 +3,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Assessment } from "@prisma/client";
 import { format } from "date-fns";
-import { ArrowUpRight, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -28,9 +28,7 @@ export default function QuizList({
             <h2>Every attempt counts.</h2>
           </div>
           <Button asChild variant="outline">
-            <Link href="/interview/mock">
-              Start New Quiz <ArrowUpRight />
-            </Link>
+            <Link href="/interview/mock">Start New Quiz</Link>
           </Button>
         </div>
         {!assessments.length && (
@@ -82,7 +80,7 @@ export default function QuizList({
       >
         <DialogContent
           aria-describedby={undefined}
-          className="w-[calc(100%-2rem)] sm:max-w-4xl max-h-[88vh] overflow-y-auto"
+          className="assessment-review-dialog w-[calc(100%-2rem)] sm:max-w-4xl max-h-[88vh] overflow-y-auto"
         >
           <DialogHeader>
             <DialogTitle>Assessment review</DialogTitle>

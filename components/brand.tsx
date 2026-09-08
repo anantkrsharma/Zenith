@@ -22,7 +22,7 @@ export function Brand({ className }: { className?: string }) {
       )}
     >
       <BrandMark />
-      zenith<span className="mb-3 -ml-1 text-primary">.</span>
+      zenith
     </Link>
   );
 }

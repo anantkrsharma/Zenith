@@ -1,64 +1,109 @@
 # Zenith — AI Career Coach
 
-A personal career workspace with industry insights, a resume studio, tailored cover letters, and interview practice. Built with Next.js, Clerk, PostgreSQL, Prisma, Google Gemini, and Inngest.
+Zenith is a focused career workspace for understanding an industry, practicing interviews, and preparing stronger applications. It brings market signals, assessments, resume editing, and AI-assisted cover letters into one calm, professional interface.
 
-## Run locally
+## Features
 
-Use Node.js 22.12 or newer and the pinned pnpm 10.34.5 package manager. `pnpm-lock.yaml` is the canonical lockfile.
+- **Industry insights** — Review market outlook, growth, hiring demand, in-demand skills, trends, and salary ranges for your field.
+- **Interview practice** — Take timed assessments, review every answer, and see where targeted practice can improve your score.
+- **Resume studio** — Build and edit a structured resume with profile, education, experience, projects, and skills sections.
+- **AI cover letters** — Generate a tailored first draft from your experience and a job description, then edit it before exporting.
+- **Guided onboarding** — Capture a career profile once and use it to personalize the workspace.
+- **Background refreshes** — Industry insights can be refreshed on a schedule through Inngest.
+
+## Technology
+
+- Next.js App Router and React with TypeScript
+- Clerk for authentication and onboarding redirects
+- PostgreSQL with Prisma ORM
+- Google Gemini through the Google Gen AI SDK
+- Inngest for scheduled and background work
+- Tailwind CSS, Radix UI primitives, and Recharts
+- Motion for small, accessible interface transitions
+
+## Getting started
+
+### Requirements
+
+- Node.js 22.12 or newer
+- pnpm 10.34.5 (the version pinned by `package.json`)
+- A PostgreSQL database
+- A Clerk application
+- A Google AI Studio API key
+
+### Install
 
 ```sh
 corepack enable
 pnpm install --frozen-lockfile
+cp .env.example .env
 ```
 
-Copy `.env.example` to `.env` and fill in your Clerk keys, Google AI Studio API key, and PostgreSQL connection URL. Existing environment variable names are preserved. Installation generates the Prisma client; stop the development server before regenerating it on Windows if its engine file is locked.
+Fill in the values in `.env`:
 
-For a local database, apply the existing migrations, then start the app:
+| Variable | Purpose |
+| --- | --- |
+| `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | Public Clerk application key |
+| `CLERK_SECRET_KEY` | Server-side Clerk key |
+| `DATABASE_URL` | PostgreSQL connection string |
+| `GENAI_API_KEY` | Google AI Studio API key |
+| `GEMINI_MODEL` | Optional Gemini model override |
+| `NEXT_PUBLIC_CLERK_SIGN_IN_URL` | Sign-in route, normally `/sign-in` |
+| `NEXT_PUBLIC_CLERK_SIGN_UP_URL` | Sign-up route, normally `/sign-up` |
+| `NEXT_PUBLIC_CLERK_SIGN_IN_FORCE_REDIRECT_URL` | Sign-in destination, normally `/onboarding` |
+| `NEXT_PUBLIC_CLERK_SIGN_UP_FORCE_REDIRECT_URL` | Sign-up destination, normally `/onboarding` |
+
+Create the Prisma client and apply the development database migrations:
 
 ```sh
+pnpm exec prisma generate
 pnpm exec prisma migrate dev
+```
+
+Start the application:
+
+```sh
 pnpm dev
 ```
 
-Open [localhost:3000](http://localhost:3000). In a separate terminal, run the Inngest development server to exercise background jobs:
+Open [http://localhost:3000](http://localhost:3000). To run scheduled or background Inngest functions locally, use a second terminal:
 
 ```sh
 pnpm dlx inngest-cli@latest dev -u http://localhost:3000/api/inngest
 ```
 
-Production deployments also need Inngest configured with `INNGEST_EVENT_KEY` and `INNGEST_SIGNING_KEY`. The industry refresh runs each Sunday at 00:00 UTC. Deploy existing database migrations with `pnpm exec prisma migrate deploy`; this refresh does not change the database schema.
+## Available commands
 
-## AI configuration
+| Command | Description |
+| --- | --- |
+| `pnpm dev` | Start the development server with Turbopack |
+| `pnpm build` | Create a production build |
+| `pnpm start` | Serve the production build |
+| `pnpm lint` | Run ESLint with warnings treated as errors |
+| `pnpm typecheck` | Run the TypeScript compiler without emitting files |
+| `pnpm test` | Run the project test suite |
+| `pnpm format` | Format the repository with Prettier |
+| `pnpm exec prisma studio` | Browse local database records |
 
-All AI features use the server-only helper in `lib/ai.ts` and the current Google Gen AI SDK. The default is `gemini-3.5-flash-lite`, listed with free-tier input and output on [Google's pricing page](https://ai.google.dev/gemini-api/docs/pricing#gemini-3.5-flash-lite), verified September 6, 2026. Set `GEMINI_MODEL` to override it. Provider quotas and availability still apply.
+## Project structure
 
-Industry insights and interview questions are validated before use. Industry figures are model-generated estimates, not a grounded live market feed. Relevant user profile details and prompts are sent to Google for generation.
-
-## Interface
-
-The graphite and chartreuse identity expresses professional progression through an interactive career atlas, connected industry signals, assessment checkpoints, and layered professional documents. The landing page tells a sequence of product stories; the workspace uses calmer forms, readable charts, and focused editing surfaces. Radix primitives provide keyboard-accessible controls and dialogs; Motion respects reduced-motion preferences.
-
-[Construct](https://construct.computer) informed the level of interaction craft and spatial storytelling. Zenith's compositions and assets are original SVG and CSS, with a separate mobile atlas composition and no WebGL dependency. Landing illustrations are labeled as conceptual; product screens use existing application data. See [redesign notes](docs/frontend-redesign.md) for the route audit, visual system, and verification scope.
-
-## Dependency and migration notes
-
-- Updated to Next.js 16, React 19.2, Clerk 7, Google Gen AI 2, Motion 13, Recharts 3, and current compatible UI packages.
-- Migrated Next's deprecated middleware filename to `proxy.ts`, Clerk's auth display/appearance APIs, Clerk route matching to resource-level checks, and Framer Motion imports to `motion/react`.
-- Prisma remains on aligned 6.19.3 packages, Zod on 3.25, and TypeScript on 5.9 to preserve database configuration and validation contracts. Their newer breaking majors are intentionally deferred.
-- A scoped pnpm override updates Prisma config's `deepmerge-ts` to 8.0.0 for [CVE-2026-40345](https://github.com/RebeccaStevens/deepmerge-ts/releases/tag/v8.0.0). Prisma client generation is verified with this override.
-- ESLint 10 uses the official compatibility adapter for older rules shipped through Next's config. Some upstream plugins still advertise ESLint 9 peer ranges; lint runs with zero warnings. Transitive `glob` and `node-domexception` deprecation notices originate upstream.
-- Removed redundant UI frameworks, duplicate animation/theme packages, unused components and testimonial fixtures, debug output, and the stale npm lockfile.
-
-## Validation
-
-```sh
-pnpm lint
-pnpm typecheck
-pnpm test
-pnpm build
-pnpm audit --prod
+```text
+app/                 Next.js routes, layouts, API handlers, and page components
+components/          Shared navigation, shell, UI primitives, and visual components
+lib/                 Authentication, AI, database, and application helpers
+prisma/               Database schema and migrations
+public/               Static assets
+tests/                Automated tests
 ```
 
-Regression tests cover AI response validation, onboarding normalization, contact/date validation, resume Markdown rendering, and preserving manual edits when toggling preview. `pnpm format` applies consistent formatting.
+The main workspace routes are `/dashboard`, `/interview`, `/resume`, and `/ai-cover-letter`. Authentication lives at `/sign-in` and `/sign-up`; new users continue through `/onboarding` before entering the workspace.
 
-Browser checks cover desktop/mobile landing and auth layouts, product tabs and FAQ, tool screens with synthetic data, assessment review, resume editing, and completion of PDF generation. A minimal live Gemini request verified the configured model. Authenticated database writes, full generated quizzes, and scheduled Inngest execution still require an end-to-end check with a signed-in test account; no production data was changed during verification.
+## AI and data behavior
+
+AI responses are validated before they are used by the application. Industry figures are generated estimates intended to help with exploration, rather than a live compensation or labor-market feed. Prompts and the profile details needed to generate a response are sent to Google Gemini. User records and generated application content are stored in the configured PostgreSQL database.
+
+For production, use production Clerk credentials, run `pnpm exec prisma migrate deploy`, and configure the Inngest event and signing keys required by your deployment environment.
+
+## License
+
+No license file is currently included in this repository.

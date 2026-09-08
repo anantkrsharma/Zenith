@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ArrowUpRight, Code2 } from "lucide-react";
+import { Code2 } from "lucide-react";
 import { Brand } from "@/components/brand";
 
 export default function Footer() {
@@ -12,9 +12,7 @@ export default function Footer() {
     return (
       <footer className="workspace-footer">
         <span>© {new Date().getFullYear()} Zenith</span>
-        <Link href="/#faq">
-          A little clarity for your next chapter <ArrowUpRight size={12} />
-        </Link>
+        <Link href="/#faq">A little clarity for your next chapter</Link>
       </footer>
     );
   return (
@@ -48,15 +46,13 @@ export default function Footer() {
               View the source <Code2 size={13} />
             </a>
             <a href="https://anantx.dev" target="_blank" rel="noreferrer">
-              Made by Anant Kr Sharma <ArrowUpRight size={13} />
+              Made by Anant Kr Sharma
             </a>
           </div>
         </div>
         <div className="footer-bottom">
           <span>© {new Date().getFullYear()} Zenith. All rights reserved.</span>
-          <span className="flex items-center gap-2">
-            <span className="status-dot" /> BUILT FOR WHAT’S NEXT
-          </span>
+          <span className="flex items-center gap-2">BUILT FOR WHAT’S NEXT</span>
         </div>
       </div>
     </footer>

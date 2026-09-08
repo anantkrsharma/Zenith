@@ -1,7 +1,7 @@
 "use client";
 import { useId, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Check, ArrowUpRight, CornerDownRight } from "lucide-react";
+import { Check } from "lucide-react";
 export interface QuestionType {
   question: string;
   correctAnswer: string;
@@ -96,7 +96,6 @@ export default function QuizResult({
       </div>
       {submitResult.improvementTip && (
         <div className="improvement-direction">
-          <CornerDownRight size={24} />
           <div>
             <p className="eyebrow">YOUR NEXT PRACTICE FOCUS</p>
             <p>{submitResult.improvementTip}</p>
@@ -182,9 +181,7 @@ export default function QuizResult({
       {showNewQuizBtn && (
         <div className="result-footer">
           <p>Keep the momentum going.</p>
-          <Button onClick={startNewQuizFn}>
-            Start New Quiz <ArrowUpRight />
-          </Button>
+          <Button onClick={startNewQuizFn}>Start New Quiz</Button>
         </div>
       )}
     </div>

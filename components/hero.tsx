@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { ArrowDown, ArrowUpRight, MoveUpRight } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import { CareerAtlas } from "@/components/career-atlas";
 export default function HeroSection() {
@@ -8,9 +8,7 @@ export default function HeroSection() {
     <section className="hero-section" aria-labelledby="hero-title">
       <div className="site-container hero-layout">
         <div className="hero-copy">
-          <p className="eyebrow">
-            <span className="status-dot" /> YOUR NEXT CHAPTER STARTS HERE
-          </p>
+          <p className="eyebrow">YOUR NEXT CHAPTER STARTS HERE</p>
           <h1 id="hero-title">
             You have <br />
             potential.
@@ -23,12 +21,10 @@ export default function HeroSection() {
           </p>
           <div className="hero-actions">
             <Button asChild size="lg">
-              <Link href="/dashboard">
-                Find your next level <ArrowUpRight />
-              </Link>
+              <Link href="/dashboard">Find your next level</Link>
             </Button>
             <Link className="text-link" href="#workspace">
-              Explore the journey <ArrowDown size={15} />
+              Explore the journey
             </Link>
           </div>
           <p className="hero-footnote">AI career guidance. Built around you.</p>
@@ -39,13 +35,11 @@ export default function HeroSection() {
         <span>AMBITION, MEET DIRECTION.</span>
         <div>
           <span>Understand</span>
-          <MoveUpRight />
           <span>Develop</span>
-          <MoveUpRight />
           <span>Become</span>
         </div>
         <a href="#workspace" aria-label="Discover the Zenith workspace">
-          <ArrowDown size={17} />
+          Explore Zenith
         </a>
       </div>
     </section>

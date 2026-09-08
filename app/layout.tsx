@@ -25,9 +25,9 @@ export default function RootLayout({
       appearance={{
         theme: "clerk",
         variables: {
-          colorPrimary: "#c5e895",
-          colorBackground: "#191f1c",
-          colorForeground: "#edf0e7",
+          colorPrimary: "#70b7c2",
+          colorBackground: "#11181b",
+          colorForeground: "#e7edef",
           borderRadius: "0.4rem",
         },
       }}

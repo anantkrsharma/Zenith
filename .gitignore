@@ -48,3 +48,6 @@ lib/generated/
 # agent reference files
 AGENTS.md
 CLAUDE.md
+
+#  documentation
+docs

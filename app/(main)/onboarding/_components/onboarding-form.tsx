@@ -110,9 +110,7 @@ export const OnboardingForm = ({ industries }: OnboardingFormProps) => {
           know your professional world.
         </p>
         <div className="identity-map">
-          <div className="identity-map-title">
-            <span className="status-dot" /> YOUR PROFESSIONAL PROFILE
-          </div>
+          <div className="identity-map-title">YOUR PROFESSIONAL PROFILE</div>
           <div className="identity-line" data-filled={!!identity.industry}>
             <span>01</span>
             <div>

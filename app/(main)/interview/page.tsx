@@ -10,7 +10,6 @@ import { PageHeading } from "@/components/page-heading";
 import { auth } from "@clerk/nextjs/server";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowUpRight } from "lucide-react";
 
 const InterviewPage = async () => {
   await auth.protect();
@@ -24,9 +23,7 @@ const InterviewPage = async () => {
         description="Practice with purpose. Learn from every answer and track your progress along the way."
       >
         <Button asChild>
-          <Link href="/interview/mock">
-            Start a practice session <ArrowUpRight />
-          </Link>
+          <Link href="/interview/mock">Start a practice session</Link>
         </Button>
       </PageHeading>
 

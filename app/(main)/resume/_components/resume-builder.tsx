@@ -23,7 +23,6 @@ import {
   Loader2,
   Monitor,
   Save,
-  Sparkle,
   TriangleAlert,
 } from "lucide-react";
 import React, { useEffect, useState } from "react";
@@ -421,7 +420,6 @@ const ResumeBuilder = ({ initialContent }: { initialContent: string }) => {
                     </>
                   ) : (
                     <>
-                      <Sparkle className="h-4 w-4" />
                       <p className="text-sm">Improve with AI</p>
                     </>
                   )}

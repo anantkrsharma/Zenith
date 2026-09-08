@@ -2,7 +2,6 @@
 
 import React from "react";
 import Link from "next/link";
-import { PenLine, ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "motion/react";
 import { CoverLetter } from "@prisma/client";
@@ -63,18 +62,13 @@ const CoverLetterCards = ({
         </motion.div>
       ) : (
         <div className="flex flex-col items-center justify-center min-h-[420px] text-center rounded-xl border border-dashed border-input bg-card p-8">
-          <span className="feature-icon mb-6">
-            <PenLine />
-          </span>
           <h2 className="text-2xl">Your next introduction starts here.</h2>
           <p className="text-sm text-muted-foreground max-w-sm leading-7 mt-3 mb-7">
             Create a cover letter that connects your experience to an
             opportunity you’re excited about.
           </p>
           <Button asChild>
-            <Link href="/ai-cover-letter/new">
-              Create your first letter <ArrowUpRight />
-            </Link>
+            <Link href="/ai-cover-letter/new">Create your first letter</Link>
           </Button>
         </div>
       )}

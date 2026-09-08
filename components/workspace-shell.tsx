@@ -2,23 +2,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  AudioLines,
-  ArrowUpRight,
-  FileText,
-  Globe2,
-  PenLine,
-  Route,
-  BookOpen,
-} from "lucide-react";
-import { cn } from "@/lib/utils";
 
-const navigation = [
-  { href: "/dashboard", label: "Industry insights", icon: Globe2 },
-  { href: "/resume", label: "Resume studio", icon: FileText },
-  { href: "/interview", label: "Interview prep", icon: AudioLines },
-  { href: "/ai-cover-letter", label: "Cover letters", icon: PenLine },
-];
+import { cn } from "@/lib/utils";
+import { workspaceNavigation as navigation } from "@/components/workspace-navigation";
 
 export function WorkspaceShell({ children }: { children: React.ReactNode }) {
   const path = usePathname();
@@ -29,7 +15,7 @@ export function WorkspaceShell({ children }: { children: React.ReactNode }) {
       <aside className="workspace-sidebar">
         <p className="eyebrow mb-6">YOUR CAREER WORKSPACE</p>
         <nav aria-label="Workspace navigation">
-          {navigation.map(({ href, label, icon: Icon }) => (
+          {navigation.map(({ href, label }) => (
             <Link
               key={href}
               href={href}
@@ -39,23 +25,12 @@ export function WorkspaceShell({ children }: { children: React.ReactNode }) {
                 path.startsWith(href) && "active",
               )}
             >
-              <Icon size={17} />
               <span>{label}</span>
-              {path.startsWith(href) && <span className="nav-active-dot" />}
             </Link>
           ))}
         </nav>
         <div className="sidebar-note">
-          <Route size={20} />
-          <p>
-            A little progress.
-            <br />
-            Every single day.
-          </p>
-          <span>Your next chapter starts with the step you take today.</span>
-          <Link href="/#faq">
-            <BookOpen size={13} /> Workspace guide <ArrowUpRight size={13} />
-          </Link>
+          <Link href="/#faq">Workspace guide</Link>
         </div>
       </aside>
       <div className="workspace-main">
@@ -64,9 +39,6 @@ export function WorkspaceShell({ children }: { children: React.ReactNode }) {
           <span>/</span>
           <span>
             {navigation.find((item) => path.startsWith(item.href))?.label}
-          </span>
-          <span className="ml-auto hidden sm:flex items-center gap-2">
-            <span className="status-dot" /> MAKE YOUR NEXT MOVE
           </span>
         </div>
         <div className="workspace-page">{children}</div>

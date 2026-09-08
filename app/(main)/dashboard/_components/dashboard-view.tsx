@@ -3,16 +3,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { format, formatDistanceToNow } from "date-fns";
 import { IndustryInsight } from "@prisma/client";
-import {
-  ArrowUpRight,
-  ArrowRight,
-  TrendingDown,
-  TrendingUp,
-  Minus,
-  Radar,
-  AudioLines,
-  FileText,
-} from "lucide-react";
+import { ArrowRight, TrendingDown, TrendingUp, Minus } from "lucide-react";
 import {
   BarChart,
   Bar,
@@ -32,6 +23,11 @@ type SalaryRange = {
   median: number;
   location?: string;
 };
+const salaryColors = {
+  min: "#68757b",
+  median: "#edf2f3",
+  max: "#70b7c2",
+} as const;
 const nextSteps = [
   {
     label: "Understand the market",
@@ -39,7 +35,6 @@ const nextSteps = [
     text: "Start with the skills and trends below. Use your industry's outlook to choose what to explore next.",
     href: "#market-skills",
     action: "Explore the signals",
-    icon: Radar,
   },
   {
     label: "Test my knowledge",
@@ -47,7 +42,6 @@ const nextSteps = [
     text: "Take a personalized assessment, review each answer, and identify where a little practice could make a difference.",
     href: "/interview",
     action: "Open interview prep",
-    icon: AudioLines,
   },
   {
     label: "Prepare my application",
@@ -55,7 +49,6 @@ const nextSteps = [
     text: "Build a focused resume, then pair it with a cover letter that connects your experience to the opportunity.",
     href: "/resume",
     action: "Open resume studio",
-    icon: FileText,
   },
 ];
 export const DashboardView = ({ insights }: { insights: IndustryInsight }) => {
@@ -72,7 +65,6 @@ export const DashboardView = ({ insights }: { insights: IndustryInsight }) => {
     .split("-")
     .map((s) => s.charAt(0).toUpperCase() + s.slice(1))
     .join(" ");
-  const StepIcon = nextSteps[focus].icon;
   const OutlookIcon =
     insights.marketOutlook === "POSITIVE"
       ? TrendingUp
@@ -89,13 +81,6 @@ export const DashboardView = ({ insights }: { insights: IndustryInsight }) => {
           <span className="eyebrow">YOUR CURRENT LANDSCAPE</span>
           <h2>{industry}</h2>
           <p>Choose what you want to move forward today.</p>
-          <div className="orientation-path" aria-hidden="true">
-            <span />
-            <i />
-            <span />
-            <i />
-            <ArrowUpRight />
-          </div>
         </div>
         <div className="orientation-action">
           <div
@@ -115,13 +100,11 @@ export const DashboardView = ({ insights }: { insights: IndustryInsight }) => {
             ))}
           </div>
           <div className="focus-content" aria-live="polite">
-            <StepIcon size={22} />
             <h3 id="career-focus-title">{nextSteps[focus].title}</h3>
             <p>{nextSteps[focus].text}</p>
             <Button asChild>
               <Link href={nextSteps[focus].href}>
                 {nextSteps[focus].action}
-                <ArrowUpRight />
               </Link>
             </Button>
           </div>
@@ -144,7 +127,7 @@ export const DashboardView = ({ insights }: { insights: IndustryInsight }) => {
             <strong className="capitalize">
               {insights.marketOutlook.toLowerCase()}
             </strong>
-            <OutlookIcon size={38} />
+            <OutlookIcon size={24} aria-hidden="true" />
           </div>
           <span>
             Next refresh{" "}
@@ -198,8 +181,7 @@ export const DashboardView = ({ insights }: { insights: IndustryInsight }) => {
         <div className="skill-landscape">
           <div className="skill-column">
             <h3>
-              <span className="status-dot" /> In demand now{" "}
-              <span>{insights.topSkills.length} skills</span>
+              In demand now <span>{insights.topSkills.length} skills</span>
             </h3>
             <div className="skill-tags">
               {insights.topSkills.map((skill, i) => (
@@ -212,7 +194,7 @@ export const DashboardView = ({ insights }: { insights: IndustryInsight }) => {
           </div>
           <div className="skill-column skill-future">
             <h3>
-              <PlusMark /> Worth exploring{" "}
+              Worth exploring{" "}
               <span>{insights.recommendedSkills.length} skills</span>
             </h3>
             <div className="skill-tags">
@@ -223,7 +205,7 @@ export const DashboardView = ({ insights }: { insights: IndustryInsight }) => {
           </div>
         </div>
         <Link href="/interview" className="text-link mt-6">
-          See where your knowledge stands <ArrowUpRight size={16} />
+          See where your knowledge stands
         </Link>
       </section>
 
@@ -237,20 +219,20 @@ export const DashboardView = ({ insights }: { insights: IndustryInsight }) => {
         </div>
         <div className="chart-legend">
           <span>
-            <i style={{ background: "#526648" }} /> Minimum
+            <i style={{ background: salaryColors.min }} /> Minimum
           </span>
           <span>
-            <i style={{ background: "#94b478" }} /> Median
+            <i style={{ background: salaryColors.median }} /> Median
           </span>
           <span>
-            <i style={{ background: "#c5e895" }} /> Maximum
+            <i style={{ background: salaryColors.max }} /> Maximum
           </span>
         </div>
         {salaryData.length ? (
           <div
             className="salary-chart"
             style={{
-              height: Math.max(300, salaryData.length * (mobile ? 78 : 68)),
+              height: Math.max(250, salaryData.length * (mobile ? 68 : 58)),
             }}
           >
             <ResponsiveContainer width="100%" height="100%">
@@ -269,7 +251,7 @@ export const DashboardView = ({ insights }: { insights: IndustryInsight }) => {
                   tick={{ fontSize: mobile ? 10 : 12 }}
                 />
                 <Tooltip
-                  cursor={{ fill: "#c5e89508" }}
+                  cursor={{ fill: "#70b7c208" }}
                   content={({ active, payload, label }) =>
                     active && payload?.length ? (
                       <div className="chart-tooltip">
@@ -288,21 +270,21 @@ export const DashboardView = ({ insights }: { insights: IndustryInsight }) => {
                   isAnimationActive={false}
                   dataKey="min"
                   name="Minimum"
-                  fill="#526648"
+                  fill={salaryColors.min}
                   radius={[0, 2, 2, 0]}
                 />
                 <Bar
                   isAnimationActive={false}
                   dataKey="median"
                   name="Median"
-                  fill="#94b478"
+                  fill={salaryColors.median}
                   radius={[0, 2, 2, 0]}
                 />
                 <Bar
                   isAnimationActive={false}
                   dataKey="max"
                   name="Maximum"
-                  fill="#c5e895"
+                  fill={salaryColors.max}
                   radius={[0, 2, 2, 0]}
                 />
               </BarChart>
@@ -355,7 +337,6 @@ export const DashboardView = ({ insights }: { insights: IndustryInsight }) => {
             <li key={i}>
               <span>{String(i + 1).padStart(2, "0")}</span>
               <p>{trend}</p>
-              <ArrowUpRight size={16} />
             </li>
           ))}
         </ol>
@@ -366,19 +347,12 @@ export const DashboardView = ({ insights }: { insights: IndustryInsight }) => {
           <h3>Make your experience count.</h3>
         </div>
         <Button asChild variant="outline">
-          <Link href="/resume">
-            Build your resume <ArrowUpRight />
-          </Link>
+          <Link href="/resume">Build your resume</Link>
         </Button>
         <Button asChild variant="outline">
-          <Link href="/ai-cover-letter">
-            Tailor your introduction <ArrowUpRight />
-          </Link>
+          <Link href="/ai-cover-letter">Tailor your introduction</Link>
         </Button>
       </div>
     </div>
   );
 };
-function PlusMark() {
-  return <span className="text-primary text-lg leading-none">+</span>;
-}

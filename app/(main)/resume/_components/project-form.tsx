@@ -15,14 +15,7 @@ import useFetch from "@/hooks/use-fetch";
 import { projectSchema } from "@/lib/form-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format, parse } from "date-fns";
-import {
-  Code,
-  ExternalLink,
-  Loader2,
-  PlusCircle,
-  Sparkle,
-  X,
-} from "lucide-react";
+import { Code, ExternalLink, Loader2, PlusCircle, X } from "lucide-react";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
@@ -346,7 +339,6 @@ const ProjectForm = ({ entries, onChange }: ProjectFormProps) => {
                         </>
                       ) : (
                         <>
-                          <Sparkle className="h-4 w-4" />
                           <p className="text-sm">Improve with AI</p>
                         </>
                       )}

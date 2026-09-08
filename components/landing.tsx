@@ -1,14 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
-import {
-  ArrowUpRight,
-  ArrowRight,
-  Check,
-  Plus,
-  MoveUpRight,
-  ScanLine,
-} from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/reveal";
 import {
@@ -53,7 +46,7 @@ export default function Landing() {
             like a leap.
           </p>
           <a href="#industry" className="text-link">
-            See the bigger picture <ArrowRight size={16} />
+            See the bigger picture
           </a>
         </Reveal>
       </section>
@@ -74,29 +67,19 @@ export default function Landing() {
               you.
             </p>
             <Link href="/dashboard" className="text-link">
-              Explore industry insights <ArrowUpRight size={17} />
+              Explore industry insights
             </Link>
             <div className="story-detail">
-              <span className="status-dot" /> Industry outlook · Salary
-              benchmarks · Skills to develop
+              Industry outlook · Salary benchmarks · Skills to develop
             </div>
           </Reveal>
           <Reveal className="signal-field">
             <div className="visual-heading">
-              <span>
-                <ScanLine size={15} /> INDUSTRY SIGNALS
-              </span>
+              <span>INDUSTRY SIGNALS</span>
               <span>01 — 03</span>
             </div>
             <div className="signal-lines" aria-hidden="true">
               <svg viewBox="0 0 560 320">
-                <defs>
-                  <linearGradient id="signal-fade">
-                    <stop stopColor="#c5e895" stopOpacity="0" />
-                    <stop offset=".5" stopColor="#c5e895" />
-                    <stop offset="1" stopColor="#c5e895" stopOpacity=".2" />
-                  </linearGradient>
-                </defs>
                 {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => (
                   <path
                     key={i}
@@ -110,7 +93,7 @@ export default function Landing() {
                       " 560 " +
                       (45 + i * 23)
                     }
-                    stroke="url(#signal-fade)"
+                    stroke="#39636d"
                     fill="none"
                     strokeWidth={i === 3 ? 2 : 0.7}
                   />
@@ -123,7 +106,6 @@ export default function Landing() {
                 <small>UNDERSTAND THE MOMENTUM</small>
                 <strong>Industry outlook</strong>
               </div>
-              <MoveUpRight size={23} />
             </div>
             <div className="signal-item signal-second">
               <span className="signal-index">02</span>
@@ -145,7 +127,6 @@ export default function Landing() {
                 <small>LOOK A LITTLE FURTHER</small>
                 <strong>Recommended skills</strong>
               </div>
-              <Plus size={23} />
             </div>
             <p className="illustration-caption">
               AI-generated market estimates, refreshed weekly.
@@ -157,7 +138,6 @@ export default function Landing() {
         <Reveal className="practice-visual">
           <div className="visual-heading">
             <span>SMALL STEPS. VISIBLE PROGRESS.</span>
-            <span>↗</span>
           </div>
           <div className="practice-top">
             <div>
@@ -168,9 +148,6 @@ export default function Landing() {
                 by answer.
               </h3>
             </div>
-            <span className="practice-glyph" aria-hidden="true">
-              ↗
-            </span>
           </div>
           <div
             className="skill-comparison"
@@ -201,7 +178,7 @@ export default function Landing() {
             >
               Earlier
             </button>
-            <ArrowRight size={14} />
+
             <button
               type="button"
               aria-pressed={latest}
@@ -231,7 +208,7 @@ export default function Landing() {
             performance evolve.
           </p>
           <Link href="/interview" className="text-link">
-            Find your strengths <ArrowUpRight size={17} />
+            Find your strengths
           </Link>
           <div className="story-detail">
             Personalized questions. Useful feedback. Every attempt saved.
@@ -257,18 +234,14 @@ export default function Landing() {
             <div className="document-tool-link">
               <div>
                 <small>YOUR PROFESSIONAL STORY</small>
-                <Link href="/resume">
-                  The resume studio <ArrowUpRight />
-                </Link>
+                <Link href="/resume">The resume studio</Link>
               </div>
               <span>01</span>
             </div>
             <div className="document-tool-link">
               <div>
                 <small>YOUR NEXT INTRODUCTION</small>
-                <Link href="/ai-cover-letter">
-                  The cover letter studio <ArrowUpRight />
-                </Link>
+                <Link href="/ai-cover-letter">The cover letter studio</Link>
               </div>
               <span>02</span>
             </div>
@@ -276,9 +249,8 @@ export default function Landing() {
           <Reveal className="document-composition">
             <div className="document-context">
               <span>YOUR EXPERIENCE</span>
-              <Plus size={13} />
+
               <span>YOUR AMBITION</span>
-              <ArrowRight size={16} />
             </div>
             <div className="story-letter">
               <small>A CONSIDERED INTRODUCTION</small>
@@ -295,7 +267,6 @@ export default function Landing() {
             <div className="story-resume">
               <div className="paper-topline">
                 <span>YOUR NEXT CHAPTER</span>
-                <span>↗</span>
               </div>
               <h3>
                 Your name.
@@ -316,9 +287,7 @@ export default function Landing() {
                 <i />
                 <i />
               </div>
-              <div className="paper-bottom">
-                <Check size={14} /> Ready to make an impression.
-              </div>
+              <div className="paper-bottom">Ready to make an impression.</div>
             </div>
             <p className="illustration-caption">
               Your story, thoughtfully presented. Illustrative documents.
@@ -367,7 +336,6 @@ export default function Landing() {
                 <h3>{title}</h3>
                 <p>{text}</p>
               </div>
-              <ArrowUpRight size={20} />
             </Reveal>
           ))}
         </div>
@@ -401,16 +369,8 @@ export default function Landing() {
             is <span>within reach.</span>
           </h2>
           <Button asChild size="lg">
-            <Link href="/dashboard">
-              Let’s find your direction <ArrowUpRight />
-            </Link>
+            <Link href="/dashboard">Let’s find your direction</Link>
           </Button>
-          <div className="closing-path" aria-hidden="true">
-            <span />
-            <span />
-            <span />
-            <ArrowUpRight />
-          </div>
         </div>
       </section>
     </div>

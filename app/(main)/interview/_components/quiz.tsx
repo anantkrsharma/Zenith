@@ -13,7 +13,6 @@ import {
   CircleCheckBig,
   Lightbulb,
   Loader2,
-  ArrowUpRight,
 } from "lucide-react";
 import React, { useState } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
@@ -160,7 +159,7 @@ export const Quiz = () => {
               onClick={handleGenerateQuiz}
               disabled={questionsLoading}
             >
-              Start the Quiz <ArrowUpRight />
+              Start the Quiz
             </Button>
           </div>
         ) : (

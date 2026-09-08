@@ -10,7 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import useFetch from "@/hooks/use-fetch";
 import { coverLetterSchema } from "@/lib/form-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowLeft, Loader2, Sparkles } from "lucide-react";
+import { ArrowLeft, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
@@ -153,10 +153,7 @@ const NewCover = () => {
                     Creating...
                   </>
                 ) : (
-                  <>
-                    <Sparkles className="w-4 h-4" />
-                    Create cover letter
-                  </>
+                  <>Create cover letter</>
                 )}
               </Button>
             </form>

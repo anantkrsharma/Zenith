@@ -103,7 +103,7 @@ const PerformanceChart = ({ assessments }: { assessments: Assessment[] }) => {
                   isAnimationActive={false}
                   type="monotone"
                   dataKey="score"
-                  stroke="#c5e895"
+                  stroke="#70b7c2"
                   strokeWidth={2.5}
                   activeDot={{ r: 7 }}
                 />
