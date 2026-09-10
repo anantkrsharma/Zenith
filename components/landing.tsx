@@ -51,6 +51,39 @@ export default function Landing() {
         </Reveal>
       </section>
       <section id="industry" className="story-section story-market">
+        <div className="signal-lines" aria-hidden="true">
+          <svg
+            viewBox="0 0 1600 600"
+            preserveAspectRatio="none"
+            focusable="false"
+          >
+            <defs>
+              <linearGradient
+                id="industry-flow-gradient"
+                x1="0"
+                y1="0"
+                x2="1600"
+                y2="0"
+                gradientUnits="userSpaceOnUse"
+              >
+                <stop offset="0%" stopColor="#39636d" stopOpacity="0.65" />
+                <stop offset="35%" stopColor="#39636d" stopOpacity="0.24" />
+                <stop offset="70%" stopColor="#508895" stopOpacity="0.65" />
+                <stop offset="100%" stopColor="#508895" stopOpacity="0.8" />
+              </linearGradient>
+            </defs>
+            {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => (
+              <path
+                key={i}
+                d={`M-40 ${390 + i * 14} C400 ${590 + i * 5} 640 ${525 + i * 2} 920 ${345 + i * 10} S1360 ${205 + i * 18} 1640 ${225 + i * 20}`}
+                stroke="url(#industry-flow-gradient)"
+                fill="none"
+                strokeWidth={i === 3 ? 1.8 : 0.8}
+                vectorEffect="non-scaling-stroke"
+              />
+            ))}
+          </svg>
+        </div>
         <div className="site-container story-grid">
           <Reveal className="story-copy">
             <p className="eyebrow">
@@ -77,28 +110,6 @@ export default function Landing() {
             <div className="visual-heading">
               <span>INDUSTRY SIGNALS</span>
               <span>01 — 03</span>
-            </div>
-            <div className="signal-lines" aria-hidden="true">
-              <svg viewBox="0 0 560 320">
-                {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => (
-                  <path
-                    key={i}
-                    d={
-                      "M0 " +
-                      (225 + i * 12) +
-                      " C180 " +
-                      (290 - i * 8) +
-                      " 270 " +
-                      (35 + i * 20) +
-                      " 560 " +
-                      (45 + i * 23)
-                    }
-                    stroke="#39636d"
-                    fill="none"
-                    strokeWidth={i === 3 ? 2 : 0.7}
-                  />
-                ))}
-              </svg>
             </div>
             <div className="signal-item signal-first">
               <span className="signal-index">01</span>

@@ -499,16 +499,35 @@
   color: #91a5ad;
 }
 .story-market {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
   background: transparent;
+}
+.story-market::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 43% 50% at 75% 50%,
+    rgb(32 79 90 / 40%) 0%,
+    rgb(32 79 90 / 28%) 25%,
+    rgb(32 79 90 / 13%) 50%,
+    rgb(32 79 90 / 4%) 75%,
+    rgb(32 79 90 / 0%) 100%
+  );
+}
+.story-market > .story-grid {
+  position: relative;
+  z-index: 1;
 }
 .signal-field {
   position: relative;
   min-height: 29.375rem;
   padding: 1.5rem;
-  border: 1px solid var(--border);
-  background: #0d1519;
-  overflow: hidden;
-  border-radius: 0.3125rem;
+  border: 0;
+  background: transparent;
 }
 .visual-heading {
   display: flex;
@@ -526,10 +545,14 @@
 }
 .signal-lines {
   position: absolute;
-  inset: 6.25rem -5rem 0 -1.25rem;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
 }
 .signal-lines svg {
+  display: block;
   width: 100%;
+  height: 100%;
 }
 .signal-item {
   position: relative;
@@ -1219,6 +1242,19 @@
   }
   .story-copy h2 {
     font-size: 3rem;
+  }
+  .story-market::before {
+    background: radial-gradient(
+      ellipse 75% 28% at 50% 73%,
+      rgb(32 79 90 / 40%) 0%,
+      rgb(32 79 90 / 28%) 25%,
+      rgb(32 79 90 / 13%) 50%,
+      rgb(32 79 90 / 4%) 75%,
+      rgb(32 79 90 / 0%) 100%
+    );
+  }
+  .signal-lines {
+    top: 42%;
   }
   .signal-field,
   .practice-visual {
