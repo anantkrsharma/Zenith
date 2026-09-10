@@ -67,24 +67,6 @@
     "tsx": "^4.23.13",
     "typescript": "^5.9.3"
   },
-  "pnpm": {
-    "overrides": {
-      "@prisma/config>deepmerge-ts": "8.0.0"
-    },
-    "onlyBuiltDependencies": [
-      "@clerk/shared",
-      "@prisma/client",
-      "@prisma/engines",
-      "@tailwindcss/oxide",
-      "esbuild",
-      "prisma",
-      "protobufjs",
-      "unrs-resolver"
-    ],
-    "ignoredBuiltDependencies": [
-      "sharp"
-    ]
-  },
   "packageManager": "pnpm@10.34.5",
   "engines": {
     "node": ">=22.12.0"

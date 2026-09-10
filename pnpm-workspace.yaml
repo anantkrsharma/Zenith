@@ -1,0 +1,15 @@
+overrides:
+  '@prisma/config>deepmerge-ts': 8.0.0
+
+onlyBuiltDependencies:
+  - '@clerk/shared'
+  - '@prisma/client'
+  - '@prisma/engines'
+  - '@tailwindcss/oxide'
+  - esbuild
+  - prisma
+  - protobufjs
+  - unrs-resolver
+
+ignoredBuiltDependencies:
+  - sharp
