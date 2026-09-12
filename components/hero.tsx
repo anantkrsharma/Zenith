@@ -8,9 +8,6 @@ export default function HeroSection() {
     <section className="zen-hero" aria-labelledby="hero-title">
       <div className="zen-hero-grid zen-container">
         <div className="zen-hero-copy">
-          <p className="zen-kicker">
-            <span className="zen-status" /> CAREER SUPPORT, BUILT AROUND YOU
-          </p>
           <h1 id="hero-title">
             Your personal
             <br />
@@ -19,7 +16,7 @@ export default function HeroSection() {
           <p className="zen-hero-description">
             Understand your industry, prepare for interviews, and create resumes
             and cover letters tailored to your experience. Zenith brings your
-            next career move into focus—whatever your field.
+            next career move into focus, whatever your field.
           </p>
           <div className="zen-hero-actions">
             <Button asChild size="lg" className="zen-button">
@@ -31,19 +28,10 @@ export default function HeroSection() {
               Explore Zenith <ArrowDown size={15} />
             </Link>
           </div>
-          <p className="zen-hero-note">
-            <span className="zen-note-line" /> Insights. Interview practice.
-            Application tools.
-          </p>
         </div>
         <CareerAtlas />
       </div>
       <div className="zen-hero-index zen-container">
-        <span className="zen-index-caption">
-          A LITTLE CLARITY.
-          <br />
-          <strong>A LOT OF POSSIBILITY.</strong>
-        </span>
         <a href="#industry">
           <span>01</span>
           <div>

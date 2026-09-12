@@ -31,7 +31,6 @@ export default function Landing() {
     <div className="zen-landing">
       <section id="workspace" className="zen-intro zen-container">
         <Reveal>
-          <p className="zen-kicker">BUILT AROUND THE WHOLE YOU</p>
           <h2>
             Your career isn’t
             <br />a straight line.
@@ -64,30 +63,29 @@ export default function Landing() {
         </Reveal>
       </section>
       <section id="industry" className="zen-story zen-market">
-        <FlowLines />
         <div className="zen-container zen-story-grid">
-          <Reveal className="zen-story-copy">
-            <p className="zen-kicker">
-              <span className="zen-chapter">01</span> READ THE LANDSCAPE
-            </p>
-            <h2>
-              The world moves.
-              <br />
-              <span>Find your direction.</span>
-            </h2>
-            <p>
-              See where your industry is heading, which skills matter, and how
-              roles compare. A wider perspective for your next decision.
-            </p>
-            <Link href="/dashboard" className="zen-feature-link">
-              Explore industry insights <ArrowUpRight size={18} />
-            </Link>
-            <div className="zen-feature-notes">
-              <span>Industry outlook</span>
-              <span>Salary benchmarks</span>
-              <span>Skills to develop</span>
-            </div>
-          </Reveal>
+          <div className="zen-market-copy">
+            <FlowLines />
+            <Reveal className="zen-story-copy">
+              <h2>
+                The world moves.
+                <br />
+                <span>Find your direction.</span>
+              </h2>
+              <p>
+                See where your industry is heading, which skills matter, and how
+                roles compare. A wider perspective for your next decision.
+              </p>
+              <Link href="/dashboard" className="zen-feature-link">
+                Explore industry insights <ArrowUpRight size={18} />
+              </Link>
+              <div className="zen-feature-notes">
+                <span>Industry outlook</span>
+                <span>Salary benchmarks</span>
+                <span>Skills to develop</span>
+              </div>
+            </Reveal>
+          </div>
           <Reveal>
             <IndustryLens />
           </Reveal>
@@ -99,10 +97,6 @@ export default function Landing() {
             <PracticeLab />
           </Reveal>
           <Reveal className="zen-story-copy">
-            <p className="zen-kicker">
-              <span className="zen-chapter">02</span> TURN KNOWLEDGE INTO
-              CONFIDENCE
-            </p>
             <h2>
               Don’t just hope
               <br />
@@ -118,20 +112,12 @@ export default function Landing() {
             <Link href="/interview" className="zen-feature-link">
               Find your strengths <ArrowUpRight size={18} />
             </Link>
-            <div className="zen-feature-notes">
-              <span>Relevant questions</span>
-              <span>Useful feedback</span>
-              <span>Progress you can see</span>
-            </div>
           </Reveal>
         </div>
       </section>
       <section id="documents" className="zen-story zen-documents">
         <div className="zen-container zen-story-grid">
           <Reveal className="zen-story-copy">
-            <p className="zen-kicker">
-              <span className="zen-chapter">03</span> MAKE YOUR EXPERIENCE COUNT
-            </p>
             <h2>
               You’ve done
               <br />
@@ -166,17 +152,11 @@ export default function Landing() {
       </section>
       <section id="how-it-works" className="zen-journey zen-container">
         <Reveal className="zen-journey-heading">
-          <p className="zen-kicker">PROGRESS STARTS WITH A STARTING POINT</p>
           <h2>
             A little perspective.
             <br />
             <span>A way forward.</span>
           </h2>
-          <p>
-            You don’t need the whole plan.
-            <br />
-            Just a place to begin.
-          </p>
         </Reveal>
         <div className="zen-journey-steps">
           <JourneyLine />
@@ -217,7 +197,6 @@ export default function Landing() {
       </section>
       <section id="faq" className="zen-faq zen-container">
         <Reveal>
-          <p className="zen-kicker">A FEW THINGS, MADE CLEAR</p>
           <h2>
             Good questions.
             <br />
@@ -271,9 +250,6 @@ export default function Landing() {
           </svg>
         </div>
         <Reveal className="zen-closing-content">
-          <p className="zen-kicker">
-            <span className="zen-status" /> THERE’S MORE AHEAD OF YOU.
-          </p>
           <h2>
             Your next chapter.
             <br />
@@ -286,9 +262,6 @@ export default function Landing() {
             </Link>
           </Button>
         </Reveal>
-        <span className="zen-closing-coordinate" aria-hidden="true">
-          YOUR POTENTIAL / NO FIXED LIMIT
-        </span>
       </section>
     </div>
   );

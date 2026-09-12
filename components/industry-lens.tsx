@@ -40,10 +40,8 @@ function OutlookPreview() {
     <>
       <div className="zen-lens-title">
         <div>
-          <small>DIFFERENT FIELDS. A WIDER PERSPECTIVE.</small>
           <h3>See where work is moving.</h3>
         </div>
-        <TrendingUp size={24} strokeWidth={1.25} />
       </div>
       <p className="zen-range-intro">
         Hiring trends and market outlooks, shaped around the industry you work
@@ -123,7 +121,7 @@ function OutlookPreview() {
               y="235"
               fill="#7f989f"
               fontSize="10"
-              fontFamily="monospace"
+              fontFamily="Inter"
             >
               {month}
             </text>
@@ -158,10 +156,8 @@ function SalaryPreview() {
     <>
       <div className="zen-lens-title">
         <div>
-          <small>YOUR ROLE. YOUR INDUSTRY. YOUR CONTEXT.</small>
           <h3>Put a range to your potential.</h3>
         </div>
-        <ArrowUpRight size={24} strokeWidth={1.25} />
       </div>
       <p className="zen-range-intro">
         Explore salary estimates for the roles that matter to you, across
@@ -242,10 +238,8 @@ function SkillsPreview() {
     <>
       <div className="zen-lens-title">
         <div>
-          <small>GROW IN THE FIELD YOU CHOOSE.</small>
           <h3>Find the skills for your next step.</h3>
         </div>
-        <Sparkles size={23} strokeWidth={1.25} />
       </div>
       <p className="zen-range-intro">
         Recommendations connect your experience to the needs of your industry.
@@ -339,12 +333,6 @@ export function IndustryLens() {
       aria-roledescription="carousel"
       aria-label="Explore career insights across industries"
     >
-      <div className="zen-instrument-heading">
-        <span>
-          <span className="zen-status" /> INDUSTRY LENS
-        </span>
-        <span>MANY FIELDS. YOUR DIRECTION.</span>
-      </div>
       <Tabs
         value={views[view]}
         onValueChange={(value) => {

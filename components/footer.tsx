@@ -45,8 +45,8 @@ export default function Footer() {
             >
               View the source <Code2 size={13} />
             </a>
-            <a href="https://anantx.dev" target="_blank" rel="noreferrer">
-              Made by Anant Kr Sharma
+            <a href="https://anant.im" target="_blank" rel="noreferrer">
+              Made by <span className="text-cyan-200/65 hover:text-cyan-200/80 transition-all duration-150">Anant Kr Sharma</span>
             </a>
           </div>
         </div>

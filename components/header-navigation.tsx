@@ -72,34 +72,32 @@ export default function HeaderNavigation() {
                 <Link href="/dashboard">Workspace</Link>
               </Button>
             )}
-            <div
-              className={
-                hasWorkspaceNavigation ? "min-[851px]:hidden" : undefined
-              }
-            >
-              <DropdownMenu modal={false}>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    aria-label="Open career tools"
-                  >
-                    <Menu className="md:hidden" />
-                    <span className="hidden md:inline">Career tools</span>
-                    <ChevronDown className="hidden md:block" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56 p-2">
-                  {workspaceNavigation.map(({ href, label }) => (
-                    <DropdownMenuItem key={href} asChild>
-                      <Link href={href} className="gap-3 py-3">
-                        {label}
-                      </Link>
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
+            {!hasWorkspaceNavigation && (
+              <div>
+                <DropdownMenu modal={false}>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      aria-label="Open career tools"
+                    >
+                      <Menu className="md:hidden" />
+                      <span className="hidden md:inline">Career tools</span>
+                      <ChevronDown className="hidden md:block" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-56 p-2">
+                    {workspaceNavigation.map(({ href, label }) => (
+                      <DropdownMenuItem key={href} asChild>
+                        <Link href={href} className="gap-3 py-3">
+                          {label}
+                        </Link>
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            )}
             <UserButton appearance={{ elements: { avatarBox: "w-8 h-8" } }} />
           </Show>
           <Show when="signed-out">

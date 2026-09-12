@@ -54,7 +54,6 @@ export function FlowLines() {
 
 const practiceQuestions = [
   {
-    topic: "TELLING YOUR STORY",
     question: "What makes a project example stand out in an interview?",
     answers: [
       "Listing every tool you used.",
@@ -66,7 +65,6 @@ const practiceQuestions = [
       "A specific problem, your contribution, and a concrete result help an interviewer understand how you think and the difference you made.",
   },
   {
-    topic: "WORKING WITH OTHERS",
     question: "How should you describe a disagreement with a teammate?",
     answers: [
       "Explain how you listened and reached a decision.",
@@ -78,7 +76,6 @@ const practiceQuestions = [
       "Explain the different perspectives, how you listened, and how you reached a decision. Show collaboration without assigning blame.",
   },
   {
-    topic: "THINKING ON YOUR FEET",
     question: "What’s a useful first step when a question is unfamiliar?",
     answers: [
       "Give an answer immediately.",
@@ -103,12 +100,6 @@ export function PracticeLab() {
         ))}
       </div>
       <div className="zen-lab">
-        <div className="zen-instrument-heading">
-          <span>
-            <span className="zen-status" /> INTERVIEW LAB
-          </span>
-          <span>TRY A QUESTION</span>
-        </div>
         <div className="zen-lab-progress">
           <span>0{questionIndex + 1} / 03</span>
           <div>
@@ -116,9 +107,7 @@ export function PracticeLab() {
               <i key={i} data-active={i <= questionIndex} />
             ))}
           </div>
-          <span>PRACTICE PREVIEW</span>
         </div>
-        <p className="zen-lab-topic">{question.topic}</p>
         <h3>{question.question}</h3>
         <div
           className="zen-demo-answers"
@@ -148,9 +137,6 @@ export function PracticeLab() {
         <div className="zen-lab-feedback" aria-live="polite">
           {answer === null ? (
             <p>
-              <span className="zen-feedback-spark">
-                <Sparkles size={14} />
-              </span>
               A little practice changes how you show up.
             </p>
           ) : (
@@ -181,13 +167,6 @@ export function PracticeLab() {
           )}
         </div>
       </div>
-      <div className="zen-practice-tag">
-        <Target size={16} />
-        <div>
-          Confidence is a practice.
-          <small>ONE THOUGHTFUL ANSWER AT A TIME.</small>
-        </div>
-      </div>
     </div>
   );
 }
@@ -197,9 +176,6 @@ export function DocumentStudio() {
   return (
     <div className="zen-document-scene">
       <div className="zen-document-source">
-        <span>
-          <Sparkles size={13} /> YOUR EXPERIENCE
-        </span>
         <p>
           “I helped make onboarding
           <br />

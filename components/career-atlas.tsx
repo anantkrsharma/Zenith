@@ -2,17 +2,13 @@
 
 import Image from "next/image";
 import { useRef, useState } from "react";
-import {
-  motion,
-  useAnimationFrame,
-  useMotionValue,
-  useSpring,
-} from "motion/react";
-import { ArrowUpRight, Pause, Play } from "lucide-react";
+import { motion, useAnimationFrame, useMotionValue } from "motion/react";
+import { Pause, Play } from "lucide-react";
 import { useAmbientPlayback } from "@/components/use-ambient-playback";
 
 // Traced in the source artwork's 1536 × 1024 coordinates. The moving light,
-// its trail, and the image share one viewBox and one perspective transform.
+// its trail, and the image share one coordinate system without rasterizing
+// the image and labels into a transformed 3D layer.
 const pathway =
   "M240 730 C256 715 325 707 386 690 C450 673 478 635 518 606 C551 581 593 577 631 552 C662 532 677 510 693 481 C718 444 757 421 795 421 C844 406 882 423 941 424 C999 427 1047 410 1067 391 C1087 370 1061 355 1054 342 C1043 319 1080 313 1114 303 C1153 291 1194 277 1208 256 C1223 235 1186 225 1194 205 C1198 188 1226 176 1235 161 C1246 145 1227 133 1236 121";
 const ascentDuration = 18000;
@@ -63,10 +59,6 @@ export function CareerAtlas() {
   const lightY = useMotionValue(730);
   const trailOffset = useMotionValue(0.055);
   const lightOpacity = useMotionValue(0);
-  const pointerX = useMotionValue(0);
-  const pointerY = useMotionValue(0);
-  const rotateY = useSpring(pointerX, { stiffness: 70, damping: 22 });
-  const rotateX = useSpring(pointerY, { stiffness: 70, damping: 22 });
 
   useAnimationFrame((_, delta) => {
     if (!canPlay || paused || !pathRef.current) return;
@@ -98,38 +90,13 @@ export function CareerAtlas() {
       data-stage={stage}
       data-static={reducedMotion}
     >
-      <div className="zen-atlas-heading">
-        <span>THE CAREER LANDSCAPE</span>
-        <span>
-          FROM INSIGHT TO OPPORTUNITY <ArrowUpRight size={12} />
-        </span>
-      </div>
-      <motion.div
-        className="zen-terrain"
-        style={{
-          rotateX: reducedMotion ? 0 : rotateX,
-          rotateY: reducedMotion ? 0 : rotateY,
-        }}
-        onPointerMove={(event) => {
-          if (reducedMotion || event.pointerType !== "mouse") return;
-          const bounds = event.currentTarget.getBoundingClientRect();
-          pointerX.set(
-            ((event.clientX - bounds.left) / bounds.width - 0.5) * 5,
-          );
-          pointerY.set(
-            -((event.clientY - bounds.top) / bounds.height - 0.5) * 4,
-          );
-        }}
-        onPointerLeave={() => {
-          pointerX.set(0);
-          pointerY.set(0);
-        }}
-      >
+      <div className="zen-terrain">
         <Image
           src="/art/career-landscape.png"
           width={1536}
           height={1024}
-          sizes="(max-width: 850px) 100vw, 65vw"
+          sizes="(max-width: 560px) calc(118vw - 47.2px), (max-width: 850px) min(651px, calc(105vw - 67.2px)), (max-width: 1100px) calc(62.5vw - 40px), min(836px, calc(68.46vw - 65.72px))"
+          quality={100}
           preload
           alt="A luminous career path climbs a teal landscape from understanding your industry, through interview preparation, to your next opportunity."
           className="zen-terrain-image"
@@ -227,7 +194,7 @@ export function CareerAtlas() {
             </span>
           </div>
         ))}
-      </motion.div>
+      </div>
       <div className="zen-atlas-console">
         <div className="zen-atlas-stage-row">
           <div className="zen-atlas-stages" aria-label="Your career journey">
