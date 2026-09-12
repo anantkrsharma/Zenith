@@ -1,45 +1,69 @@
-"use client";
 import Link from "next/link";
-
+import { ArrowDown, ArrowUpRight, MoveUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CareerAtlas } from "@/components/career-atlas";
+
 export default function HeroSection() {
   return (
-    <section className="hero-section" aria-labelledby="hero-title">
-      <div className="site-container hero-layout">
-        <div className="hero-copy">
-          <p className="eyebrow">YOUR NEXT CHAPTER STARTS HERE</p>
-          <h1 id="hero-title">
-            You have <br />
-            potential.
-            <br />
-            <span>Give it direction.</span>
-          </h1>
-          <p className="hero-description">
-            A clearer view of where you stand. The tools to move you forward.
-            Your career, with Zenith.
+    <section className="zen-hero" aria-labelledby="hero-title">
+      <div className="zen-hero-grid zen-container">
+        <div className="zen-hero-copy">
+          <p className="zen-kicker">
+            <span className="zen-status" /> CAREER SUPPORT, BUILT AROUND YOU
           </p>
-          <div className="hero-actions">
-            <Button asChild size="lg">
-              <Link href="/dashboard">Find your next level</Link>
+          <h1 id="hero-title">
+            Your personal
+            <br />
+            <span>AI career coach.</span>
+          </h1>
+          <p className="zen-hero-description">
+            Understand your industry, prepare for interviews, and create resumes
+            and cover letters tailored to your experience. Zenith brings your
+            next career move into focus—whatever your field.
+          </p>
+          <div className="zen-hero-actions">
+            <Button asChild size="lg" className="zen-button">
+              <Link href="/dashboard">
+                Get started with Zenith <ArrowUpRight size={18} />
+              </Link>
             </Button>
-            <Link className="text-link" href="#workspace">
-              Explore the journey
+            <Link className="zen-subtle-link" href="#workspace">
+              Explore Zenith <ArrowDown size={15} />
             </Link>
           </div>
-          <p className="hero-footnote">AI career guidance. Built around you.</p>
+          <p className="zen-hero-note">
+            <span className="zen-note-line" /> Insights. Interview practice.
+            Application tools.
+          </p>
         </div>
         <CareerAtlas />
       </div>
-      <div className="site-container hero-bottom">
-        <span>AMBITION, MEET DIRECTION.</span>
-        <div>
-          <span>Understand</span>
-          <span>Develop</span>
-          <span>Become</span>
-        </div>
-        <a href="#workspace" aria-label="Discover the Zenith workspace">
-          Explore Zenith
+      <div className="zen-hero-index zen-container">
+        <span className="zen-index-caption">
+          A LITTLE CLARITY.
+          <br />
+          <strong>A LOT OF POSSIBILITY.</strong>
+        </span>
+        <a href="#industry">
+          <span>01</span>
+          <div>
+            Read the landscape<small>Industry insights</small>
+          </div>
+          <MoveUpRight size={19} />
+        </a>
+        <a href="#practice">
+          <span>02</span>
+          <div>
+            Build your confidence<small>Interview preparation</small>
+          </div>
+          <MoveUpRight size={19} />
+        </a>
+        <a href="#documents">
+          <span>03</span>
+          <div>
+            Make your next move<small>Resume & cover letters</small>
+          </div>
+          <MoveUpRight size={19} />
         </a>
       </div>
     </section>

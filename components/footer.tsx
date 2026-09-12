@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Code2 } from "lucide-react";
+import { ArrowUpRight, Code2 } from "lucide-react";
 import { Brand } from "@/components/brand";
 
 export default function Footer() {
@@ -17,7 +17,7 @@ export default function Footer() {
     );
   return (
     <footer className="site-footer">
-      <div className="site-container">
+      <div className="zen-container">
         <div className="footer-grid">
           <div>
             <Brand />
@@ -49,6 +49,10 @@ export default function Footer() {
               Made by Anant Kr Sharma
             </a>
           </div>
+        </div>
+        <div className="zen-footer-signature" aria-hidden="true">
+          <span>zenith</span>
+          <ArrowUpRight strokeWidth={0.6} />
         </div>
         <div className="footer-bottom">
           <span>© {new Date().getFullYear()} Zenith. All rights reserved.</span>

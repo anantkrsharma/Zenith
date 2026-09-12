@@ -1,63 +1,123 @@
 "use client";
+
+import Image from "next/image";
 import { useRef, useState } from "react";
 import {
   motion,
+  useAnimationFrame,
   useMotionValue,
   useSpring,
-  useReducedMotion,
-  useScroll,
-  useTransform,
 } from "motion/react";
+import { ArrowUpRight, Pause, Play } from "lucide-react";
+import { useAmbientPlayback } from "@/components/use-ambient-playback";
+
+// Traced in the source artwork's 1536 × 1024 coordinates. The moving light,
+// its trail, and the image share one viewBox and one perspective transform.
+const pathway =
+  "M240 730 C256 715 325 707 386 690 C450 673 478 635 518 606 C551 581 593 577 631 552 C662 532 677 510 693 481 C718 444 757 421 795 421 C844 406 882 423 941 424 C999 427 1047 410 1067 391 C1087 370 1061 355 1054 342 C1043 319 1080 313 1114 303 C1153 291 1194 277 1208 256 C1223 235 1186 225 1194 205 C1198 188 1226 176 1235 161 C1246 145 1227 133 1236 121";
+const ascentDuration = 18000;
+const cycleDuration = 22000;
 
 const stages = [
   {
-    name: "Find your bearings",
-    text: "Connect your experience to the skills and signals around you.",
-    node: "Your starting point",
-    destination: "A clearer perspective",
+    name: "Understand",
+    title: "Understand your industry.",
+    text: "Explore market trends, salary ranges, and skills relevant to your field.",
+    location: "Your starting point",
+    x: 240,
+    y: 702,
+    lightX: 300,
+    lightY: 700,
   },
   {
-    name: "Build your momentum",
-    text: "Test what you know. Turn feedback into your next step forward.",
-    node: "Practice with purpose",
-    destination: "Room to grow",
+    name: "Develop",
+    title: "Prepare with purpose.",
+    text: "Practice interview questions and turn feedback into stronger answers.",
+    location: "Your next step",
+    x: 795,
+    y: 398,
+    lightX: 795,
+    lightY: 440,
   },
   {
-    name: "Make your next move",
-    text: "Bring your experience into focus with a resume and a tailored introduction.",
-    node: "Your professional story",
-    destination: "Your next opportunity",
+    name: "Become",
+    title: "Put your experience forward.",
+    text: "Build your resume and tailor a cover letter to your next opportunity.",
+    location: "Your next level",
+    x: 1238,
+    y: 94,
+    lightX: 1230,
+    lightY: 210,
   },
 ];
+
 export function CareerAtlas() {
+  const { ref, canPlay, reducedMotion } = useAmbientPlayback();
+  const [paused, setPaused] = useState(false);
   const [stage, setStage] = useState(0);
-  const ref = useRef<HTMLDivElement>(null);
-  const reduced = useReducedMotion();
-  const pointerX = useMotionValue(0),
-    pointerY = useMotionValue(0);
-  const rotateY = useSpring(pointerX, { stiffness: 80, damping: 25 });
-  const rotateX = useSpring(pointerY, { stiffness: 80, damping: 25 });
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start start", "end start"],
+  const currentStage = useRef(0);
+  const elapsed = useRef(0);
+  const pathRef = useRef<SVGPathElement>(null);
+  const pathLength = useRef(0);
+  const lightX = useMotionValue(240);
+  const lightY = useMotionValue(730);
+  const trailOffset = useMotionValue(0.055);
+  const lightOpacity = useMotionValue(0);
+  const pointerX = useMotionValue(0);
+  const pointerY = useMotionValue(0);
+  const rotateY = useSpring(pointerX, { stiffness: 70, damping: 22 });
+  const rotateX = useSpring(pointerY, { stiffness: 70, damping: 22 });
+
+  useAnimationFrame((_, delta) => {
+    if (!canPlay || paused || !pathRef.current) return;
+    elapsed.current = (elapsed.current + Math.min(delta, 100)) % cycleDuration;
+    const time = elapsed.current;
+    // A short introduction, an 18-second ascent, and a summit dwell.
+    // Reset only after the travelling light has faded out.
+    const progress = Math.min(1, Math.max(0, (time - 700) / ascentDuration));
+    pathLength.current ||= pathRef.current.getTotalLength();
+    const point = pathRef.current.getPointAtLength(
+      progress * pathLength.current,
+    );
+    lightX.set(point.x);
+    lightY.set(point.y);
+    trailOffset.set(0.055 - progress);
+    lightOpacity.set(Math.min(1, time / 500, (cycleDuration - time) / 1200));
+    // The middle beacon sits 48.8% along this traced path's arc length.
+    const nextStage = progress < 0.48813 ? 0 : progress < 1 ? 1 : 2;
+    if (nextStage !== currentStage.current) {
+      currentStage.current = nextStage;
+      setStage(nextStage);
+    }
   });
-  const y = useTransform(scrollYProgress, [0, 1], [0, 20]);
+
   return (
-    <div className="atlas" ref={ref}>
-      <div className="atlas-coordinate">
-        THE CAREER ATLAS <span>YOUR POSSIBILITIES, CONNECTED</span>
+    <div
+      className="zen-atlas"
+      ref={ref}
+      data-stage={stage}
+      data-static={reducedMotion}
+    >
+      <div className="zen-atlas-heading">
+        <span>THE CAREER LANDSCAPE</span>
+        <span>
+          FROM INSIGHT TO OPPORTUNITY <ArrowUpRight size={12} />
+        </span>
       </div>
       <motion.div
-        className={`atlas-scene atlas-stage-${stage}`}
-        style={reduced ? undefined : { rotateX, rotateY, y }}
+        className="zen-terrain"
+        style={{
+          rotateX: reducedMotion ? 0 : rotateX,
+          rotateY: reducedMotion ? 0 : rotateY,
+        }}
         onPointerMove={(event) => {
-          if (reduced || event.pointerType !== "mouse") return;
+          if (reducedMotion || event.pointerType !== "mouse") return;
           const bounds = event.currentTarget.getBoundingClientRect();
           pointerX.set(
-            ((event.clientX - bounds.left) / bounds.width - 0.5) * 4,
+            ((event.clientX - bounds.left) / bounds.width - 0.5) * 5,
           );
           pointerY.set(
-            ((event.clientY - bounds.top) / bounds.height - 0.5) * -3,
+            -((event.clientY - bounds.top) / bounds.height - 0.5) * 4,
           );
         }}
         onPointerLeave={() => {
@@ -65,211 +125,153 @@ export function CareerAtlas() {
           pointerY.set(0);
         }}
       >
-        <div
-          className="atlas-mobile-map"
-          aria-label="The three stages of your career journey"
+        <Image
+          src="/art/career-landscape.png"
+          width={1536}
+          height={1024}
+          sizes="(max-width: 850px) 100vw, 65vw"
+          preload
+          alt="A luminous career path climbs a teal landscape from understanding your industry, through interview preparation, to your next opportunity."
+          className="zen-terrain-image"
+        />
+        <svg
+          className="zen-terrain-path"
+          viewBox="0 0 1536 1024"
+          aria-hidden="true"
         >
-          {[
-            ["Your starting point", "Experience, skills, and ambition"],
-            ["Your next step", "A clearer focus. Room to grow."],
-            ["Your next level", "Ready to put yourself forward"],
-          ].map(([title, description], index) => (
-            <div
-              key={title}
-              className="mobile-map-level"
-              data-active={stage === index}
+          <defs>
+            <radialGradient id="zen-milestone-light">
+              <stop stopColor="#a9eaf1" stopOpacity=".22" />
+              <stop offset=".5" stopColor="#70b7c2" stopOpacity=".07" />
+              <stop offset="1" stopColor="#70b7c2" stopOpacity="0" />
+            </radialGradient>
+            <filter
+              id="zen-path-bloom"
+              x="-10%"
+              y="-10%"
+              width="120%"
+              height="120%"
             >
-              <span>0{index + 1}</span>
-              <div>
-                <strong>{title}</strong>
-                <small>{description}</small>
-              </div>
+              <feGaussianBlur stdDeviation="5" />
+            </filter>
+            <filter
+              id="zen-light-bloom"
+              x="-100%"
+              y="-100%"
+              width="300%"
+              height="300%"
+            >
+              <feGaussianBlur stdDeviation="5" />
+            </filter>
+          </defs>
+          {stages.map((item, index) => (
+            <ellipse
+              key={item.name}
+              cx={item.lightX}
+              cy={item.lightY}
+              rx="300"
+              ry="230"
+              fill="url(#zen-milestone-light)"
+              className="zen-milestone-light"
+              data-active={reducedMotion || stage === index}
+            />
+          ))}
+          <path ref={pathRef} d={pathway} fill="none" stroke="none" />
+          <motion.g style={{ opacity: reducedMotion ? 0 : lightOpacity }}>
+            <motion.path
+              d={pathway}
+              pathLength="1"
+              fill="none"
+              stroke="#a1e4ed"
+              strokeWidth="8"
+              strokeLinecap="round"
+              strokeDasharray="0.055 1"
+              style={{ strokeDashoffset: trailOffset }}
+              filter="url(#zen-path-bloom)"
+            />
+            <motion.path
+              d={pathway}
+              pathLength="1"
+              fill="none"
+              stroke="#e0fcff"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeDasharray="0.055 1"
+              style={{ strokeDashoffset: trailOffset }}
+            />
+            <motion.circle
+              cx={lightX}
+              cy={lightY}
+              r="15"
+              fill="#aceef7"
+              filter="url(#zen-light-bloom)"
+            />
+            <motion.circle cx={lightX} cy={lightY} r="4" fill="#f0feff" />
+          </motion.g>
+        </svg>
+        {stages.map((item, index) => (
+          <div
+            key={item.name}
+            className="zen-terrain-beacon"
+            data-active={reducedMotion || stage === index}
+            data-milestone={index}
+            style={{
+              left: (item.x / 1536) * 100 + "%",
+              top: (item.y / 1024) * 100 + "%",
+            }}
+          >
+            <span className="zen-beacon-ring" />
+            <span className="zen-beacon-label">
+              <small>0{index + 1}</small>
+              {item.location}
+            </span>
+          </div>
+        ))}
+      </motion.div>
+      <div className="zen-atlas-console">
+        <div className="zen-atlas-stage-row">
+          <div className="zen-atlas-stages" aria-label="Your career journey">
+            {stages.map((item, index) => (
+              <span
+                key={item.name}
+                className="zen-atlas-stage"
+                data-active={reducedMotion || stage === index}
+              >
+                <span>0{index + 1}</span>
+                {item.name}
+                <span className="zen-stage-indicator" />
+              </span>
+            ))}
+          </div>
+          {!reducedMotion && (
+            <button
+              type="button"
+              className="zen-motion-control"
+              onClick={() => setPaused(!paused)}
+              aria-label={
+                paused
+                  ? "Play career path animation"
+                  : "Pause career path animation"
+              }
+            >
+              {paused ? <Play size={13} /> : <Pause size={13} />}
+            </button>
+          )}
+        </div>
+        <div className="zen-atlas-description">
+          {stages.map((item, index) => (
+            <div
+              key={item.name}
+              className="zen-atlas-caption"
+              data-active={stage === index}
+              aria-hidden={stage !== index}
+            >
+              <strong>{item.title}</strong>
+              <p>{item.text}</p>
             </div>
           ))}
         </div>
-        <svg
-          className="atlas-drawing"
-          viewBox="0 0 700 620"
-          role="img"
-          aria-label="A career path rises through connected skills, practice, and professional identity toward a new opportunity."
-        >
-          <g
-            className="atlas-grid"
-            fill="none"
-            stroke="#1d2b30"
-            strokeWidth=".7"
-          >
-            {Array.from({ length: 10 }, (_, i) => (
-              <path
-                key={i}
-                d={`M ${20 + i * 49} ${403 - i * 24} l 230 116 M ${20 + i * 49} ${403 + i * 13} l 490 -245`}
-              />
-            ))}
-          </g>
-          <g className="atlas-level atlas-level-back">
-            <path
-              d="M278 177 L475 78 L653 168 L456 267Z"
-              fill="#13242a"
-              stroke="#6b838d"
-            />
-            <path
-              d="M278 177 L456 267 L653 168 L653 180 L456 279 L278 189Z"
-              fill="#131e22"
-              stroke="#35474f"
-            />
-            <path d="M456 267 L653 168" stroke="#3f6f79" strokeWidth="2" />
-            <path
-              d="M316 178 L475 99 L614 169 L456 248Z"
-              fill="none"
-              stroke="#6b838d"
-              strokeDasharray="3 6"
-            />
-          </g>
-          <g className="atlas-level atlas-level-middle">
-            <path
-              d="M127 306 L345 196 L552 299 L333 410Z"
-              fill="#13242a"
-              stroke="#35474f"
-            />
-            <path
-              d="M127 306 L333 410 L552 299 L552 311 L333 422 L127 318Z"
-              fill="#131e22"
-              stroke="#35474f"
-            />
-            <path
-              d="M127 306 L333 410 L552 299"
-              fill="none"
-              stroke="#3f6f79"
-              strokeWidth="2"
-            />
-            <g fill="none" stroke="#6b838d">
-              <path d="M212 306 L305 259 L410 309 L333 355Z M212 306 L333 355 M305 259 L333 355 M305 259 L410 309" />
-            </g>
-            {[
-              [212, 306],
-              [305, 259],
-              [410, 309],
-              [333, 355],
-            ].map(([cx, cy], i) => (
-              <circle
-                key={i}
-                cx={cx}
-                cy={cy}
-                r={i === stage ? 5 : 3}
-                fill={i === stage ? "#b4c2c8" : "#91a5ad"}
-              />
-            ))}
-          </g>
-          <g className="atlas-level atlas-level-front">
-            <path
-              d="M37 450 L221 357 L414 453 L229 547Z"
-              fill="#13242a"
-              stroke="#35474f"
-            />
-            <path
-              d="M37 450 L229 547 L414 453 L414 466 L229 560 L37 463Z"
-              fill="#131e22"
-              stroke="#35474f"
-            />
-            <path
-              d="M37 450 L229 547 L414 453"
-              fill="none"
-              stroke="#3f6f79"
-              strokeWidth="2"
-            />
-            <path
-              d="M104 451 L200 403 L325 465 M200 403 L222 493 M104 451 L222 493 L325 465"
-              fill="none"
-              stroke="#6b838d"
-            />
-            {[
-              [104, 451],
-              [200, 403],
-              [222, 493],
-              [325, 465],
-            ].map(([cx, cy], i) => (
-              <circle key={i} cx={cx} cy={cy} r="4" fill="#b4c2c8" />
-            ))}
-          </g>
-          <path
-            className="atlas-route"
-            d="M140 463 C224 474 263 461 272 391 C279 329 356 360 385 287 S459 260 479 196 C488 164 510 150 549 139"
-            fill="none"
-            stroke="#70b7c2"
-            strokeWidth="3"
-            pathLength="1"
-          />
-          <g fill="#b4c2c8" stroke="#131e22" strokeWidth="5">
-            <circle cx="140" cy="463" r="9" />
-            <circle cx="335" cy="340" r="9" />
-            <circle cx="549" cy="139" r="10" />
-          </g>
-          <g stroke="#6b838d" strokeDasharray="3 5" fill="none">
-            <path d="M549 139 V65 H570 M140 463 V523 H83" />
-          </g>
-          <g fontSize="12" fill="#91a5ad" letterSpacing="2">
-            <text x="577" y="68">
-              NEXT
-            </text>
-            <text x="40" y="535">
-              NOW
-            </text>
-          </g>
-        </svg>
-        <div className="atlas-label atlas-label-top">
-          <span>{stages[stage].destination}</span>
-        </div>
-        <div className="atlas-label atlas-label-middle">
-          <div>
-            <small>
-              {
-                ["SKILL CONNECTION", "YOUR NEXT STEP", "APPLICATION TOOLS"][
-                  stage
-                ]
-              }
-            </small>
-            <strong>
-              {
-                [
-                  "Experience meets possibility",
-                  "Feedback becomes progress",
-                  "Experience becomes a story",
-                ][stage]
-              }
-            </strong>
-          </div>
-        </div>
-        <div className="atlas-label atlas-label-bottom">
-          <div>
-            <small>BUILT AROUND YOU</small>
-            <strong>{stages[stage].node}</strong>
-          </div>
-        </div>
-      </motion.div>
-      <div
-        className="atlas-controls"
-        role="group"
-        aria-label="Explore career stages"
-      >
-        {stages.map((item, index) => (
-          <button
-            type="button"
-            key={item.name}
-            aria-pressed={index === stage}
-            aria-label={item.name}
-            onClick={() => setStage(index)}
-          >
-            <span>0{index + 1}</span>
-            {["Understand", "Develop", "Become"][index]}
-          </button>
-        ))}
       </div>
-      <p className="atlas-stage-description" aria-live="polite">
-        {stages[stage].text}
-      </p>
-      <p className="illustration-caption">
-        A conceptual career journey. Your workspace uses your own data.
-      </p>
     </div>
   );
 }
